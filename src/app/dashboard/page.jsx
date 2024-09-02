@@ -496,12 +496,19 @@ const Dashboard = () => {
               </button>
             </div>
             <div className="flex items-center justify-center mt-5">
-              {/* <div className="max-w-[338px] max-h-[338px] w-full h-full">
+              <div className="max-w-[338px] max-h-[338px] w-full h-full">
                 <CancellationChart />
-              </div>   */}
-              <div className="w-[338px] h-[338px] bg-white p-10">
-                <div className="w-full h-full border border-dashed rounded-full"></div>
               </div>
+              {/* <div className=" bg-white p-10">
+                <div className="w-full h-full border-2 border-[#BABABA] border-dashed rounded-full text-center flex justify-center items-center">
+                  <div>
+                    <h3 className="text-xl/7 text-black font-semibold">70</h3>
+                    <p className="text-sm/7 text-black font-medium">
+                      Session cancelled
+                    </p>
+                  </div>
+                </div>
+              </div> */}
             </div>
           </div>
         </div>
