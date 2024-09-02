@@ -95,16 +95,12 @@ const CancellationChart = () => {
         ref={chartRef}
         data={data}
         options={options}
-        className="!w-full !h-full relative z-[99]"
+        className="!w-full !h-full relative"
       />
-      <div className="absolute w-full h-full top-1 left-0 flex justify-center items-center">
-        <div className="w-48 h-48 border-2 border-[#BABABA] border-dashed rounded-full text-center flex justify-center items-center">
-          <div>
-            <h3 className="text-xl/7 text-black font-semibold">70</h3>
-            <p className="text-sm/7 text-black font-medium">
-              Session cancelled
-            </p>
-          </div>
+      <div className="w-48 h-48 absolute top-[51%] left-1/2 -translate-x-1/2 -translate-y-1/2  border-2 border-[#BABABA] border-dashed rounded-full text-center flex justify-center items-center">
+        <div>
+          <h3 className="text-xl/7 text-black font-semibold">70</h3>
+          <p className="text-sm/7 text-black font-medium">Session cancelled</p>
         </div>
       </div>
     </div>
