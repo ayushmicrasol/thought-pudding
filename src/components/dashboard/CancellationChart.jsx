@@ -97,7 +97,7 @@ const CancellationChart = () => {
         options={options}
         className="!w-full !h-full relative"
       />
-      <div className="w-48 h-48 absolute top-[51%] left-1/2 -translate-x-1/2 -translate-y-1/2  border-2 border-[#BABABA] border-dashed rounded-full text-center flex justify-center items-center">
+      <div className="w-48 h-48 absolute top-[51.5%] left-1/2 -translate-x-[49%] -translate-y-1/2  border-2 border-[#BABABA] border-dashed rounded-full text-center flex justify-center items-center">
         <div>
           <h3 className="text-xl/7 text-black font-semibold">70</h3>
           <p className="text-sm/7 text-black font-medium">Session cancelled</p>
