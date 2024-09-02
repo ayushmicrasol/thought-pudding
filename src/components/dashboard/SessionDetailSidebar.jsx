@@ -10,6 +10,8 @@ import {
 } from "@phosphor-icons/react";
 import Button from "../Button";
 import SessionDetailModal from "./SessionDetailModal";
+import RescheduleSidebar from "./RescheduleSidebar";
+import EditSessionSidebar from "./EditSessionSidebar";
 
 const ModalWrapper = ({ isVisible, title, children, onClose }) => {
   return (
@@ -30,6 +32,10 @@ const SessionDetailSidebar = ({ isSessionDetails, setIsSessionDetails }) => {
     isReminder: false, // Add state for Reminder modal
   });
 
+  const [isRescheduleSession, setIsRescheduleSession] = useState(false);
+  const [isEditSession, setIsEditSession] = useState(false);
+
+  // stop body scrollig
   useEffect(() => {
     document.body.style.overflow = isSessionDetails ? "hidden" : "auto";
     return () => (document.body.style.overflow = "auto");
@@ -77,7 +83,10 @@ const SessionDetailSidebar = ({ isSessionDetails, setIsSessionDetails }) => {
             </h3>
             <div className="flex items-center gap-5">
               <button>
-                <PencilSimple size={20} />
+                <PencilSimple
+                  size={20}
+                  onClick={() => setIsEditSession(!isEditSession)}
+                />
               </button>
               <button onClick={openReminderModal}>
                 {" "}
@@ -145,7 +154,7 @@ const SessionDetailSidebar = ({ isSessionDetails, setIsSessionDetails }) => {
           <div className="bg-white shadow-[0px_4px_43.4px_0px_#0000001A] px-5 py-2.5 grid grid-cols-2 gap-5 z-10">
             <Button
               variant="outlined"
-              onClick={() => setIsSessionDetails(false)}
+              onClick={() => setIsRescheduleSession(!isRescheduleSession)}
             >
               Reschedule
             </Button>
@@ -201,7 +210,6 @@ const SessionDetailSidebar = ({ isSessionDetails, setIsSessionDetails }) => {
           Okay, got it
         </Button>
       </ModalWrapper>
-
       {/* terminating the client */}
       <ModalWrapper
         isVisible={modalState.isTerminatingClient}
@@ -246,6 +254,18 @@ const SessionDetailSidebar = ({ isSessionDetails, setIsSessionDetails }) => {
           </Button>
         </div>
       </ModalWrapper>
+
+      {/* Reschedule Session sidebar */}
+      <RescheduleSidebar
+        isRescheduleSession={isRescheduleSession}
+        setIsRescheduleSession={setIsRescheduleSession}
+      />
+
+      {/* Edit Session sidebar */}
+      <EditSessionSidebar
+        isEditSession={isEditSession}
+        setIsEditSession={setIsEditSession}
+      />
     </div>
   );
 };
