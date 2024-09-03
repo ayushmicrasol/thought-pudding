@@ -24,7 +24,7 @@ module.exports = {
         base: "10px",
       },
       colors: {
-        primary: "#212121",
+        primary: "#242424",
         divider: "#DADDFF",
 
         orange: {
