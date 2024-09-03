@@ -145,8 +145,8 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="space-y-5">
-        <div className="grid grid-cols-7 gap-5">
-          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between col-span-12">
+        <div className="grid md:grid-cols-7 gap-5">
+          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between md:col-span-12">
             <div className="max-w-[422px]">
               <h2 className="text-lg/6 font-semibold text-primary">
                 Sync Your Google Calendar
@@ -160,7 +160,7 @@ const Dashboard = () => {
               Setup calendar
             </Button>
           </div>
-          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between col-span-3">
+          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between md:col-span-3">
             <div>
               <h2 className="text-lg/6 font-semibold text-[#242424]">
                 Hi Anusha!
@@ -179,7 +179,7 @@ const Dashboard = () => {
               />
             </div>
           </div>
-          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between col-span-9">
+          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between md:col-span-9">
             <div>
               <h2 className="text-lg/6 font-semibold text-[#242424] capitalize">
                 New Appointment
@@ -206,6 +206,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+
         {/* Activity */}
         <div className="p-5 rounded-base bg-white">
           <div className="flex justify-between items-center">
@@ -277,111 +278,115 @@ const Dashboard = () => {
           </div>
           {/* session table */}
           <div className="pt-30px">
-            <table className="min-w-full bg-white border-y border-gray-100">
-              <thead className="text-left">
-                <tr className="bg-blue-100 uppercase">
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
-                    Name
-                  </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
-                    Session Time
-                  </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
-                    Session status
-                  </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
-                    Mobile Number
-                  </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
-                    Age
-                  </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
-                    session Amount
-                  </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5 text-center">
-                    Appointment
-                  </th>
-                </tr>
-              </thead>
+            <div className="w-full overflow-x-auto">
+              <table className="w-full  bg-white border-y border-gray-100">
+                <thead className="text-left">
+                  <tr className="bg-blue-100 uppercase">
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Name
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Session Time
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Session status
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Mobile Number
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Age
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      session Amount
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5 text-center">
+                      Appointment
+                    </th>
+                  </tr>
+                </thead>
 
-              <tbody className="divide-y divide-gray-100">
-                {sessionTable?.map((item, index) => {
-                  const formatName = (name) => {
-                    const nameParts = name.split(" ");
-                    const firstName = nameParts[0];
-                    const lastNameInitial = nameParts[1]?.charAt(0);
-                    return `${firstName} ${lastNameInitial} (${name})`;
-                  };
+                <tbody className="divide-y divide-gray-100">
+                  {sessionTable?.map((item, index) => {
+                    const formatName = (name) => {
+                      const nameParts = name.split(" ");
+                      const firstName = nameParts[0];
+                      const lastNameInitial = nameParts[1]?.charAt(0);
+                      return `${firstName} ${lastNameInitial} (${name})`;
+                    };
 
-                  return (
-                    <tr key={index}>
-                      <td className="px-2.5 py-15px flex items-center gap-3 min-w-[121px]">
-                        <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
-                          {item.img ? (
-                            <img
-                              src={item.img}
-                              alt=""
-                              className="w-full h-full"
-                            />
-                          ) : (
-                            <span className="text-xs_18 text-[#72748D]">
-                              {formatName(item.name).split(" ")[0].charAt(0) +
-                                formatName(item.name).split(" ")[1].charAt(0)}
-                            </span>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm/5 font-medium text-primary">
-                            {formatName(item.name)}
-                          </p>
-                          <p className="text-xs_18 text-gray-400">
-                            {item.email}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-2.5 py-15px text-primary text-sm/5 min-w-[121px]">
-                        {item.time}
-                      </td>
-                      <td className="px-2.5 py-15px min-w-[121px]">
-                        <span
-                          className={`inline-block py-1.5 px-3  rounded-full text-sm/5 ${
-                            item.status.trim() === "Completed"
-                              ? "bg-green-200 text-green-500"
-                              : item.status.trim() === "Upcoming"
-                              ? "bg-orange-200 text-orange-600"
-                              : ""
-                          }`}
-                        >
-                          {item.status}
-                        </span>
-                      </td>
-                      <td className="px-2.5 py-15px text-primary text-sm/5 min-w-[121px]">
-                        {item.number}
-                      </td>
-                      <td className="px-2.5 py-15px text-primary text-sm/5 min-w-[121px]">
-                        {item.age}
-                      </td>
-                      <td className="px-2.5 py-15px text-primary text-sm/5 min-w-[121px]">
-                        {item.amount}
-                      </td>
-                      <td className="px-2.5 py-15px shadow-[-3px_0px_11.9px_0px_#5E83D30D] text-center">
-                        <Button
-                          variant="outlined"
-                          className={`!px-4.5 !py-2`}
-                          onClick={() => setIsSessionDetails(!isSessionDetails)}
-                        >
-                          View Details
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                    return (
+                      <tr key={index}>
+                        <td className="p-15px flex items-center gap-3 min-w-[121px]">
+                          <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
+                            {item.img ? (
+                              <img
+                                src={item.img}
+                                alt=""
+                                className="w-full h-full"
+                              />
+                            ) : (
+                              <span className="text-xs_18 text-[#72748D]">
+                                {formatName(item.name).split(" ")[0].charAt(0) +
+                                  formatName(item.name).split(" ")[1].charAt(0)}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-sm/5 font-medium text-primary">
+                              {formatName(item.name)}
+                            </p>
+                            <p className="text-xs_18 text-gray-400">
+                              {item.email}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
+                          {item.time}
+                        </td>
+                        <td className="p-15px min-w-[121px]">
+                          <span
+                            className={`inline-block py-1.5 px-3  rounded-full text-sm/5 ${
+                              item.status.trim() === "Completed"
+                                ? "bg-green-200 text-green-500"
+                                : item.status.trim() === "Upcoming"
+                                ? "bg-orange-200 text-orange-600"
+                                : ""
+                            }`}
+                          >
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
+                          {item.number}
+                        </td>
+                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
+                          {item.age}
+                        </td>
+                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
+                          {item.amount}
+                        </td>
+                        <td className="p-15px shadow-[-3px_0px_11.9px_0px_#5E83D30D] text-center">
+                          <Button
+                            variant="outlined"
+                            className={`!px-4.5 !py-2`}
+                            onClick={() =>
+                              setIsSessionDetails(!isSessionDetails)
+                            }
+                          >
+                            View Details
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
             <div className="flex items-center justify-between py-[11px] px-5 mt-30px shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
               <div className="flex items-center gap-3">
-                <button className="w-12 h-12 border border-primary rounded-xl text-sm/4 text-primary">
-                  1
+                <button className="w-20 h-12 border border-primary rounded-xl text-sm/4 text-primary flex items-center gap-3 justify-around px-2.5">
+                  1 <CaretDown size={20} />
                 </button>
                 <p className="text-sm/4 text-primary">of 0 pages</p>
               </div>
@@ -411,13 +416,13 @@ const Dashboard = () => {
             <table className="min-w-full bg-white border-t border-gray-100">
               <thead className="text-left">
                 <tr className="bg-blue-100 uppercase">
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
+                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
                     Name
                   </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
+                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
                     Session
                   </th>
-                  <th className="px-2.5 py-5 font-medium text-gray-500 text-sm/5">
+                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
                     Total Revenue
                   </th>
                 </tr>
@@ -471,12 +476,10 @@ const Dashboard = () => {
                       </td>
                       <td className="px-15px py-[35px]">
                         <div className=" flex items-center gap-5 text-sm/5">
-                          <p className="text-primary">
-                            {item.tRevenue} Session
-                          </p>
+                          <p className="text-primary">₹{item.tRevenue} Total</p>
                           <div className="text-gray-400">
-                            <p>{item.cRevenue} Completed</p>
-                            <p>{item.pRevenue} Pending</p>
+                            <p>₹{item.cRevenue} Completed</p>
+                            <p>₹{item.pRevenue} Pending</p>
                           </div>
                         </div>
                       </td>
@@ -499,16 +502,6 @@ const Dashboard = () => {
               <div className="max-w-[338px] max-h-[338px] w-full h-full">
                 <CancellationChart />
               </div>
-              {/* <div className=" bg-white p-10">
-                <div className="w-full h-full border-2 border-[#BABABA] border-dashed rounded-full text-center flex justify-center items-center">
-                  <div>
-                    <h3 className="text-xl/7 text-black font-semibold">70</h3>
-                    <p className="text-sm/7 text-black font-medium">
-                      Session cancelled
-                    </p>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>

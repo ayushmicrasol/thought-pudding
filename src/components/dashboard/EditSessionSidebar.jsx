@@ -36,9 +36,7 @@ const EditSessionSidebar = ({ isEditSession, setIsEditSession }) => {
         <div className="relative h-screen flex flex-col">
           {/* side bar header */}
           <div className="px-5 py-3.5 shadow-[0px_4px_12px_0px_#0000000F] flex justify-between items-center">
-            <h3 className="text-lg font-medium text-[#242424]">
-              Reschedule Session
-            </h3>
+            <h3 className="text-lg font-medium text-[#242424]">Edit Session</h3>
             <button onClick={() => setIsEditSession(false)}>
               <X size={20} />
             </button>
@@ -143,7 +141,9 @@ const EditSessionSidebar = ({ isEditSession, setIsEditSession }) => {
             <Button onClick={() => setIsEditSession(false)} variant="outlined">
               Cancel
             </Button>
-            <Button variant="filled">Save</Button>
+            <Button onClick={() => setIsEditSession(false)} variant="filled">
+              Save
+            </Button>
           </div>
         </div>
       </div>

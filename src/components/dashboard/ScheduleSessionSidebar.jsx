@@ -180,7 +180,12 @@ const ScheduleSessionSidebar = ({
             >
               Cancel
             </Button>
-            <Button variant="filled">Save</Button>
+            <Button
+              onClick={() => setIsScheduleSessionModal(false)}
+              variant="filled"
+            >
+              Save
+            </Button>
           </div>
         </div>
       </div>

@@ -84,7 +84,12 @@ const RescheduleSidebar = ({ isRescheduleSession, setIsRescheduleSession }) => {
             >
               Cancel
             </Button>
-            <Button variant="filled">Save</Button>
+            <Button
+              onClick={() => setIsRescheduleSession(false)}
+              variant="filled"
+            >
+              Save
+            </Button>
           </div>
         </div>
       </div>

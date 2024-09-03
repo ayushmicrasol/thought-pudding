@@ -144,7 +144,9 @@ const FreeSlotsSidebar = ({ freeSlote, setFreeSlote }) => {
             <Button onClick={() => setFreeSlote(false)} variant="outlined">
               Cancel
             </Button>
-            <Button variant="filled">Save</Button>
+            <Button onClick={() => setFreeSlote(false)} variant="filled">
+              Save
+            </Button>
           </div>
         </div>
       </div>
