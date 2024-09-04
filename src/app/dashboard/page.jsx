@@ -6,13 +6,14 @@ import {
   OrangeCalendarIcon,
   PendingPayIcon,
   ReceivedPayIcon,
+  RegularBinIcon,
+  RegularNotificationIcon,
 } from "../../../public/assets/Svgs";
 import Button from "@/components/Button";
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
 import FreeSlotsSidebar from "@/components/dashboard/FreeSlotsSidebar";
 import ScheduleSessionSidebar from "@/components/dashboard/ScheduleSessionSidebar";
 import { CaretDown, Check, MagnifyingGlass } from "@phosphor-icons/react";
-import SessionDetailSidebar from "@/components/dashboard/SessionDetailSidebar";
 import CancellationChart from "@/components/dashboard/CancellationChart";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -22,6 +23,8 @@ import "swiper/css/navigation";
 import "swiper/swiper-bundle.css";
 import SelectDropdown from "@/components/SelectDropdown";
 import Tabs from "@/components/common/Tabs";
+import RescheduleSidebar from "@/components/dashboard/RescheduleSidebar";
+import SessionDetailModal from "@/components/dashboard/SessionDetailModal";
 
 const activity = [
   {
@@ -53,9 +56,9 @@ const sessionTable = [
     email: "abhi@gmail.com",
     time: "2.00 PM, 50 min",
     status: "Completed",
-    number: "+91 25253 63632",
-    age: "43",
     amount: "₹ 2,200",
+    sessionFee: "Paid on time",
+    previousFee: "Cleared",
   },
   {
     img: "",
@@ -63,9 +66,9 @@ const sessionTable = [
     email: "dishankgajera00@gmail.com",
     time: "2.50 PM, 20 min",
     status: "Upcoming",
-    number: "+91 25363 15236",
-    age: "23",
     amount: "₹ 700",
+    sessionFee: "Pending",
+    previousFee: "Cleared",
   },
   {
     img: "",
@@ -73,9 +76,9 @@ const sessionTable = [
     email: "darshant56@gmail.com",
     time: "3.10 PM, 30 min",
     status: "Upcoming",
-    number: "+91 24513 15236",
-    age: "45",
     amount: "₹ 1,800",
+    sessionFee: "Pending",
+    previousFee: "Pending",
   },
   {
     img: "",
@@ -83,9 +86,9 @@ const sessionTable = [
     email: "nehak@gmail.com",
     time: "3.40 PM, 20 min",
     status: "Upcoming",
-    number: "+91 97653 63632",
-    age: "43",
     amount: "₹ 3,200",
+    sessionFee: "Pending",
+    previousFee: "Pending",
   },
   {
     img: "",
@@ -93,9 +96,9 @@ const sessionTable = [
     email: "divyeh@gmail.com",
     time: "3.40 PM, 20 min",
     status: "Upcoming",
-    number: "+91 97653 63632",
-    age: "43",
     amount: "₹ 2,200",
+    sessionFee: "Pending",
+    previousFee: "Cleared",
   },
   {
     img: "",
@@ -103,9 +106,9 @@ const sessionTable = [
     email: "ayu@gmail.com",
     time: "3.40 PM, 20 min",
     status: "Upcoming",
-    number: "+91 97653 63632",
-    age: "15",
     amount: "₹ 2",
+    sessionFee: "Pending",
+    previousFee: "Pending",
   },
 ];
 
@@ -161,7 +164,17 @@ const sessionTabs = [
 const Dashboard = () => {
   const [freeSlote, setFreeSlote] = useState(false);
   const [isScheduleSessionModal, setIsScheduleSessionModal] = useState(false);
-  const [isSessionDetails, setIsSessionDetails] = useState(false);
+  const [isRescheduleSession, setIsRescheduleSession] = useState(false);
+  const [isReminderModal, setIsReminderModal] = useState(false);
+  const [isCanceledSessionModal, setIsCanceledSessionModal] = useState(false);
+  const [isCancellationModal, setIsCancellationModal] = useState(false);
+  const [isUpdatePaymentModal, setIsUpdatePaymentModal] = useState(false);
+  const [isTerminatingModal, setIsTerminatingModal] = useState(false);
+
+  function handleModalTransition(closeModal, openModal) {
+    closeModal(false); // Close the currently open modal
+    openModal(true); // Open the next modal
+  }
 
   // session Dates Swiper and dropdown start ------------------------------------
   const [isDateDrop, setIsDateDrop] = useState(false);
@@ -548,21 +561,21 @@ const Dashboard = () => {
                       Session status
                     </th>
                     <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Mobile Number
+                      Amount
                     </th>
                     <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Age
+                      this session Fee
                     </th>
                     <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      session Amount
+                      Previous Fee
                     </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5 text-center">
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
                       Appointment
                     </th>
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="">
                   {sessionTable?.map((item, index) => {
                     const formatName = (name) => {
                       const nameParts = name.split(" ");
@@ -573,34 +586,40 @@ const Dashboard = () => {
 
                     return (
                       <tr key={index}>
-                        <td className="p-15px flex items-center gap-3 min-w-[121px]">
-                          <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
-                            {item.img ? (
-                              <img
-                                src={item.img}
-                                alt=""
-                                className="w-full h-full"
-                              />
-                            ) : (
-                              <span className="text-xs_18 text-[#72748D]">
-                                {formatName(item.name).split(" ")[0].charAt(0) +
-                                  formatName(item.name).split(" ")[1].charAt(0)}
-                              </span>
-                            )}
-                          </div>
-                          <div>
-                            <p className="text-sm/5 font-medium text-primary">
-                              {formatName(item.name)}
-                            </p>
-                            <p className="text-xs_18 text-gray-400">
-                              {item.email}
-                            </p>
+                        <td className="p-15px min-w-[121px] border-b border-gray-100">
+                          <div className="flex items-center gap-3 ">
+                            <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
+                              {item.img ? (
+                                <img
+                                  src={item.img}
+                                  alt=""
+                                  className="w-full h-full"
+                                />
+                              ) : (
+                                <span className="text-xs_18 text-[#72748D]">
+                                  {formatName(item.name)
+                                    .split(" ")[0]
+                                    .charAt(0) +
+                                    formatName(item.name)
+                                      .split(" ")[1]
+                                      .charAt(0)}
+                                </span>
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-sm/5 font-medium text-primary">
+                                {formatName(item.name)}
+                              </p>
+                              <p className="text-xs_18 text-gray-400">
+                                {item.email}
+                              </p>
+                            </div>
                           </div>
                         </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
+                        <td className="p-15px text-primary text-sm/5 min-w-[150px] border-b border-gray-100">
                           {item.time}
                         </td>
-                        <td className="p-15px min-w-[121px]">
+                        <td className="p-15px min-w-[150px] border-b border-gray-100">
                           <span
                             className={`inline-block py-1.5 px-3  rounded-full text-sm/5 ${
                               item.status.trim() === "Completed"
@@ -613,25 +632,87 @@ const Dashboard = () => {
                             {item.status}
                           </span>
                         </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
-                          {item.number}
-                        </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
-                          {item.age}
-                        </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[121px]">
+                        <td className="p-15px text-primary text-sm/5 min-w-[115px] border-b border-gray-100">
                           {item.amount}
                         </td>
-                        <td className="p-15px shadow-[-3px_0px_11.9px_0px_#5E83D30D] text-center">
-                          <Button
-                            variant="outlined"
-                            className={`!px-4.5 !py-2`}
-                            onClick={() =>
-                              setIsSessionDetails(!isSessionDetails)
-                            }
-                          >
-                            View Details
-                          </Button>
+                        <td className="p-15px text-primary text-sm/5 min-w-[157px] border-b border-gray-100">
+                          {item.sessionFee}
+                        </td>
+                        <td className="p-15px text-primary text-sm/5 min-w-[157px] border-b border-gray-100">
+                          <div className="flex items-center gap-3">
+                            {item.previousFee}{" "}
+                            {item.previousFee === "Pending" && (
+                              <div className="relative group cursor-pointer">
+                                <span className="w-5 h-5 flex items-center justify-center border border-[#010101] rounded-full">
+                                  !
+                                </span>
+                                <div className="absolute w-[322px] py-30px px-5 top-full right-0 rounded-base bg-white shadow-[0px_4px_16px_0px_#2424241A] transition-all duration-500 opacity-0 hidden group-hover:block group-hover:opacity-100 z-10">
+                                  <h3 className="text-sm/5 text-primary">
+                                    Unpaid Session Payment
+                                  </h3>
+                                  <ul className="space-y-15px pt-[22px] text-sm/5">
+                                    <li className="flex items-center justify-between text-primary">
+                                      <p className="text-xs_18">
+                                        14th July,2024
+                                      </p>
+                                      <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
+                                        Unpaid
+                                      </span>
+                                    </li>
+                                    <li className="flex items-center justify-between text-primary">
+                                      <p className="text-xs_18">
+                                        10th July,2024
+                                      </p>
+                                      <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
+                                        Unpaid
+                                      </span>
+                                    </li>
+                                    <li className="flex items-center justify-between text-primary">
+                                      <p className="text-xs_18">
+                                        7th July,2024
+                                      </p>
+                                      <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
+                                        Unpaid
+                                      </span>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                        <td className="p-15px border-l border-gray-100">
+                          <div className="flex items-center justify-between gap-3">
+                            <RegularNotificationIcon
+                              className="w-5 h-5 cursor-pointer"
+                              onClick={() =>
+                                setIsReminderModal(!isReminderModal)
+                              }
+                            />
+                            <RegularBinIcon
+                              className="w-5 h-5  cursor-pointer"
+                              onClick={() =>
+                                setIsCanceledSessionModal(
+                                  !isCanceledSessionModal
+                                )
+                              }
+                            />
+                            <Button
+                              variant="default"
+                              className={`!px-4.5 !py-2`}
+                              onClick={() =>
+                                setIsRescheduleSession(!isRescheduleSession)
+                              }
+                            >
+                              Reschedule
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              className={`!px-4.5 !py-2`}
+                            >
+                              Start Session
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -696,28 +777,30 @@ const Dashboard = () => {
 
                   return (
                     <tr key={index}>
-                      <td className="px-15px py-[35px] flex items-center gap-3">
-                        <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
-                          {item.img ? (
-                            <img
-                              src={item.img}
-                              alt=""
-                              className="w-full h-full"
-                            />
-                          ) : (
-                            <span className="text-xs_18 text-[#72748D]">
-                              {formatName(item.name).split(" ")[0].charAt(0) +
-                                formatName(item.name).split(" ")[1].charAt(0)}
-                            </span>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm/5 font-medium text-primary">
-                            {formatName(item.name)}
-                          </p>
-                          <p className="text-xs_18 text-gray-400">
-                            {item.email}
-                          </p>
+                      <td className="px-15px py-[35px]">
+                        <div className="flex items-center gap-3">
+                          <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
+                            {item.img ? (
+                              <img
+                                src={item.img}
+                                alt=""
+                                className="w-full h-full"
+                              />
+                            ) : (
+                              <span className="text-xs_18 text-[#72748D]">
+                                {formatName(item.name).split(" ")[0].charAt(0) +
+                                  formatName(item.name).split(" ")[1].charAt(0)}
+                              </span>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-sm/5 font-medium text-primary">
+                              {formatName(item.name)}
+                            </p>
+                            <p className="text-xs_18 text-gray-400">
+                              {item.email}
+                            </p>
+                          </div>
                         </div>
                       </td>
                       <td className="px-15px py-[35px]">
@@ -765,15 +848,177 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+
+      {/* FreeSlots Sidebar */}
       <FreeSlotsSidebar freeSlote={freeSlote} setFreeSlote={setFreeSlote} />
+
+      {/* Schedule Session Sidebar */}
       <ScheduleSessionSidebar
         isScheduleSessionModal={isScheduleSessionModal}
         setIsScheduleSessionModal={setIsScheduleSessionModal}
       />
-      <SessionDetailSidebar
-        isSessionDetails={isSessionDetails}
-        setIsSessionDetails={setIsSessionDetails}
+
+      {/* Reschedule Session sidebar */}
+      <RescheduleSidebar
+        isRescheduleSession={isRescheduleSession}
+        setIsRescheduleSession={setIsRescheduleSession}
       />
+
+      {/* ====== Session modals ====== */}
+      {/* Reminder Modal */}
+      <SessionDetailModal
+        title="Reminder"
+        isClose={isReminderModal}
+        setIsClose={setIsReminderModal}
+      >
+        <div className="pt-30px space-y-2.5">
+          <label className="flex justify-between items-center text-sm/5 text-gray-500">
+            Session Reminder
+            <input type="radio" name="reminder" className="w-4.5 h-4.5" />
+          </label>
+          <label className="flex justify-between items-center text-sm/5 text-gray-500">
+            Payment Session
+            <input type="radio" name="reminder" className="w-4.5 h-4.5" />
+          </label>
+          <label className="flex justify-between items-center text-sm/5 text-gray-500">
+            Set Both
+            <input type="radio" name="reminder" className="w-4.5 h-4.5" />
+          </label>
+        </div>
+        <div className="flex items-center gap-3.5 pt-[50px]">
+          <Button
+            variant="outlined"
+            className={`w-full !px-0`}
+            onClick={() => {
+              setIsReminderModal(false);
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="filled"
+            className={`w-full`}
+            onClick={() => {
+              setIsReminderModal(false);
+            }}
+          >
+            Remind
+          </Button>
+        </div>
+      </SessionDetailModal>
+
+      {/* Session Canceled */}
+      <SessionDetailModal
+        title="Session Canceled"
+        isClose={isCanceledSessionModal}
+        setIsClose={setIsCanceledSessionModal}
+      >
+        <p className="text-gray-500 text-sm/5 pt-30px">
+          Are you sure you want to mark this session as canceled? This action
+          will notify the customer and update your records accordingly.
+        </p>
+        <div className="grid grid-cols-2 gap-3.5 pt-[50px]">
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleModalTransition(
+                setIsCanceledSessionModal,
+                setIsTerminatingModal
+              )
+            }
+          >
+            Cancel All Sessions
+          </Button>
+          <Button
+            variant="filled"
+            onClick={() =>
+              handleModalTransition(
+                setIsCanceledSessionModal,
+                setIsCancellationModal
+              )
+            }
+          >
+            Session Off
+          </Button>
+        </div>
+      </SessionDetailModal>
+
+      {/* Cancellation Fees */}
+      <SessionDetailModal
+        title="Is There a Cancellation Fees"
+        isClose={isCancellationModal}
+        setIsClose={setIsCancellationModal}
+      >
+        <div className="grid grid-cols-2 gap-3.5 pt-[50px]">
+          <Button
+            variant="outlined"
+            onClick={() =>
+              handleModalTransition(
+                setIsCancellationModal,
+                setIsUpdatePaymentModal
+              )
+            }
+          >
+            No
+          </Button>
+          <Button
+            variant="filled"
+            onClick={() =>
+              handleModalTransition(
+                setIsCancellationModal,
+                setIsUpdatePaymentModal
+              )
+            }
+          >
+            Yes
+          </Button>
+        </div>
+      </SessionDetailModal>
+
+      {/* Update Payment Session */}
+      <SessionDetailModal
+        title="Update Payment Session"
+        isClose={isUpdatePaymentModal}
+        setIsClose={setIsUpdatePaymentModal}
+      >
+        <p className="text-gray-500 text-sm/5 pt-30px">
+          We are calling off this session. After you've got it, update the same
+          information in your payment records.
+        </p>
+        <Button
+          variant="filled"
+          className="w-full col-span-2 mt-[50px]"
+          onClick={() => setIsUpdatePaymentModal(false)}
+        >
+          Okay, got it
+        </Button>
+      </SessionDetailModal>
+
+      {/* Are you terminating the client */}
+      <SessionDetailModal
+        title="Are you terminating the client"
+        isClose={isTerminatingModal}
+        setIsClose={setIsTerminatingModal}
+      >
+        <p className="text-gray-500 text-sm/5 pt-30px">
+          This action will end all services with the client. Please confirm to
+          proceed.
+        </p>
+        <div className="grid grid-cols-2 gap-3.5 pt-[50px]">
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setIsTerminatingModal(false);
+              setIsRescheduleSession(true);
+            }}
+          >
+            No
+          </Button>
+          <Button variant="filled" onClick={() => setIsTerminatingModal(false)}>
+            Yes
+          </Button>
+        </div>
+      </SessionDetailModal>
     </DashboardLayout>
   );
 };
