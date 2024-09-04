@@ -850,10 +850,13 @@ const Dashboard = () => {
               <thead className="text-left">
                 <tr className="bg-blue-100 uppercase">
                   <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                    Name
+                    Client Details
                   </th>
                   <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                    Session
+                    Last Session
+                  </th>
+                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                    Session Summary
                   </th>
                   <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
                     Total Revenue
@@ -872,7 +875,7 @@ const Dashboard = () => {
 
                   return (
                     <tr key={index}>
-                      <td className="px-15px py-[35px]">
+                      <td className="px-15px py-5">
                         <div className="flex items-center gap-3">
                           <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
                             {item.img ? (
@@ -898,7 +901,31 @@ const Dashboard = () => {
                           </div>
                         </div>
                       </td>
-                      <td className="px-15px py-[35px]">
+                      <td className="px-15px py-5">
+                        <p className="text-sm/5 text-primary">18 Sep,2024</p>
+                        <p className="text-sm/5 text-gray-400 pt-[3px]">
+                          2.00 PM, 50 min
+                        </p>
+                      </td>
+                      <td className="px-15px py-5">
+                        <p className="text-sm/5 text-primary">15 Session</p>
+                        <p className="text-sm/5 text-[#14A347] pt-[3px]">
+                          12 Completed
+                        </p>
+                        <p className="text-sm/5 text-gray-400 pt-[3px]">
+                          3 Pending
+                        </p>
+                      </td>
+                      <td className="px-15px py-5">
+                        <p className="text-sm/5 text-primary">₹6,000 Total</p>
+                        <p className="text-sm/5 text-[#14A347] pt-[3px]">
+                          +₹1,500 Collected
+                        </p>
+                        <p className="text-sm/5 text-gray-400 pt-[3px]">
+                          -₹4,500 Pending
+                        </p>
+                      </td>
+                      {/* <td className="px-15px py-[35px]">
                         <div className=" flex items-center gap-5 text-sm/5">
                           <p className="text-primary font-medium">
                             {item.tSession} Session
@@ -919,7 +946,7 @@ const Dashboard = () => {
                             <p>₹{item.pRevenue} Pending</p>
                           </div>
                         </div>
-                      </td>
+                      </td> */}
                     </tr>
                   );
                 })}
