@@ -428,7 +428,7 @@ const Dashboard = () => {
                     </button>
                   </div>
                   <hr className="border-[#CAC4D0]" />
-                  <div className="pt-2 pb-5 overflow-y-auto h-full">
+                  <div className="pt-2 pb-5 overflow-y-auto h-[calc(100%-50px)]">
                     {activeTab === "month" && (
                       <ul className="month">
                         {months.map((month) => (
@@ -753,35 +753,42 @@ const Dashboard = () => {
                     className="px-2.5 py-2.5 border border-primary rounded-lg text-sm/4 text-primary flex items-center gap-2 capitalize"
                   >
                     page : {currentPage.toString().padStart(2, "0")}{" "}
-                    <CaretDown size={20} className="" />
+                    <CaretDown
+                      size={20}
+                      className={`transition-all duration-300 ${
+                        isTablePagination ? "rotate-180" : "rotate-0"
+                      }`}
+                    />
                   </button>
                   <p className="text-sm/4 text-primary">
                     Of {totalPages} Pages
                   </p>
                 </div>
 
-                {isTablePagination && (
-                  <div className="absolute mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
-                    <ul className="py-1 text-sm/4 text-gray-700">
-                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                        (page) => (
-                          <li key={page}>
-                            <button
-                              onClick={() => handlePageSelect(page)}
-                              className={`block w-full text-left px-4 py-2 ${
-                                currentPage === page
-                                  ? "bg-blue-600/15"
-                                  : "hover:bg-gray-100"
-                              }`}
-                            >
-                              Page : {page.toString().padStart(2, "0")}
-                            </button>
-                          </li>
-                        )
-                      )}
-                    </ul>
-                  </div>
-                )}
+                <div
+                  className={`absolute mt-2 w-full bg-white shadow-[0px_4px_12px_0px_#2C58BB1A] rounded-lg z-10 transition-all duration-500 overflow-y-auto ${
+                    isTablePagination ? "h-[200px]" : "h-0"
+                  }`}
+                >
+                  <ul className="py-1 text-sm/4 text-gray-700">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                      (page) => (
+                        <li key={page}>
+                          <button
+                            onClick={() => handlePageSelect(page)}
+                            className={`block w-full text-left px-4 py-2 ${
+                              currentPage === page
+                                ? "bg-blue-600/15"
+                                : "hover:bg-gray-100"
+                            }`}
+                          >
+                            Page : {page.toString().padStart(2, "0")}
+                          </button>
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
               </div>
 
               <div className="flex items-center gap-[11px]">

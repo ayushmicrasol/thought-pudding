@@ -31,19 +31,19 @@ const Header = () => {
           {/* navigation manu */}
           <nav>
             <ul className="flex gap-3">
-              <li className="py-[18px] px-5 text-base/6 text-blue-600 font-semibold flex items-center gap-3 rounded-full cursor-pointer bg-blue-200">
+              <li className="py-[18px] px-5 text-base/4 text-blue-600 font-semibold flex items-center gap-3 rounded-full cursor-pointer bg-blue-200">
                 <DashboardIcon className="w-6 h-6" pathFillColor="#2C58BB" />
                 Dashboard
               </li>
-              <li className="py-[18px] px-5 text-base/6 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer ">
+              <li className="py-[18px] px-5 text-base/4 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer ">
                 <SessionIcon className="w-6 h-6" pathFillColor="#5E585A" />
                 Session
               </li>
-              <li className="py-[18px] px-5 text-base/6 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer">
+              <li className="py-[18px] px-5 text-base/4 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer">
                 <PaymentIcon className="w-6 h-6" pathFillColor="#5E585A" />
                 Payment
               </li>
-              <li className="py-[18px] px-5 text-base/6 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer">
+              <li className="py-[18px] px-5 text-base/4 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer">
                 <PatientIcon className="w-6 h-6" pathFillColor="#5E585A" />
                 Patient
               </li>
