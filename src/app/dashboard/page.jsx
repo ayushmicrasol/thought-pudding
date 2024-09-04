@@ -246,6 +246,31 @@ const Dashboard = () => {
 
   // session Dates Swiper and dropdown end -----------------------------
 
+  // table pagination start ---------------------
+
+  const [isTablePagination, setIsTablePagination] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = 6;
+
+  const handlePageSelect = (page) => {
+    setCurrentPage(page);
+    setIsTablePagination(false);
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // table pagination end ---------------------
+
   return (
     <DashboardLayout>
       <div className="space-y-5">
@@ -647,7 +672,7 @@ const Dashboard = () => {
                                   !
                                 </span>
                                 <div className="absolute w-[322px] py-30px px-5 top-full right-0 rounded-base bg-white shadow-[0px_4px_16px_0px_#2424241A] transition-all duration-500 opacity-0 hidden group-hover:block group-hover:opacity-100 z-10">
-                                  <h3 className="text-sm/5 text-primary">
+                                  <h3 className="text-sm/5 text-primary font-medium">
                                     Unpaid Session Payment
                                   </h3>
                                   <ul className="space-y-15px pt-[22px] text-sm/5">
@@ -720,18 +745,66 @@ const Dashboard = () => {
                 </tbody>
               </table>
             </div>
-            <div className="flex items-center justify-between py-[11px] px-5 mt-30px shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
-              <div className="flex items-center gap-3">
-                <button className="px-2.5 py-2.5 border border-primary rounded-lg text-sm/4 text-primary flex items-center gap-2 capitalize">
-                  page : 01 <CaretDown size={20} />
-                </button>
-                <p className="text-sm/4 text-primary">Of 0 Pages</p>
+            <div className="flex justify-between items-center py-[11px] px-5 mt-30px shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
+              <div className="relative inline-block text-left">
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => setIsTablePagination(!isTablePagination)}
+                    className="px-2.5 py-2.5 border border-primary rounded-lg text-sm/4 text-primary flex items-center gap-2 capitalize"
+                  >
+                    page : {currentPage.toString().padStart(2, "0")}{" "}
+                    <CaretDown size={20} className="" />
+                  </button>
+                  <p className="text-sm/4 text-primary">
+                    Of {totalPages} Pages
+                  </p>
+                </div>
+
+                {isTablePagination && (
+                  <div className="absolute mt-2 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-10">
+                    <ul className="py-1 text-sm/4 text-gray-700">
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                        (page) => (
+                          <li key={page}>
+                            <button
+                              onClick={() => handlePageSelect(page)}
+                              className={`block w-full text-left px-4 py-2 ${
+                                currentPage === page
+                                  ? "bg-blue-600/15"
+                                  : "hover:bg-gray-100"
+                              }`}
+                            >
+                              Page : {page.toString().padStart(2, "0")}
+                            </button>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </div>
+                )}
               </div>
+
               <div className="flex items-center gap-[11px]">
-                <button className="py-2.5 px-5 rounded-lg border border-gray-400 text-gray-400 text-sm/4">
+                <button
+                  onClick={handlePrevious}
+                  className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
+                    currentPage === 1
+                      ? "border-gray-300 text-gray-300 cursor-not-allowed"
+                      : "border-gray-400 text-gray-400 hover:border-primary hover:text-primary"
+                  }`}
+                  disabled={currentPage === 1}
+                >
                   Previous
                 </button>
-                <button className="py-2.5 px-5 rounded-lg border border-primary text-primary text-sm/4">
+                <button
+                  onClick={handleNext}
+                  className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
+                    currentPage === totalPages
+                      ? "border-gray-300 text-gray-300 cursor-not-allowed"
+                      : "border-primary text-primary hover:bg-primary hover:text-white"
+                  }`}
+                  disabled={currentPage === totalPages}
+                >
                   Next
                 </button>
               </div>
