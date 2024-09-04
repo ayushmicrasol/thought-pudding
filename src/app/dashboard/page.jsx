@@ -161,6 +161,8 @@ const sessionTabs = [
   { label: "Completed" },
 ];
 
+const monthsDropOptions = ["This Month", "Last Month", "90s day"];
+
 const Dashboard = () => {
   const [freeSlote, setFreeSlote] = useState(false);
   const [isScheduleSessionModal, setIsScheduleSessionModal] = useState(false);
@@ -170,6 +172,11 @@ const Dashboard = () => {
   const [isCancellationModal, setIsCancellationModal] = useState(false);
   const [isUpdatePaymentModal, setIsUpdatePaymentModal] = useState(false);
   const [isTerminatingModal, setIsTerminatingModal] = useState(false);
+
+  // select drop down stats
+
+  const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("This Month");
+  const [isMonthsDropSelect2, setIsMonthsDropSelect2] = useState("This Month");
 
   function handleModalTransition(closeModal, openModal) {
     closeModal(false); // Close the currently open modal
@@ -380,7 +387,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        {/* session */}
+        {/* session area */}
         <div className=" rounded-base bg-white">
           <div className="p-5 pb-0">
             <div className="flex items-center justify-between">
@@ -434,8 +441,10 @@ const Dashboard = () => {
                         {months.map((month) => (
                           <li
                             key={month}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4 ${
-                              month === selectedMonth ? "bg-blue-600/15" : ""
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4  hover:bg-gray-100/20 ${
+                              month === selectedMonth
+                                ? "bg-blue-600/10 !text-blue-600"
+                                : ""
                             }`}
                             onClick={() => handleSelectMonth(month)}
                           >
@@ -452,8 +461,10 @@ const Dashboard = () => {
                         {years.map((year) => (
                           <li
                             key={year}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4 ${
-                              year === selectedYear ? "bg-blue-600/15" : ""
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4  hover:bg-gray-100/20 ${
+                              year === selectedYear
+                                ? "bg-blue-600/10 !text-blue-600"
+                                : ""
                             }`}
                             onClick={() => handleSelectYear(year)}
                           >
@@ -491,9 +502,9 @@ const Dashboard = () => {
                 >
                   {dates.map((date) => (
                     <SwiperSlide key={date.day}>
-                      <div className="h-[70px] flex items-center justify-center text-center">
-                        <button className="text-primary focus:text-blue-600 hover:text-blue-600 transition-all duration-500">
-                          <p className="text-[26px] leading-[30px] ">
+                      <div className=" flex items-center justify-center text-center">
+                        <button className="text-primary focus:text-blue-600 hover:text-blue-600 group transition-all duration-500 relative z-30">
+                          <p className="text-[26px] leading-[30px] group-hover:font-semibold group-focus:font-semibold">
                             {date.day}
                           </p>
                           <p className="text-sm leading-[30px]">
@@ -778,8 +789,8 @@ const Dashboard = () => {
                             onClick={() => handlePageSelect(page)}
                             className={`block w-full text-left px-4 py-2 ${
                               currentPage === page
-                                ? "bg-blue-600/15"
-                                : "hover:bg-gray-100"
+                                ? "bg-blue-600/10 !text-blue-600"
+                                : "hover:bg-gray-100/20"
                             }`}
                           >
                             Page : {page.toString().padStart(2, "0")}
@@ -826,10 +837,14 @@ const Dashboard = () => {
               <h2 className="text-xl/6 font-semibold text-primary">
                 Most regular clients
               </h2>
-              <button className="relative flex items-center gap-2 text-base/6 font-medium text-[#5E585A]">
-                <span>This Month</span> <CaretDown size={20} />
-              </button>
-              {/* <SelectDropdown /> */}
+              <SelectDropdown
+                options={monthsDropOptions}
+                value={isMonthsDropSelect}
+                onChange={setIsMonthsDropSelect}
+                className="!m-0"
+                subClass="!p-0 !border-0 !text-base/6 !font-medium !text-gray-500 gap-2"
+                DropClass="!w-[148px] right-0 !border-0"
+              />
             </div>
             <table className="min-w-full bg-white border-t border-gray-100">
               <thead className="text-left">
@@ -916,9 +931,14 @@ const Dashboard = () => {
               <h2 className="text-xl/6 font-semibold text-primary">
                 Cancellation
               </h2>
-              <button className="relative flex items-center gap-2 text-base/6 font-medium text-[#5E585A]">
-                <span>This Month</span> <CaretDown size={20} />
-              </button>
+              <SelectDropdown
+                options={monthsDropOptions}
+                value={isMonthsDropSelect2}
+                onChange={setIsMonthsDropSelect2}
+                className="!m-0"
+                subClass="!p-0 !border-0 !text-base/6 !font-medium !text-gray-500 gap-2"
+                DropClass="!w-[148px] right-0 !border-0"
+              />
             </div>
             <div className="flex items-center justify-center mt-5">
               <div className="max-w-[338px] max-h-[338px] w-full h-full">
