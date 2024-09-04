@@ -38,8 +38,8 @@ module.exports = {
         },
 
         red: {
-          200: "#FFD4D4",
-          500: "#FF2727",
+          200: "#FFEDED",
+          500: "#FF5959",
         },
 
         gray: {
