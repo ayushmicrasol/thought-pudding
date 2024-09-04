@@ -21,7 +21,7 @@ const RescheduleSidebar = ({ isRescheduleSession, setIsRescheduleSession }) => {
   }, [isRescheduleSession]);
   return (
     <div
-      className={`fixed w-full h-full bg-black/20 top-0 left-0  ${
+      className={`fixed w-full h-full bg-black/20 top-0 left-0 z-[999] ${
         isRescheduleSession ? "visible" : "invisible"
       }`}
     >

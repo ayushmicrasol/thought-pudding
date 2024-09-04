@@ -64,7 +64,7 @@ const SessionDetailSidebar = ({ isSessionDetails, setIsSessionDetails }) => {
 
   return (
     <div
-      className={`fixed w-full h-full bg-black/20 top-0 left-0 transition-opacity ${
+      className={`fixed w-full h-full bg-black/20 top-0 left-0 transition-opacity z-[999] ${
         isSessionDetails ? "visible opacity-100" : "invisible opacity-0"
       }`}
     >
