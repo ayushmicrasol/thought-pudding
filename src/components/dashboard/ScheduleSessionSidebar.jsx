@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Button from "../Button";
 import Input from "../Input";
 import SelectDropdown from "../SelectDropdown";
+import DatePicker from "../common/DatePicker";
+import TimePicker from "../common/TimePicker";
 
 const frequencyOption = [
   "Every Week On Monday",
@@ -62,19 +64,19 @@ const ScheduleSessionSidebar = ({
                 <label className="text-sm/5 text-primary font-medium">
                   Appointment Date
                 </label>
-                <Input type={"date"} placeholder={""} />
+                <DatePicker placeholder={`DD/MM/YYYY`} />
               </div>
               <div>
                 <label className="text-sm/5 text-primary font-medium">
                   Start Time
                 </label>
-                <Input type={"text"} placeholder={"00:00"} />
+                <TimePicker />
               </div>
               <div>
                 <label className="text-sm/5 text-primary font-medium">
                   End Time
                 </label>
-                <Input type={"text"} placeholder={"00:00"} />
+                <TimePicker />
               </div>
               <div className="col-span-2">
                 <label className="text-sm/5 text-primary font-medium">
@@ -91,7 +93,7 @@ const ScheduleSessionSidebar = ({
                 <label className="text-sm/5 text-primary font-medium">
                   End Date
                 </label>
-                <Input type={"date"} placeholder={""} />
+                <DatePicker placeholder={`DD/MM/YYYY`} />
               </div>
             </form>
             <hr className="border-divider my-5" />

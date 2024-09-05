@@ -874,7 +874,7 @@ const Dashboard = () => {
                   };
 
                   return (
-                    <tr key={index}>
+                    <tr key={index} className="align-top">
                       <td className="px-15px py-5">
                         <div className="flex items-center gap-3">
                           <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">

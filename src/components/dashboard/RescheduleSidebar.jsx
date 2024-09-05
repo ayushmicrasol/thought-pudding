@@ -1,8 +1,10 @@
-import { X } from "@phosphor-icons/react";
+import { CalendarDots, X } from "@phosphor-icons/react";
 import React, { useEffect, useState } from "react";
 import SelectDropdown from "../SelectDropdown";
 import Input from "../Input";
 import Button from "../Button";
+import DatePicker from "../common/DatePicker";
+import TimePicker from "../common/TimePicker";
 
 const frequencyOption = ["This Session", "This Week"];
 
@@ -48,19 +50,19 @@ const RescheduleSidebar = ({ isRescheduleSession, setIsRescheduleSession }) => {
                 <label className="text-sm/5 text-primary font-medium">
                   Appointment Date
                 </label>
-                <Input type={"date"} placeholder={""} />
+                <DatePicker placeholder={`DD/MM/YYYY`} />
               </div>
               <div>
                 <label className="text-sm/5 text-primary font-medium">
                   Start Time
                 </label>
-                <Input type={"text"} placeholder={"00:00"} />
+                <TimePicker />
               </div>
               <div>
                 <label className="text-sm/5 text-primary font-medium">
                   End Time
                 </label>
-                <Input type={"text"} placeholder={"00:00"} />
+                <TimePicker />
               </div>
               <div className="col-span-2">
                 <label className="text-sm/5 text-primary font-medium">
