@@ -160,7 +160,7 @@ export default function Home() {
 
         {/* Growth-Driven Tools */}
         <section className="container mx-auto">
-          <div className="bg-blue-300 sm:px-[50.5px] px-4 sm:pb-[117px] sm:pt-24 py-50px  rounded-xl">
+          <div className="bg-blue-300 sm:px-[50.5px] px-4 sm:pb-20 sm:pt-100px py-50px  rounded-xl">
             <div className="max-w-[704px] mx-auto text-center">
               <h2 className="sm:text-4.5xl sm:leading-[48px] text-xl/7 font-semibold text-primary">
                 Empower Your Practice with Our{" "}

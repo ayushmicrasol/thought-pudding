@@ -42,13 +42,13 @@ const Footer = () => {
             </Button>
           </div>
         </div>
-        <hr className="border-[#ECECEC] mt-[50px] mb-12 hidden sm:block" />
-        <div className="grid sm:grid-cols-3 gap-30px pt-8 sm:p-0">
+        <hr className="border-[#ECECEC]/50 sm:mt-[50px] sm:mb-12 my-5" />
+        <div className="grid sm:grid-cols-3 gap-30px">
           <div className="order-2 sm:order-1">
             <h3 className="sm:text-xl_30 text-base/6 text-white font-semibold">
               Get in touch
             </h3>
-            <ul className="sm:pt-6 pt-5 space-y-6">
+            <ul className="sm:pt-6 pt-5 space-y-6 capitalize">
               <li className="flex items-center gap-2.5 ">
                 <EnvelopeSimple
                   weight="fill"
@@ -82,7 +82,7 @@ const Footer = () => {
             <h3 className="sm:text-xl_30 text-base/6 text-white font-semibold">
               Company
             </h3>
-            <ul className="sm:pt-6 pt-5 space-y-6">
+            <ul className="sm:pt-6 pt-5 space-y-6 capitalize">
               <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4">
                 Terms of use
               </li>
@@ -123,7 +123,7 @@ const Footer = () => {
             </div>
           </div>
         </div>
-        <p className="sm:text-base_30 text-xs/6 text-white/65 text-center sm:pt-[90px] pt-16">
+        <p className="sm:text-base_30 text-xs/6 text-white/65 text-center sm:pt-[90px] pt-16 capitalize">
           Copyright © 2024 Thought Pudding. All rights reserved
         </p>
       </div>

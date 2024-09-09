@@ -58,7 +58,7 @@ const FAQ = () => {
       </div>
       {FAQData.map((item, index) => (
         <div key={index} className="faq-item">
-          <div className="sm:py-9 sm:px-5 py-5 border-b overflow-hidden">
+          <div className="sm:py-30px sm:px-5 py-5 border-b overflow-hidden">
             <div
               className="flex gap-4 items-center justify-between bg-white cursor-pointer"
               onClick={() => toggleAccordion(index)}
