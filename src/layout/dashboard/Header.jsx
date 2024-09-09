@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import { CaretDown } from "@phosphor-icons/react";
 import {
@@ -13,10 +13,31 @@ import {
 } from "../../../public/assets/Svgs";
 
 const Header = () => {
+  const [hasShadow, setHasShadow] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setHasShadow(true);
+      } else {
+        setHasShadow(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
   return (
     <Fragment>
       <header className=" sticky top-0 backdrop-blur-sm pt-3 z-[99]">
-        <div className="bg-white p-5 flex items-center justify-between rounded-base ">
+        <div
+          className={`bg-white p-5 flex items-center justify-between rounded-base transition-shadow duration-300 ${
+            hasShadow ? "shadow-[0px_4px_6.1px_0px_#E5E9FF80]" : ""
+          }`}
+        >
           {/* logo  */}
           <div className="max-w-[140px]">
             <Image

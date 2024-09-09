@@ -1,8 +1,8 @@
 import { CalendarDots, X } from "@phosphor-icons/react";
 import React, { useEffect, useState } from "react";
-import SelectDropdown from "../SelectDropdown";
-import Input from "../Input";
-import Button from "../Button";
+import SelectDropdown from "../common/SelectDropdown";
+import Input from "../common/Input";
+import Button from "../common/Button";
 import DatePicker from "../common/DatePicker";
 import TimePicker from "../common/TimePicker";
 

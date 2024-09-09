@@ -9,7 +9,6 @@ import {
   RegularBinIcon,
   RegularNotificationIcon,
 } from "../../../public/assets/Svgs";
-import Button from "@/components/Button";
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
 import FreeSlotsSidebar from "@/components/dashboard/FreeSlotsSidebar";
 import ScheduleSessionSidebar from "@/components/dashboard/ScheduleSessionSidebar";
@@ -21,10 +20,11 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/swiper-bundle.css";
-import SelectDropdown from "@/components/SelectDropdown";
+import SelectDropdown from "@/components/common/SelectDropdown";
 import Tabs from "@/components/common/Tabs";
 import RescheduleSidebar from "@/components/dashboard/RescheduleSidebar";
 import SessionDetailModal from "@/components/dashboard/SessionDetailModal";
+import Button from "@/components/common/Button";
 
 const activity = [
   {
@@ -721,6 +721,7 @@ const Dashboard = () => {
                           <div className="flex items-center justify-between gap-3">
                             <RegularNotificationIcon
                               className="w-5 h-5 cursor-pointer"
+                              pathFillColor="#242424"
                               onClick={() =>
                                 setIsReminderModal(!isReminderModal)
                               }

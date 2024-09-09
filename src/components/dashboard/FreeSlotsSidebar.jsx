@@ -1,9 +1,9 @@
 "use client";
 import { X } from "@phosphor-icons/react";
 import React, { useEffect, useState } from "react";
-import Input from "../Input";
-import SelectDropdown from "../SelectDropdown";
-import Button from "../Button";
+import Input from "../common/Input";
+import SelectDropdown from "../common/SelectDropdown";
+import Button from "../common/Button";
 
 const recommendedWeek = [
   { date: "Fri, 1st April", time: "4:00 PM 20min" },

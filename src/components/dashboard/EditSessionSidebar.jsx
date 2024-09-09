@@ -1,8 +1,8 @@
 import { X } from "@phosphor-icons/react";
 import React, { useEffect, useState } from "react";
-import Input from "../Input";
-import SelectDropdown from "../SelectDropdown";
-import Button from "../Button";
+import Input from "../common/Input";
+import SelectDropdown from "../common/SelectDropdown";
+import Button from "../common/Button";
 
 const rescheduleOption = ["This Session", "This Week"];
 const genderOption = ["Male", "Female", "Others"];

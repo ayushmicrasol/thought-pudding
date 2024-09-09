@@ -5,7 +5,7 @@ const DashboardLayout = ({ children }) => {
   return (
     <Fragment>
       <div className="px-6 pt-3 pb-8 bg-[#F5F5F7] h-full ">
-        <div className="container mx-auto">
+        <div className="dashboard_container">
           {/* header */}
           <Header />
 
