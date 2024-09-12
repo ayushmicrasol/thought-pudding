@@ -35,7 +35,7 @@ const Header = () => {
             </h2>
             <div
               className={`flex flex-col sm:flex-row sm:items-center sm:gap-12 gap-7 sm:static absolute top-full  bg-white w-full sm:w-auto px-4 sm:px-0 py-30px sm:py-0 z-30 transition-all duration-500 ${
-                menuOpen ? "-left-full" : "left-0"
+                menuOpen ? "left-0" : "-left-full"
               }`}
             >
               <ul className="flex flex-col sm:flex-row sm:items-center sm:gap-38px gap-2.5 text-primary font-medium sm:text-lg/5 text-base/6">
@@ -51,9 +51,9 @@ const Header = () => {
               onClick={() => setMenuOpen(!menuOpen)}
             >
               {menuOpen ? (
-                <List size={24} className="text-primary" />
-              ) : (
                 <X size={24} className="text-blue-600 font-semibold" />
+              ) : (
+                <List size={24} className="text-primary" />
               )}
             </button>
           </div>
