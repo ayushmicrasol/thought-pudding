@@ -168,7 +168,7 @@ export default function Home() {
               </h2>
               <div className="flex items-center justify-center pt-30px">
                 <Button variant="filled" className="flex items-center gap-1.5">
-                  Free trial request a demo <ArrowUpRight />
+                  Free trial request a demo <ArrowUpRight className="text-xl" />
                 </Button>
               </div>
             </div>
