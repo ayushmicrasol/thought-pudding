@@ -50,7 +50,7 @@ const Header = () => {
           </div>
 
           {/* navigation manu */}
-          <nav>
+          <nav className="md:block hidden">
             <ul className="flex gap-3">
               <li className="py-[18px] px-5 text-base/4 text-blue-600 font-semibold flex items-center gap-3 rounded-full cursor-pointer bg-blue-200">
                 <DashboardIcon className="w-6 h-6" pathFillColor="#2C58BB" />
@@ -72,7 +72,7 @@ const Header = () => {
           </nav>
 
           {/* profile area */}
-          <div className="flex items-center gap-6">
+          <div className="md:flex hidden items-center gap-6">
             <button className="w-[30px] h-[30px]">
               <SettingIcon className="w-full h-full" />
             </button>

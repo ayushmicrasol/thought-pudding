@@ -282,7 +282,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="space-y-5">
         <div className="grid md:grid-cols-7 gap-5">
-          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between md:col-span-12">
+          <div className="bg-white px-5 py-11 rounded-base md:flex items-center justify-between md:col-span-12">
             <div className="max-w-[422px]">
               <h2 className="text-lg/6 font-semibold text-primary">
                 Sync Your Google Calendar
@@ -292,7 +292,10 @@ const Dashboard = () => {
               </p>
             </div>
 
-            <Button variant="filled" className="max-w-[177px] w-full">
+            <Button
+              variant="filled"
+              className="max-w-[177px] w-full mt-5 sm:mt-0"
+            >
               Setup calendar
             </Button>
           </div>
@@ -305,7 +308,7 @@ const Dashboard = () => {
                 You have an exciting week ahead of you
               </p>
             </div>
-            <div className="w-[68px] h-auto">
+            <div className="w-[68px] h-auto md:block hidden">
               <Image
                 src="/assets/images/dashboard/hand.webp"
                 alt="logo"
@@ -315,7 +318,7 @@ const Dashboard = () => {
               />
             </div>
           </div>
-          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between md:col-span-9">
+          <div className="bg-white px-5 py-11 rounded-base md:flex items-center justify-between md:col-span-9">
             <div>
               <h2 className="text-lg/6 font-semibold text-[#242424] capitalize">
                 New Appointment
@@ -324,7 +327,7 @@ const Dashboard = () => {
                 Guide users through booking a specific time.
               </p>
             </div>
-            <div className="flex gap-5 items-center">
+            <div className="flex gap-5 items-center mt-5 md:mt-0">
               <Button
                 onClick={() => setFreeSlote(!freeSlote)}
                 variant="default"
@@ -345,16 +348,10 @@ const Dashboard = () => {
 
         {/* Activity */}
         <div className="p-5 rounded-base bg-white">
-          <div className="flex justify-between items-center">
-            <h2 className="text-xl/6 font-semibold text-primary">Activity</h2>
-            {/* <ul className="flex items-center gap-[30px] text-base/4 font-medium">
-              <li className="cursor-pointer p-2.5 text-blue-600 border-b border-blue-600">
-                Today
-              </li>
-              <li className="cursor-pointer p-2.5 text-gray-400">Week</li>
-              <li className="cursor-pointer p-2.5 text-gray-400">This Month</li>
-              <li className="cursor-pointer p-2.5 text-gray-400">Last Month</li>
-            </ul> */}
+          <div className="md:flex justify-between items-center">
+            <h2 className="text-xl/6 font-semibold text-primary pb-5 md:pb-0">
+              Activity
+            </h2>
             <Tabs tabs={activityTab} />
           </div>
           <div className="grid md:grid-cols-4 grid-cols-2  gap-5 pt-5">
@@ -518,7 +515,7 @@ const Dashboard = () => {
 
                 <button
                   ref={prevRef}
-                  className="absolute top-1/2 -left-24 transform -translate-y-1/2 rounded-full z-10"
+                  className="absolute top-1/2 -left-24 transform -translate-y-1/2 rounded-full z-10 md:block hidden"
                 >
                   <svg
                     width="20"
@@ -542,7 +539,7 @@ const Dashboard = () => {
                 </button>
                 <button
                   ref={nextRef}
-                  className="absolute top-1/2 -right-24 transform -translate-y-1/2 rounded-full z-10"
+                  className="absolute top-1/2 -right-24 transform -translate-y-1/2 rounded-full z-10 md:block hidden"
                 >
                   <svg
                     width="20"
@@ -832,8 +829,8 @@ const Dashboard = () => {
         </div>
 
         {/* Most regular clients and Cancellation */}
-        <div className="grid grid-cols-5 gap-6">
-          <div className="col-span-3 bg-white rounded-base overflow-hidden">
+        <div className="grid md:grid-cols-5 gap-6">
+          <div className="md:col-span-3 bg-white rounded-base overflow-hidden">
             <div className="flex items-center justify-between p-5">
               <h2 className="text-xl/6 font-semibold text-primary">
                 Most regular clients
@@ -847,86 +844,91 @@ const Dashboard = () => {
                 DropClass="!w-[148px] right-0 !border-0"
               />
             </div>
-            <table className="min-w-full bg-white border-t border-gray-100">
-              <thead className="text-left">
-                <tr className="bg-blue-100 uppercase">
-                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                    Client Details
-                  </th>
-                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                    Last Session
-                  </th>
-                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                    Session Summary
-                  </th>
-                  <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                    Total Revenue
-                  </th>
-                </tr>
-              </thead>
+            <div className="w-full overflow-x-auto">
+              <table className="min-w-full bg-white border-t border-gray-100">
+                <thead className="text-left">
+                  <tr className="bg-blue-100 uppercase">
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Client Details
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Last Session
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Session Summary
+                    </th>
+                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                      Total Revenue
+                    </th>
+                  </tr>
+                </thead>
 
-              <tbody className="divide-y divide-gray-100">
-                {regularClientsTable?.map((item, index) => {
-                  const formatName = (name) => {
-                    const nameParts = name.split(" ");
-                    const firstName = nameParts[0];
-                    const lastNameInitial = nameParts[1]?.charAt(0);
-                    return `${firstName} ${lastNameInitial} (${name})`;
-                  };
+                <tbody className="divide-y divide-gray-100">
+                  {regularClientsTable?.map((item, index) => {
+                    const formatName = (name) => {
+                      const nameParts = name.split(" ");
+                      const firstName = nameParts[0];
+                      const lastNameInitial = nameParts[1]?.charAt(0);
+                      return `${firstName} ${lastNameInitial} (${name})`;
+                    };
 
-                  return (
-                    <tr key={index} className="align-top">
-                      <td className="px-15px py-5">
-                        <div className="flex items-center gap-3">
-                          <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
-                            {item.img ? (
-                              <img
-                                src={item.img}
-                                alt=""
-                                className="w-full h-full"
-                              />
-                            ) : (
-                              <span className="text-xs_18 text-[#72748D]">
-                                {formatName(item.name).split(" ")[0].charAt(0) +
-                                  formatName(item.name).split(" ")[1].charAt(0)}
-                              </span>
-                            )}
+                    return (
+                      <tr key={index} className="align-top">
+                        <td className="px-15px py-5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
+                              {item.img ? (
+                                <img
+                                  src={item.img}
+                                  alt=""
+                                  className="w-full h-full"
+                                />
+                              ) : (
+                                <span className="text-xs_18 text-[#72748D]">
+                                  {formatName(item.name)
+                                    .split(" ")[0]
+                                    .charAt(0) +
+                                    formatName(item.name)
+                                      .split(" ")[1]
+                                      .charAt(0)}
+                                </span>
+                              )}
+                            </div>
+                            <div>
+                              <p className="text-sm/5 font-medium text-primary">
+                                {formatName(item.name)}
+                              </p>
+                              <p className="text-xs_18 text-gray-400">
+                                {item.email}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <p className="text-sm/5 font-medium text-primary">
-                              {formatName(item.name)}
-                            </p>
-                            <p className="text-xs_18 text-gray-400">
-                              {item.email}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-15px py-5">
-                        <p className="text-sm/5 text-primary">18 Sep,2024</p>
-                        <p className="text-sm/5 text-gray-400 pt-[3px]">
-                          2.00 PM, 50 min
-                        </p>
-                      </td>
-                      <td className="px-15px py-5">
-                        <p className="text-sm/5 text-primary">15 Session</p>
-                        <p className="text-sm/5 text-[#14A347] pt-[3px]">
-                          12 Completed
-                        </p>
-                        <p className="text-sm/5 text-gray-400 pt-[3px]">
-                          3 Pending
-                        </p>
-                      </td>
-                      <td className="px-15px py-5">
-                        <p className="text-sm/5 text-primary">₹6,000 Total</p>
-                        <p className="text-sm/5 text-[#14A347] pt-[3px]">
-                          +₹1,500 Collected
-                        </p>
-                        <p className="text-sm/5 text-gray-400 pt-[3px]">
-                          -₹4,500 Pending
-                        </p>
-                      </td>
-                      {/* <td className="px-15px py-[35px]">
+                        </td>
+                        <td className="px-15px py-5">
+                          <p className="text-sm/5 text-primary">18 Sep,2024</p>
+                          <p className="text-sm/5 text-gray-400 pt-[3px]">
+                            2.00 PM, 50 min
+                          </p>
+                        </td>
+                        <td className="px-15px py-5">
+                          <p className="text-sm/5 text-primary">15 Session</p>
+                          <p className="text-sm/5 text-[#14A347] pt-[3px]">
+                            12 Completed
+                          </p>
+                          <p className="text-sm/5 text-gray-400 pt-[3px]">
+                            3 Pending
+                          </p>
+                        </td>
+                        <td className="px-15px py-5">
+                          <p className="text-sm/5 text-primary">₹6,000 Total</p>
+                          <p className="text-sm/5 text-[#14A347] pt-[3px]">
+                            +₹1,500 Collected
+                          </p>
+                          <p className="text-sm/5 text-gray-400 pt-[3px]">
+                            -₹4,500 Pending
+                          </p>
+                        </td>
+                        {/* <td className="px-15px py-[35px]">
                         <div className=" flex items-center gap-5 text-sm/5">
                           <p className="text-primary font-medium">
                             {item.tSession} Session
@@ -948,13 +950,14 @@ const Dashboard = () => {
                           </div>
                         </div>
                       </td> */}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-          <div className="col-span-2 bg-white rounded-base overflow-hidden">
+          <div className="md:col-span-2 bg-white rounded-base overflow-hidden">
             <div className="flex items-center justify-between p-5">
               <h2 className="text-xl/6 font-semibold text-primary">
                 Cancellation
@@ -1054,6 +1057,7 @@ const Dashboard = () => {
                 setIsTerminatingModal
               )
             }
+            className={`whitespace-nowrap`}
           >
             Cancel All Sessions
           </Button>

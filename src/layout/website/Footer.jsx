@@ -49,30 +49,30 @@ const Footer = () => {
               Get in touch
             </h3>
             <ul className="sm:pt-6 pt-5 space-y-6 capitalize">
-              <li className="flex items-center gap-2.5 ">
+              <li className="flex items-center gap-2.5 group hover:text-white hover:translate-x-1.5 transition-all duration-300 cursor-pointer">
                 <EnvelopeSimple
                   weight="fill"
                   className="sm:text-2xl text-base text-white"
                 />
-                <p className="sm:text-base/5 text-sm/4 text-white/80">
+                <p className="sm:text-base/5 text-sm/4 text-white/80 group-hover:text-white transition-all duration-300">
                   help@thoughtpudding.com
                 </p>
               </li>
-              <li className="flex items-center gap-2.5">
+              <li className="flex items-center gap-2.5 group hover:text-white hover:translate-x-1.5 transition-all duration-300 cursor-pointer">
                 <Phone
                   weight="fill"
                   className="sm:text-2xl text-base text-white"
                 />
-                <p className="sm:text-base/5 text-sm/4 text-white/80">
+                <p className="sm:text-base/5 text-sm/4 text-white/80 group-hover:text-white transition-all duration-300">
                   +91 2525 3636 96
                 </p>
               </li>
-              <li className="flex items-center gap-2.5">
+              <li className="flex items-center gap-2.5 group hover:text-white hover:translate-x-1.5 transition-all duration-300 cursor-pointer">
                 <MapPin
                   weight="fill"
                   className="sm:text-2xl text-base text-white"
                 />
-                <p className="sm:text-base/5 text-sm/4 max-w-[300px] text-white/80">
+                <p className="sm:text-base/5 text-sm/4 max-w-[300px] text-white/80 group-hover:text-white transition-all duration-300">
                   84, 5th main road, Domlur, Indiranagar, Bangalore 56007184,{" "}
                 </p>
               </li>
@@ -83,16 +83,16 @@ const Footer = () => {
               Company
             </h3>
             <ul className="sm:pt-6 pt-5 space-y-6 capitalize">
-              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4">
+              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4 cursor-pointer hover:text-white hover:translate-x-1.5 transition-all duration-300">
                 Terms of use
               </li>
-              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4">
+              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4 cursor-pointer hover:text-white hover:translate-x-1.5 transition-all duration-300">
                 Refund and cancellation policy
               </li>
-              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4">
+              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4 cursor-pointer hover:text-white hover:translate-x-1.5 transition-all duration-300">
                 help and support
               </li>
-              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4">
+              <li className="flex items-center gap-2.5 text-white/80 sm:text-base/5 text-sm/4 cursor-pointer hover:text-white hover:translate-x-1.5 transition-all duration-300">
                 privacy policy
               </li>
             </ul>

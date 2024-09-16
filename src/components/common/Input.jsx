@@ -7,7 +7,7 @@ import {
 } from "@phosphor-icons/react";
 import React, { useState } from "react";
 
-const Input = ({ placeholder, type, className, icon, ...props }) => {
+const Input = ({ placeholder, type, className, mainClass, icon, ...props }) => {
   const [inputValue, setInputValue] = useState("");
 
   const handleClear = () => {
@@ -18,14 +18,16 @@ const Input = ({ placeholder, type, className, icon, ...props }) => {
     setInputValue(e.target.value);
   };
   return (
-    <div className="relative mt-2 py-3 pl-2.5 pr-[30px] border border-[#D9D9D9] rounded flex items-center gap-2.5">
+    <div
+      className={`relative mt-2 py-3 pl-2.5 pr-[30px] border border-[#D9D9D9] rounded flex items-center gap-2.5 ${mainClass}`}
+    >
       {icon === "number" && <Phone size={20} />}
       {icon === "email" && <EnvelopeOpen size={20} />}
       {icon === "rup" && <CurrencyInr size={20} />}
 
       <input
         type={type}
-        className={`outline-none text-sm text-primary w-full ${className}`}
+        className={`outline-none text-sm text-primary bg-transparent w-full ${className}`}
         placeholder={placeholder}
         value={inputValue}
         onChange={handleChange}

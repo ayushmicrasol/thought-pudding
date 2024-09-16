@@ -10,7 +10,7 @@ const Tabs = ({ tabs }) => {
 
   return (
     <div>
-      <ul className="flex items-center gap-[30px] text-base/4 font-medium">
+      <ul className="flex items-center md:gap-[30px] gap-2 flex-wrap text-base/4 font-medium">
         {tabs.map((tab) => (
           <li
             key={tab.label}

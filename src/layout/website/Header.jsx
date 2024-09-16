@@ -1,10 +1,12 @@
 "use client";
+import Login from "@/components/common/Login";
 import { ArrowUpRight, List, X } from "@phosphor-icons/react";
 import React, { Fragment, useEffect, useState } from "react";
 
 const Header = () => {
   const [hasShadow, setHasShadow] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -39,8 +41,15 @@ const Header = () => {
               }`}
             >
               <ul className="flex flex-col sm:flex-row sm:items-center sm:gap-38px gap-2.5 text-primary font-medium sm:text-lg/5 text-base/6">
-                <li className="py-2.5 px-1.5">Blog</li>
-                <li className="py-2.5 px-1.5">Login</li>
+                <li className="py-2.5 px-1.5 sm:p-0  cursor-pointer hover:text-blue-600 transition-all duration-500 relative">
+                  Blog
+                </li>
+                <li
+                  className="py-2.5 px-1.5 sm:p-0 cursor-pointer hover:text-blue-600 transition-all duration-500 relative"
+                  onClick={() => setLoginOpen(!loginOpen)}
+                >
+                  Login
+                </li>
               </ul>
               <button className="sm:py-4 py-3.5 px-5 border sm:border-primary border-blue-600 rounded-full flex items-center justify-center gap-1.5 sm:text-base_18 text-sm/4 sm:text-primary text-blue-600 font-medium shadow-[0px_1px_8.5px_0px_#2C58BB33] sm:shadow-none">
                 Let’s Talk <ArrowUpRight size={20} />
@@ -59,6 +68,8 @@ const Header = () => {
           </div>
         </div>
       </header>
+
+      <Login setLoginOpen={setLoginOpen} loginOpen={loginOpen} />
     </Fragment>
   );
 };

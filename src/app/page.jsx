@@ -3,7 +3,6 @@ import Button from "@/components/common/Button";
 import WebsiteLayout from "@/layout/website/WebsiteLayout";
 import { ArrowUpRight, CalendarDots, CheckFat } from "@phosphor-icons/react";
 import Image from "next/image";
-import Link from "next/link";
 import {
   AnalyticsIcon,
   CalendarIcon,
@@ -407,6 +406,7 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Accordian  */}
         <FAQ />
       </WebsiteLayout>
     </div>
