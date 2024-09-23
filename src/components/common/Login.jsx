@@ -73,14 +73,14 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                 <button className="p-3 bg-white border border-green-600 w-full rounded mt-2 flex items-center justify-center gap-2.5 text-sm/5 text-primary">
                   <GoogleIcon className={`w-5 h-5`} /> Continue with Google
                 </button>
-                <div className="py-3 flex items-center text-sm text-[#D9D9D9] before:flex-1 before:border-t before:border-[#D9D9D9] before:me-6 after:flex-1 after:border-t after:border-[#D9D9D9] after:ms-6">
+                <div className="py-3 flex items-center text-sm text-primary/50 before:flex-1 before:border-t before:border-[#D9D9D9] before:me-6 after:flex-1 after:border-t after:border-[#D9D9D9] after:ms-6">
                   or
                 </div>
                 <div className="space-y-4.5">
                   <div>
                     <label className="text-sm/5 text-primary">Email</label>
                     <Input
-                      mainClass={`bg-white border-[#CADAFF]`}
+                      mainClass={`bg-white border-green-600/20`}
                       placeholder={`Enter Email Address`}
                     />
                   </div>
@@ -88,7 +88,7 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                     <label className="text-sm/5 text-primary">Password</label>
                     <Input
                       type="password"
-                      mainClass={`bg-white border-[#CADAFF]`}
+                      mainClass={`bg-white border-green-600/20`}
                       placeholder={`Enter Password`}
                     />
                   </div>

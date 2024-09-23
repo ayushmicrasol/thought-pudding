@@ -73,7 +73,7 @@ const Footer = () => {
                   className="sm:text-2xl text-base text-white"
                 />
                 <p className="sm:text-base/5 text-sm/4 max-w-[300px] text-white/80 group-hover:text-white transition-all duration-300">
-                  84, 5th main road, Domlur, Indiranagar, Bangalore 56007184,{" "}
+                  84, 5th main road, Domlur, 56007184,{" "}
                 </p>
               </li>
             </ul>

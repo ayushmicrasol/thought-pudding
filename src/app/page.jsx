@@ -26,7 +26,7 @@ const GrowthDriven = [
       "Manage all your sessions, whether theyʼre youʼre just starting or already have an established practice.",
     list: [
       "Schedule intake calls and therapy sessions",
-      "Sync google calendar with just one-click",
+      "Sync google calendar with just one click",
       "Reschedule, cancel, block slots with",
     ],
     img: "/assets/images/home/growth1.webp",
