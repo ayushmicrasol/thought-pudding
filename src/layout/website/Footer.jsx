@@ -15,7 +15,7 @@ import React, { Fragment } from "react";
 
 const Footer = () => {
   return (
-    <footer className="sm:pt-[100px] sm:pb-26px py-30px px-4 footer-gradiant sm:mt-100px mt-50px">
+    <footer className="sm:pt-[100px] sm:pb-26px py-30px px-4 bg-green-600 sm:mt-100px mt-50px">
       <div className="container mx-auto">
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-30px">
           <div>

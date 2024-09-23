@@ -50,12 +50,10 @@ const FAQ = () => {
   }, [openIndex]);
 
   return (
-    <div className="container mx-auto px-4 xl:px-0 sm:pt-100px pt-50px">
-      <div className="sm:max-w-[654px] max-w-[300px] mx-auto sm:pb-50px pb-2.5">
-        <h2 className="sm:text-4.5xl_48 text-xl/7 text-primary font-semibold text-center capitalize">
-          Find answers to your questions here
-        </h2>
-      </div>
+    <div className="container mx-auto px-4 xl:px-0 sm:pt-120px pt-50px">
+      <h2 className="sm:text-38px_45 text-xl/7 font-semibold text-primary text-center sm:pb-50px pb-2.5">
+        Find answers to your questions here
+      </h2>
       {FAQData.map((item, index) => (
         <div key={index} className="faq-item">
           <div className="sm:py-30px sm:px-5 py-5 border-b overflow-hidden">
@@ -66,7 +64,7 @@ const FAQ = () => {
               <p
                 className={`sm:text-xl/6 text-sm/4 transition-all duration-300 ${
                   openIndex === index
-                    ? "text-blue-600 font-semibold"
+                    ? "text-green-600 font-semibold"
                     : "text-blue-700 font-medium"
                 }`}
               >
@@ -84,7 +82,7 @@ const FAQ = () => {
               }`}
             >
               <div className="bg-white">
-                <p className="sm:text-xl/6 text-sm/5 text-blue-700/75  sm:pt-4 pt-2">
+                <p className="sm:text-xl/6 text-sm/5 text-primary/75  sm:pt-4 pt-2">
                   {item.content}
                 </p>
               </div>
