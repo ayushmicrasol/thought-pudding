@@ -65,7 +65,7 @@ const FAQ = () => {
                 className={`sm:text-xl/6 text-sm/4 transition-all duration-300 ${
                   openIndex === index
                     ? "text-green-600 font-semibold"
-                    : "text-blue-700 font-medium"
+                    : "text-primary font-medium"
                 }`}
               >
                 {item.title}

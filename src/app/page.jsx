@@ -128,7 +128,7 @@ export default function Home() {
               <h1 className="sm:text-[48px] sm:leading-[62px] text-2xl/8 font-semibold text-green-600 max-w-[900px] mx-auto">
                 Your all-in-one support system for private practice
               </h1>
-              <p className="pt-4 sm:max-w-[640px] mx-auto sm:text-lg/8 text-sm_18 text-gray-400">
+              <p className="pt-4 sm:max-w-[640px] mx-auto sm:text-lg/8 text-sm_18 text-primary/50">
                 Manage your private practice from intake to income, whether
                 youʼre a solo practitioner or part of a collective. All in one
                 place.
@@ -194,7 +194,7 @@ export default function Home() {
                         {item.list?.map((items, index) => (
                           <li
                             key={index}
-                            className="flex items-baseline gap-[18px] sm:text-lg/6 text-sm_18 text-blue-700 font-medium"
+                            className="flex items-baseline gap-[18px] sm:text-lg/6 text-sm_18 text-primary font-medium"
                           >
                             <CheckFat
                               weight="fill"
@@ -254,7 +254,7 @@ export default function Home() {
               We manage all the admin work so you can focus on what really
               matters - your clients
             </h2>
-            <p className="text-gray-400 sm:text-lg/8 text-sm/5 max-w-[574px] mx-auto sm:pt-4 pt-5">
+            <p className="text-primary/50 sm:text-lg/8 text-sm/5 max-w-[574px] mx-auto sm:pt-4 pt-5">
               Enhance your therapeutic practice, streamline operations, and
               focus on your clients' well-being
             </p>
@@ -341,7 +341,7 @@ export default function Home() {
                   </div>
                   <div className="col-span-2">
                     <div className="sm:pt-5 sm:pl-3 sm:pr-3.5 sm:pb-4 p-2.5 flex flex-col justify-between h-full">
-                      <p className="sm:text-sm_22 text-[10px] leading-4 text-blue-700 font-medium">
+                      <p className="sm:text-sm_22 text-[10px] leading-4 text-primary font-medium">
                         {item.paragraph}
                       </p>
                       <div>
@@ -353,7 +353,7 @@ export default function Home() {
                             <RiStarFill />
                             <RiStarFill />
                           </p>
-                          <p className="sm:text-base/6 text-[10px] leading-4 text-gray-400">
+                          <p className="sm:text-base/6 text-[10px] leading-4 text-primary/50">
                             {item.rating}
                           </p>
                         </div>
