@@ -1,7 +1,12 @@
 "use client";
 import Button from "@/components/common/Button";
 import WebsiteLayout from "@/layout/website/WebsiteLayout";
-import { ArrowUpRight, CalendarDots, CheckFat } from "@phosphor-icons/react";
+import {
+  ArrowUpRight,
+  CalendarDots,
+  CheckFat,
+  PlayCircle,
+} from "@phosphor-icons/react";
 import Image from "next/image";
 import {
   AnalyticsIcon,
@@ -11,17 +16,31 @@ import {
 } from "../../public/assets/Svgs";
 import { RiStarFill, RiStarHalfFill } from "react-icons/ri";
 import FAQ from "@/components/common/FAQ";
+import { useRef, useState } from "react";
 
 const GrowthDriven = [
   {
-    icon: <CalendarIcon className="sm:w-8 sm:h-8 w-6 h-6" />,
+    icon: <ClockIcon className="sm:w-10 sm:h-10 w-6 h-6" />,
+    title: "Easy session booking",
+    paragraph:
+      "Manage all your sessions, whether theyʼre youʼre just starting or already have an established practice.",
+    list: [
+      "Schedule intake calls and therapy sessions",
+      "Sync google calendar with just one-click",
+      "Reschedule, cancel, block slots with",
+    ],
+    img: "/assets/images/home/growth1.webp",
+    extraImg: "/assets/images/home/Session.webp",
+  },
+  {
+    icon: <CalendarIcon className="sm:w-10 sm:h-10 w-6 h-6" />,
     title: "Integrated Calendar",
     paragraph:
       "Sync with your existing calendar to avoid double bookings and conflicts.",
     list: [
-      "Real-time Availability",
-      "Secure Scheduling",
-      "Time Zone Management",
+      "Real-time availability",
+      "Secure scheduling",
+      "Time zone management",
     ],
     img: "/assets/images/home/growth2.webp",
     extraImg: "/assets/images/home/DatePicker.webp",
@@ -29,39 +48,31 @@ const GrowthDriven = [
   {
     icon: (
       <RegularNotificationIcon
-        pathFillColor="#2C58BB"
-        className="sm:w-8 sm:h-8 w-6 h-6"
+        pathFillColor="#C58843"
+        className="sm:w-10 sm:h-10 w-6 h-6"
       />
     ),
-    title: "Automated Reminder",
+    title: "Automated reminder",
     paragraph:
-      "Send automatic reminders to your patients to reduce no-shows and late cancellations.",
+      "Send client reminders and quickly find open slots—no more wasting hours juggling your calendar and client follow-ups.",
     list: [
-      "Timely Notifications",
+      "Timely notifications",
       "Save time and effort",
-      "Maintain a positive reputation",
+      "Build a professional practice grounded in healthy boundaries",
     ],
     img: "/assets/images/home/growth3.webp",
     extraImg: "/assets/images/home/Reminder.webp",
   },
+
   {
-    icon: <ClockIcon className="sm:w-8 sm:h-8 w-6 h-6" />,
-    title: "Easy Appointment Booking",
+    icon: <AnalyticsIcon className="sm:w-10 sm:h-10 w-6 h-6" />,
+    title: "Hassle-free payments and session accounts",
     paragraph:
-      "Manage your appointments from any device, whether you’re in the office or on the go.",
-    list: ["Simple calendar", "Add reminders", "Easy Rescheduling"],
-    img: "/assets/images/home/growth1.webp",
-    extraImg: "/assets/images/home/Session.webp",
-  },
-  {
-    icon: <AnalyticsIcon className="sm:w-8 sm:h-8 w-6 h-6" />,
-    title: "Analytics and Reporting",
-    paragraph:
-      "Enables improved strategic planning and decision-making by providing real-time financial insights.",
+      "Say goodbye to painful excel sheets, track monthly income with least effort and no more missing out on cancellation fees.",
     list: [
-      "User Behavior Analysis",
-      "Cancellation session",
-      "Future-proof your business",
+      "Collect session payments in one place",
+      "Track cancellations charges",
+      "Automated monthly accounts",
     ],
     img: "/assets/images/home/growth4.webp",
     extraImg: "/assets/images/home/Cancellation.webp",
@@ -93,58 +104,45 @@ const clinetReview = [
 ];
 
 export default function Home() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef(null);
+
+  const handlePlay = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
   return (
     <div className="">
       <WebsiteLayout>
         {/* Hero section  */}
         <section className="">
-          <div className="bg-[url('/assets/images/bg-image.webp')] bg-cover bg-center bg-no-repeat">
-            <div className="sm:py-150px pt-[60px] pb-50px px-4 sm:px-0 text-center">
-              <h1 className="sm:text-[54px] sm:leading-[64px] text-2xl/8 font-semibold text-primary max-w-[900px] mx-auto">
-                Optimize your Practice with Our{" "}
-                <span className="text-blue-600">Admin Solution</span>
+          <div className="bg-[url('/assets/images/home/bg-image.webp')] bg-cover bg-center bg-no-repeat">
+            <div className="sm:py-120px pt-[60px] pb-50px px-4 sm:px-0 text-center">
+              <h1 className="sm:text-[48px] sm:leading-[62px] text-2xl/8 font-semibold text-green-600 max-w-[900px] mx-auto">
+                Your all-in-one support system for private practice
               </h1>
-              <p className="sm:pt-30px pt-5 sm:max-w-[751px] mx-auto sm:text-base/7 text-sm_18 text-gray-400">
-                Take a chance on the efficiency and speed of your company and
-                gain{" "}
-                <span className="inline-block w-8 h-8 rounded-full overflow-hidden relative z-[1] align-middle border-2 border-white">
-                  <Image
-                    src="/assets/images/home/client.webp"
-                    alt="banner"
-                    width={50}
-                    height={50}
-                    className="w-full h-full object-cover"
-                  />
-                </span>
-                <span className="inline-block w-8 h-8 rounded-full overflow-hidden -ml-2 relative z-[2] align-middle border-2 border-white">
-                  <Image
-                    src="/assets/images/home/client2.webp"
-                    alt="banner"
-                    width={50}
-                    height={50}
-                    className="w-full h-full object-cover"
-                  />
-                </span>
-                <span className="inline-block w-8 h-8 rounded-full overflow-hidden -ml-2 relative z-[3] align-middle border-2 border-white">
-                  <Image
-                    src="/assets/images/home/client3.webp"
-                    alt="banner"
-                    width={50}
-                    height={50}
-                    className="w-full h-full object-cover"
-                  />
-                </span>{" "}
-                20% more clients with the help of the Thought Pudding Admin
-                Panel.
+              <p className="pt-4 sm:max-w-[640px] mx-auto sm:text-lg/8 text-sm_18 text-gray-400">
+                Manage your private practice from intake to income, whether
+                youʼre a solo practitioner or part of a collective. All in one
+                place.
               </p>
-              <Button
-                variant="filled"
-                className={`mt-30px flex items-center gap-2 mx-auto`}
-              >
-                schedule a demo
-                <CalendarDots size={16} />
-              </Button>
-              <div className="max-w-[1009px] mx-auto h-auto overflow-hidden rounded-base sm:mt-[92px] mt-10">
+              <div className="mt-6 flex items-center gap-30px justify-center">
+                <Button variant="filled" className={`flex items-center gap-2 `}>
+                  Schedule a Demo
+                  <ArrowUpRight className="text-xl" />
+                </Button>
+                <Button variant="default" className={``}>
+                  Free Trial For 3 Months
+                </Button>
+              </div>
+              <div className="max-w-[1000px] mx-auto h-auto overflow-hidden rounded-base sm:mt-50px mt-10">
                 <Image
                   src="/assets/images/home/hero-img.webp"
                   alt="banner"
@@ -159,13 +157,12 @@ export default function Home() {
 
         {/* Growth-Driven Tools */}
         <section className="container mx-auto">
-          <div className="bg-blue-300 sm:px-[50.5px] px-4 sm:pb-20 sm:pt-100px py-50px  rounded-xl">
+          <div className="bg-yellow-100 sm:px-[50.5px] px-4 sm:pb-20 sm:pt-100px py-50px  rounded-xl">
             <div className="max-w-[704px] mx-auto text-center">
-              <h2 className="sm:text-4.5xl sm:leading-[48px] text-xl/7 font-semibold text-primary">
-                Empower Your Practice with Our{" "}
-                <span className="text-blue-600">Growth-Driven</span> Tools
+              <h2 className="sm:text-38px_45 text-xl/7 font-semibold text-primary">
+                The best part? built by a therapist who has been in your shoes.
               </h2>
-              <div className="flex items-center justify-center pt-30px">
+              <div className="flex items-center justify-center pt-6">
                 <Button variant="filled" className="flex items-center gap-1.5">
                   Free trial request a demo <ArrowUpRight className="text-xl" />
                 </Button>
@@ -179,29 +176,29 @@ export default function Home() {
                   className="grid sm:grid-cols-2 gap-16 sm:gap-0 bg-white rounded-base overflow-hidden relative sm:p-0 p-15px pb-6"
                 >
                   <div
-                    className={`bg-white sm:p-12 sm:h-[462px] flex order-2 ${
+                    className={`bg-white sm:p-10 sm:h-[462px] flex order-2 ${
                       index % 2 !== 0
                         ? "sm:order-2 sm:justify-end"
                         : "sm:order-1"
                     }`}
                   >
-                    <div>
+                    <div className="max-w-[392px] flex flex-col justify-center">
                       {item.icon}
-                      <h2 className="sm:text-xl/7 text-base/5  text-primary font-semibold pt-3">
+                      <h2 className="sm:text-2xl/7 text-base/5  text-primary font-semibold pt-3">
                         {item.title}
                       </h2>
-                      <p className="sm:text-sm/5 text-xs/4 sm:pt-5 pt-3 max-w-[360px] text-gray-400">
+                      <p className="sm:text-sm/5 text-xs/4 sm:pt-3.5 pt-3 text-primary/50">
                         {item.paragraph}
                       </p>
-                      <ul className="sm:pt-30px pt-15px space-y-5">
+                      <ul className="sm:pt-5 pt-15px space-y-4">
                         {item.list?.map((items, index) => (
                           <li
                             key={index}
-                            className="flex items-center gap-[18px] sm:text-lg/6 text-sm_18 text-blue-700 font-medium"
+                            className="flex items-baseline gap-[18px] sm:text-lg/6 text-sm_18 text-blue-700 font-medium"
                           >
                             <CheckFat
                               weight="fill"
-                              className="text-blue-600 sm:text-base text-xs"
+                              className="text-yellow-600 sm:text-base text-xs sm:min-w-6 min-w-3.5"
                             />
                             {items}
                           </li>
@@ -223,16 +220,16 @@ export default function Home() {
                     />
                   </div>
                   <div
-                    className={`absolute shadow-[0px_1.58px_8.89px_0px_#2424241A] rounded-lg animate-move left-3.5 bottom-64  ${
+                    className={`absolute shadow-[0px_1.58px_8.89px_0px_#2424241A] rounded-lg animate-move left-3.5  ${
                       item.extraImg === "/assets/images/home/DatePicker.webp"
-                        ? "sm:left-[430px] sm:bottom-7"
+                        ? "sm:left-[430px] sm:bottom-7  bottom-64"
                         : item.extraImg === "/assets/images/home/Reminder.webp"
-                        ? "sm:left-[350px] sm:bottom-16"
+                        ? "sm:left-[430px] sm:bottom-16  bottom-72"
                         : item.extraImg === "/assets/images/home/Session.webp"
-                        ? "sm:left-1/3 sm:bottom-16"
+                        ? "sm:left-[470px] sm:bottom-16  bottom-72"
                         : item.extraImg ===
                           "/assets/images/home/Cancellation.webp"
-                        ? "sm:left-1/3 sm:bottom-16"
+                        ? "sm:left-[410px] sm:bottom-16  bottom-72"
                         : ""
                     }`}
                   >
@@ -251,42 +248,54 @@ export default function Home() {
         </section>
 
         {/* dashboard manage the admin */}
-        <section className="sm:pt-100px pt-50px container mx-auto px-4 xl:px-0">
-          <div className="max-w-[704px] mx-auto text-center">
-            <h2 className="sm:text-4.5xl_48 text-xl/7 font-semibold text-primary capitalize">
-              Focus on patients. Let our dashboard manage the admin
+        <section className="sm:pt-120px pt-50px container mx-auto px-4 xl:px-0">
+          <div className="max-w-[870px] mx-auto text-center">
+            <h2 className="sm:text-38px_45 text-xl/7 font-semibold text-primary">
+              We manage all the admin work so you can focus on what really
+              matters - your clients
             </h2>
-            <p className="text-gray-400 sm:text-base/6 text-sm/5 max-w-[500px] mx-auto sm:pt-30px pt-5">
+            <p className="text-gray-400 sm:text-lg/8 text-sm/5 max-w-[574px] mx-auto sm:pt-4 pt-5">
               Enhance your therapeutic practice, streamline operations, and
               focus on your clients' well-being
             </p>
-            <Button variant="default" className={`mt-7 `}>
-              Schedule a demo
-            </Button>
+            <div className="pt-6 flex items-center justify-center gap-30px">
+              <Button variant="filled">Schedule a Demo</Button>
+              <Button variant="default">Free Trial For 3 Months</Button>
+            </div>
           </div>
-          <div className="sm:mt-50px mt-7 mx-auto cursor-pointer sm:max-w-[822px] max-w-[283px] sm:h-[423px] h-36 rounded-lg overflow-hidden">
-            <Image
-              src="/assets/images/home/videoimage.png"
-              alt="video"
-              width={1000}
-              height={1000}
-              className="w-full h-full"
-            />
+          <div className="sm:mt-[50px] mt-7 mx-auto cursor-pointer sm:max-w-[822px] max-w-[283px] sm:h-[423px] h-36 rounded-lg overflow-hidden relative group">
+            <video
+              loop
+              muted
+              className="w-full h-full object-cover"
+              ref={videoRef}
+              onClick={handlePlay}
+            >
+              <source
+                src="/assets/images/home/clients-video.mp4"
+                type="video/mp4"
+              />
+            </video>
+
+            {/* Overlay with play button */}
+            {!isPlaying && (
+              <div className="absolute top-0 left-0 w-full h-full bg-black/35 flex items-center justify-center">
+                <button onClick={handlePlay} className="rounded-full">
+                  <PlayCircle weight="fill" className="text-white w-12 h-12" />
+                </button>
+              </div>
+            )}
           </div>
         </section>
 
-        {/* Our clients experiences  speak volumes. */}
-        <section className="sm:pt-100px pt-50px">
+        {/* Hear from the therapists who trust us */}
+        <section className="sm:pt-120px pt-50px">
           <div className="container mx-auto px-4 xl:px-0 flex justify-center">
             <div className="text-center">
-              <h2 className="sm:text-4.5xl_48 text-xl/7 font-semibold text-primary capitalize max-w-[652px]">
-                Our clients experiences  speak volumes.
+              <h2 className="sm:text-38px_45 text-xl/7 font-semibold text-primary">
+                Hear from the therapists who trust us
               </h2>
-              <p className="text-gray-400 sm:text-base/6 text-sm/5 max-w-[697px] pt-5">
-                Real and Insightful Feedback from Professionals Like You,
-                Offering Guidance to Enhance Your Experience and Decision-Making
-              </p>
-              <div className="mx-auto inline-block bg-[#FFFAEA] p-3 rounded-md mt-5">
+              <div className="mx-auto inline-block bg-[#FFFAEA] p-3 rounded-md mt-6">
                 <p className="text-primary sm:text-base/6 text-sm/5 font-medium">
                   Thought Pudding
                 </p>
@@ -310,8 +319,8 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="flex overflow-x-hidden client_marquee_anim_wrap cursor-pointer">
-            <div className="flex client_marquee_anim sm:pt-50px pt-5">
+          <div className="flex overflow-x-hidden client_marquee_anim_wrap cursor-pointer sm:pt-[70px] pt-5">
+            <div className="flex client_marquee_anim">
               {clinetReview.map((item, index) => (
                 <div
                   key={index}
@@ -357,7 +366,7 @@ export default function Home() {
                 </div>
               ))}
             </div>
-            <div className="flex client_marquee_anim sm:pt-50px pt-5">
+            <div className="flex client_marquee_anim">
               {clinetReview.map((item, index) => (
                 <div
                   key={index}

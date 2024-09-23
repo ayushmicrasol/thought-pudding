@@ -7,6 +7,7 @@ import Button from "./Button";
 import { useRouter } from "next/navigation";
 import ForgotPassword from "./ForgotPassword";
 import { X } from "@phosphor-icons/react";
+import Image from "next/image";
 
 const Login = ({ loginOpen, setLoginOpen }) => {
   const { push } = useRouter();
@@ -40,17 +41,26 @@ const Login = ({ loginOpen, setLoginOpen }) => {
           }`}
         >
           <div className="col-span-3">
-            <div className="pl-5 pr-38px py-30px">
-              <h2 className="text-lg/7 text-blue-600 font-semibold">
+            <div className="pl-5 pr-2.5 py-30px">
+              <h2 className="text-lg/7 text-green-600 font-semibold">
                 Unlock Thought Pudding
               </h2>
-              <p className="text-xs_18 text-gray-400 pt-3">
+              <p className="text-sm_22 text-primary/70 pt-3">
                 Log in to streamline sessions, enhance client care, and elevate
                 your professional journey with ease.
               </p>
             </div>
+            <div>
+              <Image
+                src="/assets/images/login-banner.webp"
+                alt="Your Practice"
+                width={1000}
+                height={1000}
+                className="w-full h-full"
+              />
+            </div>
           </div>
-          <div className="col-span-4 bg-[#F8FAFF]">
+          <div className="col-span-4 bg-yellow-50">
             <div className="px-10 py-30px ">
               <div>
                 <X
@@ -58,9 +68,9 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                   onClick={() => setLoginOpen(false)}
                 />
                 <p className="text-sm/5 text-primary font-semibold mt-2">
-                  Log in <span className="font-normal">with</span>
+                  Log in with
                 </p>
-                <button className="p-3 bg-white border border-blue-600 w-full rounded mt-2 flex items-center justify-center gap-2.5 text-sm/5 text-primary">
+                <button className="p-3 bg-white border border-green-600 w-full rounded mt-2 flex items-center justify-center gap-2.5 text-sm/5 text-primary">
                   <GoogleIcon className={`w-5 h-5`} /> Continue with Google
                 </button>
                 <div className="py-3 flex items-center text-sm text-[#D9D9D9] before:flex-1 before:border-t before:border-[#D9D9D9] before:me-6 after:flex-1 after:border-t after:border-[#D9D9D9] after:ms-6">
@@ -85,17 +95,17 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                   <div className="flex items-center justify-between !mt-3">
                     <label htmlFor="" className="flex gap-2">
                       <input type="checkbox" />
-                      <p className="text-xs_18 text-blue-600">Remember Me</p>
+                      <p className="text-xs_18 text-green-600">Remember Me</p>
                     </label>
                     <p
-                      className="text-xs_18 text-blue-600 underline cursor-pointer"
+                      className="text-xs_18 text-green-600 underline cursor-pointer"
                       onClick={() => setForgotPasswordOpen(true)}
                     >
                       Forgot Password?
                     </p>
                   </div>
                   <Button
-                    variant="filled"
+                    variant="filledGreen"
                     className={`w-full`}
                     onClick={() => push("/dashboard")}
                   >
@@ -103,10 +113,10 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                   </Button>
                   <p className="text-center text-xs_18">
                     By continuing you agree to our 
-                    <Link href={`/`} className="text-blue-600 underline">
+                    <Link href={`/`} className="text-green-600 underline">
                       Terms & Conditions
                     </Link>
-                    <Link href={`/`} className="block text-blue-600">
+                    <Link href={`/`} className="block text-green-600">
                       Contact Us
                     </Link>
                   </p>
