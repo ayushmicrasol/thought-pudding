@@ -1,8 +1,6 @@
 "use client";
-import Button from "@/components/common/Button";
 import Login from "@/components/common/Login";
 import { ArrowUpRight, List, X } from "@phosphor-icons/react";
-import Image from "next/image";
 import React, { Fragment, useEffect, useState } from "react";
 
 const Header = () => {
@@ -34,38 +32,28 @@ const Header = () => {
       >
         <div className="sm:py-6 py-4 px-4 relative z-[99]">
           <div className="container mx-auto flex justify-between items-center">
-            {/* <h2 className="sm:text-2xl_30 text-base/5 font-semibold text-gray-400">
+            <h2 className="sm:text-2xl_30 text-base/5 font-semibold text-gray-400">
               Thought Pudding
-            </h2> */}
-            <div>
-              <Image
-                src="/assets/images/logo.webp"
-                alt="banner"
-                width={200}
-                height={200}
-                className="sm:max-w-[214px] max-w-40 h-auto"
-              />
-            </div>
+            </h2>
             <div
               className={`flex flex-col sm:flex-row sm:items-center sm:gap-12 gap-7 sm:static absolute top-full  bg-white w-full sm:w-auto px-4 sm:px-0 py-30px sm:py-0 z-30 transition-all duration-500 ${
                 menuOpen ? "left-0" : "-left-full"
               }`}
             >
               <ul className="flex flex-col sm:flex-row sm:items-center sm:gap-38px gap-2.5 text-primary font-medium sm:text-lg/5 text-base/6">
-                <li className="py-2.5 px-1.5 sm:p-0  cursor-pointer hover:text-green-600 transition-all duration-500 relative">
+                <li className="py-2.5 px-1.5 sm:p-0  cursor-pointer hover:text-blue-600 transition-all duration-500 relative">
                   Blog
                 </li>
                 <li
-                  className="py-2.5 px-1.5 sm:p-0 cursor-pointer hover:text-green-600 transition-all duration-500 relative"
+                  className="py-2.5 px-1.5 sm:p-0 cursor-pointer hover:text-blue-600 transition-all duration-500 relative"
                   onClick={() => setLoginOpen(!loginOpen)}
                 >
                   Login
                 </li>
               </ul>
-              <Button variant="filled" className={`flex items-center gap-2 `}>
-                Schedule a Demo
-                <ArrowUpRight className="text-xl" />
-              </Button>
+              <button className="sm:py-4 py-3.5 px-5 border sm:border-primary border-blue-600 rounded-full flex items-center justify-center gap-1.5 sm:text-base_18 text-sm/4 sm:text-primary text-blue-600 font-medium shadow-[0px_1px_8.5px_0px_#2C58BB33] sm:shadow-none">
+                Let’s Talk <ArrowUpRight size={20} />
+              </button>
             </div>
             <button
               className="sm:hidden"
