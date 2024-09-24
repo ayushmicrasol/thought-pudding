@@ -12,7 +12,13 @@ import {
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
 import FreeSlotsSidebar from "@/components/dashboard/FreeSlotsSidebar";
 import ScheduleSessionSidebar from "@/components/dashboard/ScheduleSessionSidebar";
-import { CaretDown, Check, MagnifyingGlass } from "@phosphor-icons/react";
+import {
+  CaretDown,
+  CaretLeft,
+  CaretRight,
+  Check,
+  MagnifyingGlass,
+} from "@phosphor-icons/react";
 import CancellationChart from "@/components/dashboard/CancellationChart";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -25,27 +31,30 @@ import Tabs from "@/components/common/Tabs";
 import RescheduleSidebar from "@/components/dashboard/RescheduleSidebar";
 import SessionDetailModal from "@/components/dashboard/SessionDetailModal";
 import Button from "@/components/common/Button";
+import Link from "next/link";
+import TablePagination from "@/components/common/TablePagination";
+import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
 
 const activity = [
   {
     title: " Received payment",
     count: "₹220",
-    icon: <ReceivedPayIcon className="w-10 h-auto" />,
+    icon: <ReceivedPayIcon className="w-30px h-auto" />,
   },
   {
     title: "Pending payment",
     count: "₹220",
-    icon: <PendingPayIcon className="w-10 h-auto" />,
+    icon: <PendingPayIcon className="w-30px h-auto" />,
   },
   {
     title: "Patient",
     count: "56",
-    icon: <GreenUsersIcon className="w-10 h-auto" />,
+    icon: <GreenUsersIcon className="w-30px h-auto" />,
   },
   {
     title: "Session",
     count: "23",
-    icon: <OrangeCalendarIcon className="w-10 h-auto" />,
+    icon: <OrangeCalendarIcon className="w-30px h-auto" />,
   },
 ];
 
@@ -54,7 +63,7 @@ const sessionTable = [
     img: "",
     name: "Abhi Sojitra",
     email: "abhi@gmail.com",
-    time: "2.00 PM, 50 min",
+    time: "03:40-04:15 PM",
     status: "Completed",
     amount: "₹ 2,200",
     sessionFee: "Paid on time",
@@ -64,8 +73,8 @@ const sessionTable = [
     img: "",
     name: "Dishank Gajera",
     email: "dishankgajera00@gmail.com",
-    time: "2.50 PM, 20 min",
-    status: "Upcoming",
+    time: "02:00-03:15 PM",
+    status: "Cancelled",
     amount: "₹ 700",
     sessionFee: "Pending",
     previousFee: "Cleared",
@@ -74,8 +83,8 @@ const sessionTable = [
     img: "",
     name: "Darshan Tarpada",
     email: "darshant56@gmail.com",
-    time: "3.10 PM, 30 min",
-    status: "Upcoming",
+    time: "12:00-01:30 PM",
+    status: "Cancelled",
     amount: "₹ 1,800",
     sessionFee: "Pending",
     previousFee: "Pending",
@@ -84,7 +93,7 @@ const sessionTable = [
     img: "",
     name: "Neha Kikani",
     email: "nehak@gmail.com",
-    time: "3.40 PM, 20 min",
+    time: "05:00-06:00 PM",
     status: "Upcoming",
     amount: "₹ 3,200",
     sessionFee: "Pending",
@@ -94,7 +103,7 @@ const sessionTable = [
     img: "",
     name: "Divyesh Sojitra",
     email: "divyeh@gmail.com",
-    time: "3.40 PM, 20 min",
+    time: "01:40-02:30 PM",
     status: "Upcoming",
     amount: "₹ 2,200",
     sessionFee: "Pending",
@@ -104,7 +113,7 @@ const sessionTable = [
     img: "",
     name: "Ayush Dobariya",
     email: "ayu@gmail.com",
-    time: "3.40 PM, 20 min",
+    time: "01:40-02:30 PM",
     status: "Upcoming",
     amount: "₹ 2",
     sessionFee: "Pending",
@@ -148,20 +157,14 @@ const regularClientsTable = [
   },
 ];
 
-const activityTab = [
-  { label: "Today" },
-  { label: "Week" },
-  { label: "This Month" },
-  { label: "Last Month" },
-];
-
 const sessionTabs = [
-  { label: "All" },
-  { label: "Upcoming" },
-  { label: "Completed" },
+  { label: "All (52)" },
+  { label: "Upcoming (20)" },
+  { label: "Completed (30)" },
+  { label: "Cancelled (02)" },
 ];
 
-const monthsDropOptions = ["This Month", "Last Month", "90s day"];
+const monthsDropOptions = ["Today", "Week", "This Month", "Last Month"];
 
 const Dashboard = () => {
   const [freeSlote, setFreeSlote] = useState(false);
@@ -175,8 +178,9 @@ const Dashboard = () => {
 
   // select drop down stats
 
-  const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("This Month");
-  const [isMonthsDropSelect2, setIsMonthsDropSelect2] = useState("This Month");
+  const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("Today");
+  const [isMonthsDropSelect2, setIsMonthsDropSelect2] = useState("Today");
+  const [isMonthsDropSelect3, setIsMonthsDropSelect3] = useState("Today");
 
   function handleModalTransition(closeModal, openModal) {
     closeModal(false); // Close the currently open modal
@@ -255,28 +259,29 @@ const Dashboard = () => {
 
   // table pagination start ---------------------
 
-  const [isTablePagination, setIsTablePagination] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 6;
+  // const [isTablePagination, setIsTablePagination] = useState(false);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const totalPages = 6;
 
-  const handlePageSelect = (page) => {
-    setCurrentPage(page);
-    setIsTablePagination(false);
-  };
+  // const handlePageSelect = (page) => {
+  //   setCurrentPage(page);
+  //   setIsTablePagination(false);
+  // };
 
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  // const handleNext = () => {
+  //   if (currentPage < totalPages) {
+  //     setCurrentPage(currentPage + 1);
+  //   }
+  // };
 
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  // const handlePrevious = () => {
+  //   if (currentPage > 1) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
 
   // table pagination end ---------------------
+  const totalPages = 10; // Define total pages for pagination
 
   return (
     <DashboardLayout>
@@ -287,7 +292,7 @@ const Dashboard = () => {
               <h2 className="text-lg/6 font-semibold text-primary">
                 Sync Your Google Calendar
               </h2>
-              <p className="text-base/5 text-primary pt-3">
+              <p className="text-base/5 text-primary/70 pt-3">
                 Schedule Sessions and timely Reminders With just one click.
               </p>
             </div>
@@ -299,12 +304,12 @@ const Dashboard = () => {
               Setup calendar
             </Button>
           </div>
-          <div className="bg-white px-5 py-11 rounded-base flex items-center justify-between md:col-span-3">
+          <div className="bg-white px-5 py-10 rounded-base flex items-center justify-between md:col-span-3">
             <div>
-              <h2 className="text-lg/6 font-semibold text-[#242424]">
+              <h2 className="text-lg/6 font-semibold text-primary">
                 Hi Anusha!
               </h2>
-              <p className="text-base/5 text-gray-400 pt-3">
+              <p className="text-base/5 text-primary/70 pt-3">
                 You have an exciting week ahead of you
               </p>
             </div>
@@ -318,12 +323,12 @@ const Dashboard = () => {
               />
             </div>
           </div>
-          <div className="bg-white px-5 py-11 rounded-base md:flex items-center justify-between md:col-span-9">
+          <div className="bg-white px-5 py-10 rounded-base md:flex items-center justify-between md:col-span-9">
             <div>
-              <h2 className="text-lg/6 font-semibold text-[#242424] capitalize">
+              <h2 className="text-lg/6 font-semibold text-primary capitalize">
                 New Appointment
               </h2>
-              <p className="text-base/5 text-gray-400 pt-3 capitalize">
+              <p className="text-base/5 text-primary/70 pt-3 capitalize">
                 Guide users through booking a specific time.
               </p>
             </div>
@@ -352,33 +357,50 @@ const Dashboard = () => {
             <h2 className="text-xl/6 font-semibold text-primary pb-5 md:pb-0">
               Activity
             </h2>
-            <Tabs tabs={activityTab} />
+            <DaysSelectDropdown
+              value={isMonthsDropSelect3}
+              onChange={setIsMonthsDropSelect3}
+            />
           </div>
           <div className="grid md:grid-cols-4 grid-cols-2  gap-5 pt-5">
             {activity?.map((item, index) => (
               <div
                 key={index}
-                className={`p-5  rounded-base flex justify-between items-end ${
+                className={`p-5  rounded-base flex justify-between items-center ${
                   item.title.trim() === "Received payment"
-                    ? "shadow-[0px_4px_16px_0px_#EB63B71F]"
+                    ? "bg-[#FBE9D0]"
                     : item.title.trim() === "Pending payment"
-                    ? "shadow-[0px_4px_16px_0px_#3CC1FC29]"
+                    ? "bg-[#D8E5FF]"
                     : item.title.trim() === "Patient"
-                    ? "shadow-[0px_4px_16px_0px_#449C6326]"
+                    ? "bg-[#FBD7D8]"
                     : item.title.trim() === "Session"
-                    ? "shadow-[0px_4px_16px_0px_#F8930026]"
+                    ? "bg-[#F8DBFF]"
                     : ""
                 }`}
               >
                 <div>
-                  <p className="capitalize text-base/5 text-primary">
-                    {item.title}
-                  </p>
-                  <p className="text-2xl/8 font-semibold text-primary pt-[18px]">
+                  <p className="text-2xl/7 font-medium text-primary">
                     {item.count}
                   </p>
+                  <p className="capitalize text-base/5 text-primary  pt-3">
+                    {item.title}
+                  </p>
                 </div>
-                <div>{item.icon}</div>
+                <div
+                  className={`p-4 rounded-full ${
+                    item.title.trim() === "Received payment"
+                      ? "bg-[#FFD7A0]"
+                      : item.title.trim() === "Pending payment"
+                      ? "bg-[#A0BEFF]"
+                      : item.title.trim() === "Patient"
+                      ? "bg-[#FDC0C1]"
+                      : item.title.trim() === "Session"
+                      ? "bg-[#F1C2FE]"
+                      : ""
+                  }`}
+                >
+                  {item.icon}
+                </div>
               </div>
             ))}
           </div>
@@ -386,7 +408,7 @@ const Dashboard = () => {
 
         {/* session area */}
         <div className=" rounded-base bg-white">
-          <div className="p-5 pb-0">
+          <div className="p-5">
             <div className="flex items-center justify-between">
               <h2 className="text-xl/6 font-semibold text-primary">Session</h2>
               <div className="relative">
@@ -410,7 +432,9 @@ const Dashboard = () => {
                   <div className="grid grid-cols-2 gap-2.5">
                     <button
                       className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${
-                        activeTab === "month" ? "text-primary" : "text-gray-400"
+                        activeTab === "month"
+                          ? "text-primary"
+                          : "text-primary/70"
                       }`}
                       onClick={() => setActiveTab("month")}
                     >
@@ -421,7 +445,9 @@ const Dashboard = () => {
                     </button>
                     <button
                       className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${
-                        activeTab === "year" ? "text-primary" : "text-gray-400"
+                        activeTab === "year"
+                          ? "text-primary"
+                          : "text-primary/70"
                       }`}
                       onClick={() => setActiveTab("year")}
                     >
@@ -440,7 +466,7 @@ const Dashboard = () => {
                             key={month}
                             className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4  hover:bg-gray-100/20 ${
                               month === selectedMonth
-                                ? "bg-blue-600/10 !text-blue-600"
+                                ? "bg-green-600/10 !text-green-600"
                                 : ""
                             }`}
                             onClick={() => handleSelectMonth(month)}
@@ -460,7 +486,7 @@ const Dashboard = () => {
                             key={year}
                             className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4  hover:bg-gray-100/20 ${
                               year === selectedYear
-                                ? "bg-blue-600/10 !text-blue-600"
+                                ? "bg-green-600/10 !text-green-600"
                                 : ""
                             }`}
                             onClick={() => handleSelectYear(year)}
@@ -565,6 +591,7 @@ const Dashboard = () => {
             </div>
 
             <hr className="border-gray-100 my-15px " />
+
             <div className="flex items-center justify-between">
               <Tabs tabs={sessionTabs} />
 
@@ -577,252 +604,290 @@ const Dashboard = () => {
                 />
               </div>
             </div>
-          </div>
-          {/* session table */}
-          <div className="pt-30px">
-            <div className="w-full overflow-x-auto">
-              <table className="w-full  bg-white border-y border-gray-100">
-                <thead className="text-left">
-                  <tr className="bg-blue-100 uppercase">
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Name
-                    </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Session Time
-                    </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Session status
-                    </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Amount
-                    </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      this session Fee
-                    </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Previous Fee
-                    </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
-                      Appointment
-                    </th>
-                  </tr>
-                </thead>
 
-                <tbody className="">
-                  {sessionTable?.map((item, index) => {
-                    const formatName = (name) => {
-                      const nameParts = name.split(" ");
-                      const firstName = nameParts[0];
-                      const lastNameInitial = nameParts[1]?.charAt(0);
-                      return `${firstName} ${lastNameInitial} (${name})`;
-                    };
+            {/* session table */}
+            <div className="pt-30px">
+              <div className="w-full border border-gray-100 rounded-base overflow-x-auto">
+                <table className="w-full  bg-white ">
+                  <thead className="text-left">
+                    <tr className="bg-[#F9F9F9] uppercase">
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        Name
+                      </th>
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        Time
+                      </th>
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        status
+                      </th>
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        Amount
+                      </th>
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        this session Fee
+                      </th>
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        Previous Fee
+                      </th>
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        Appointment
+                      </th>
+                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                        actions
+                      </th>
+                    </tr>
+                  </thead>
 
-                    return (
-                      <tr key={index}>
-                        <td className="p-15px min-w-[121px] border-b border-gray-100">
-                          <div className="flex items-center gap-3 ">
-                            <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
-                              {item.img ? (
-                                <img
-                                  src={item.img}
-                                  alt=""
-                                  className="w-full h-full"
-                                />
-                              ) : (
-                                <span className="text-xs_18 text-[#72748D]">
-                                  {formatName(item.name)
-                                    .split(" ")[0]
-                                    .charAt(0) +
-                                    formatName(item.name)
-                                      .split(" ")[1]
-                                      .charAt(0)}
-                                </span>
+                  <tbody className="divide-y divide-primary/10">
+                    {sessionTable?.map((item, index) => {
+                      const formatName = (name) => {
+                        const nameParts = name.split(" ");
+                        const firstName = nameParts[0];
+                        const lastNameInitial = nameParts[1]?.charAt(0);
+                        return `${firstName} ${lastNameInitial} (${name})`;
+                      };
+
+                      return (
+                        <tr key={index}>
+                          <td className="p-15px">
+                            <div className="flex items-center gap-3 ">
+                              <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
+                                {item.img ? (
+                                  <img
+                                    src={item.img}
+                                    alt=""
+                                    className="w-full h-full"
+                                  />
+                                ) : (
+                                  <span className="text-xs_18 text-[#72748D]">
+                                    {formatName(item.name)
+                                      .split(" ")[0]
+                                      .charAt(0) +
+                                      formatName(item.name)
+                                        .split(" ")[1]
+                                        .charAt(0)}
+                                  </span>
+                                )}
+                              </div>
+                              <div>
+                                <p className="text-sm/5 font-medium text-primary">
+                                  {formatName(item.name)}
+                                </p>
+                                <p className="text-xs_18 text-primary/70">
+                                  {item.email}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="p-15px text-primary/70 text-sm/5">
+                            {item.time}
+                          </td>
+                          <td className="p-15px">
+                            <span
+                              className={`inline-block py-1.5 px-3  rounded-full text-sm/5 ${
+                                item.status.trim() === "Completed"
+                                  ? "bg-green-200 text-green-500"
+                                  : item.status.trim() === "Upcoming"
+                                  ? "bg-orange-200 text-orange-600"
+                                  : item.status.trim() === "Cancelled"
+                                  ? "bg-[#FFEDED] text-[#FF5959]"
+                                  : ""
+                              }`}
+                            >
+                              {item.status}
+                            </span>
+                          </td>
+                          <td className="p-15px text-primary text-sm/5 font-medium">
+                            {item.amount}
+                          </td>
+                          <td className="p-15px text-primary/70 text-sm/5">
+                            {item.sessionFee}
+                          </td>
+                          <td className="p-15px text-primary text-sm/5">
+                            <div className="flex items-center gap-3">
+                              {item.previousFee}{" "}
+                              {item.previousFee === "Pending" && (
+                                <div className="relative group cursor-pointer">
+                                  <span className="w-5 h-5 flex items-center justify-center border border-[#010101] rounded-full">
+                                    !
+                                  </span>
+                                  <div className="absolute w-[322px] py-30px px-5 top-full right-0 rounded-base bg-white shadow-[0px_4px_16px_0px_#2424241A] transition-all duration-500 opacity-0 hidden group-hover:block group-hover:opacity-100 z-10">
+                                    <h3 className="text-sm/5 text-primary font-medium">
+                                      Unpaid Session Payment
+                                    </h3>
+                                    <ul className="space-y-15px pt-[22px] text-sm/5">
+                                      <li className="flex items-center justify-between text-primary">
+                                        <p className="text-xs_18">
+                                          14th July,2024
+                                        </p>
+                                        <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
+                                          Unpaid
+                                        </span>
+                                      </li>
+                                      <li className="flex items-center justify-between text-primary">
+                                        <p className="text-xs_18">
+                                          10th July,2024
+                                        </p>
+                                        <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
+                                          Unpaid
+                                        </span>
+                                      </li>
+                                      <li className="flex items-center justify-between text-primary">
+                                        <p className="text-xs_18">
+                                          7th July,2024
+                                        </p>
+                                        <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
+                                          Unpaid
+                                        </span>
+                                      </li>
+                                    </ul>
+                                  </div>
+                                </div>
                               )}
                             </div>
-                            <div>
-                              <p className="text-sm/5 font-medium text-primary">
-                                {formatName(item.name)}
-                              </p>
-                              <p className="text-xs_18 text-gray-400">
-                                {item.email}
-                              </p>
+                          </td>
+                          <td className="p-15px">
+                            <div className="flex items-center justify-between gap-3 text-sm/6 font-medium">
+                              <Link
+                                href={`javascript:void(0)`}
+                                onClick={() =>
+                                  setIsRescheduleSession(!isRescheduleSession)
+                                }
+                                className="text-green-600 underline"
+                              >
+                                Reschedule
+                              </Link>
+                              <Link
+                                href={`javascript:void(0)`}
+                                className="text-green-600 underline"
+                              >
+                                Start Session
+                              </Link>
                             </div>
-                          </div>
-                        </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[150px] border-b border-gray-100">
-                          {item.time}
-                        </td>
-                        <td className="p-15px min-w-[150px] border-b border-gray-100">
-                          <span
-                            className={`inline-block py-1.5 px-3  rounded-full text-sm/5 ${
-                              item.status.trim() === "Completed"
-                                ? "bg-green-200 text-green-500"
-                                : item.status.trim() === "Upcoming"
-                                ? "bg-orange-200 text-orange-600"
-                                : ""
-                            }`}
-                          >
-                            {item.status}
-                          </span>
-                        </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[115px] border-b border-gray-100">
-                          {item.amount}
-                        </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[157px] border-b border-gray-100">
-                          {item.sessionFee}
-                        </td>
-                        <td className="p-15px text-primary text-sm/5 min-w-[157px] border-b border-gray-100">
-                          <div className="flex items-center gap-3">
-                            {item.previousFee}{" "}
-                            {item.previousFee === "Pending" && (
-                              <div className="relative group cursor-pointer">
-                                <span className="w-5 h-5 flex items-center justify-center border border-[#010101] rounded-full">
-                                  !
-                                </span>
-                                <div className="absolute w-[322px] py-30px px-5 top-full right-0 rounded-base bg-white shadow-[0px_4px_16px_0px_#2424241A] transition-all duration-500 opacity-0 hidden group-hover:block group-hover:opacity-100 z-10">
-                                  <h3 className="text-sm/5 text-primary font-medium">
-                                    Unpaid Session Payment
-                                  </h3>
-                                  <ul className="space-y-15px pt-[22px] text-sm/5">
-                                    <li className="flex items-center justify-between text-primary">
-                                      <p className="text-xs_18">
-                                        14th July,2024
-                                      </p>
-                                      <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
-                                        Unpaid
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between text-primary">
-                                      <p className="text-xs_18">
-                                        10th July,2024
-                                      </p>
-                                      <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
-                                        Unpaid
-                                      </span>
-                                    </li>
-                                    <li className="flex items-center justify-between text-primary">
-                                      <p className="text-xs_18">
-                                        7th July,2024
-                                      </p>
-                                      <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
-                                        Unpaid
-                                      </span>
-                                    </li>
-                                  </ul>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </td>
-                        <td className="p-15px border-l border-gray-100">
-                          <div className="flex items-center justify-between gap-3">
-                            <RegularNotificationIcon
-                              className="w-5 h-5 cursor-pointer"
-                              pathFillColor="#242424"
-                              onClick={() =>
-                                setIsReminderModal(!isReminderModal)
-                              }
-                            />
-                            <RegularBinIcon
-                              className="w-5 h-5  cursor-pointer"
-                              onClick={() =>
-                                setIsCanceledSessionModal(
-                                  !isCanceledSessionModal
-                                )
-                              }
-                            />
-                            <Button
-                              variant="default"
-                              className={`!px-4.5 !py-2`}
-                              onClick={() =>
-                                setIsRescheduleSession(!isRescheduleSession)
-                              }
-                            >
-                              Reschedule
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              className={`!px-4.5 !py-2`}
-                            >
-                              Start Session
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-            <div className="flex justify-between items-center py-[11px] px-5 mt-30px shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
-              <div className="relative inline-block text-left">
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => setIsTablePagination(!isTablePagination)}
-                    className="px-2.5 py-2.5 border border-primary rounded-lg text-sm/4 text-primary flex items-center gap-2 capitalize"
-                  >
-                    page : {currentPage.toString().padStart(2, "0")}{" "}
-                    <CaretDown
-                      size={20}
-                      className={`transition-all duration-300 ${
-                        isTablePagination ? "rotate-180" : "rotate-0"
+                          </td>
+                          <td className="p-15px">
+                            <div className="flex items-center justify-between gap-3">
+                              <RegularNotificationIcon
+                                className="w-5 h-5 cursor-pointer"
+                                pathFillColor="#242424"
+                                onClick={() =>
+                                  setIsReminderModal(!isReminderModal)
+                                }
+                              />
+                              <RegularBinIcon
+                                className="w-5 h-5  cursor-pointer"
+                                onClick={() =>
+                                  setIsCanceledSessionModal(
+                                    !isCanceledSessionModal
+                                  )
+                                }
+                              />
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {/* <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
+                  <div className="relative inline-block text-left">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setIsTablePagination(!isTablePagination)}
+                        className="px-2.5 py-2.5 border border-primary rounded-lg text-sm/4 text-primary flex items-center gap-2 capitalize"
+                      >
+                        page : {currentPage.toString().padStart(2, "0")}{" "}
+                        <CaretDown
+                          size={20}
+                          className={`transition-all duration-300 ${
+                            isTablePagination ? "rotate-180" : "rotate-0"
+                          }`}
+                        />
+                      </button>
+                      <p className="text-sm/4 text-primary">
+                        Of {totalPages} Pages
+                      </p>
+                    </div>
+
+                    <div
+                      className={`absolute mt-2 w-full bg-white shadow-[0px_4px_12px_0px_#2C58BB1A] rounded-lg z-10 transition-all duration-500 overflow-y-auto ${
+                        isTablePagination ? "h-[200px]" : "h-0"
                       }`}
-                    />
+                    >
+                      <ul className="py-1 text-sm/4 text-gray-700">
+                        {Array.from(
+                          { length: totalPages },
+                          (_, i) => i + 1
+                        ).map((page) => (
+                          <li key={page}>
+                            <button
+                              onClick={() => handlePageSelect(page)}
+                              className={`block w-full text-left px-4 py-2 ${
+                                currentPage === page
+                                  ? "bg-blue-600/10 !text-blue-600"
+                                  : "hover:bg-gray-100/20"
+                              }`}
+                            >
+                              Page : {page.toString().padStart(2, "0")}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-[11px]">
+                    <button
+                      onClick={handlePrevious}
+                      className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
+                        currentPage === 1
+                          ? "border-gray-300 text-gray-300 cursor-not-allowed"
+                          : "border-gray-400 text-gray-400 hover:border-primary hover:text-primary"
+                      }`}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    <button
+                      onClick={handleNext}
+                      className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
+                        currentPage === totalPages
+                          ? "border-gray-300 text-gray-300 cursor-not-allowed"
+                          : "border-primary text-primary hover:bg-primary hover:text-white"
+                      }`}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div> */}
+                {/* <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
+                  <button className="p-2 border border-primary rounded-full">
+                    <CaretLeft size={22} />
                   </button>
-                  <p className="text-sm/4 text-primary">
-                    Of {totalPages} Pages
-                  </p>
-                </div>
-
-                <div
-                  className={`absolute mt-2 w-full bg-white shadow-[0px_4px_12px_0px_#2C58BB1A] rounded-lg z-10 transition-all duration-500 overflow-y-auto ${
-                    isTablePagination ? "h-[200px]" : "h-0"
-                  }`}
-                >
-                  <ul className="py-1 text-sm/4 text-gray-700">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <li key={page}>
-                          <button
-                            onClick={() => handlePageSelect(page)}
-                            className={`block w-full text-left px-4 py-2 ${
-                              currentPage === page
-                                ? "bg-blue-600/10 !text-blue-600"
-                                : "hover:bg-gray-100/20"
-                            }`}
-                          >
-                            Page : {page.toString().padStart(2, "0")}
-                          </button>
-                        </li>
-                      )
-                    )}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-[11px]">
-                <button
-                  onClick={handlePrevious}
-                  className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
-                    currentPage === 1
-                      ? "border-gray-300 text-gray-300 cursor-not-allowed"
-                      : "border-gray-400 text-gray-400 hover:border-primary hover:text-primary"
-                  }`}
-                  disabled={currentPage === 1}
-                >
-                  Previous
-                </button>
-                <button
-                  onClick={handleNext}
-                  className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
-                    currentPage === totalPages
-                      ? "border-gray-300 text-gray-300 cursor-not-allowed"
-                      : "border-primary text-primary hover:bg-primary hover:text-white"
-                  }`}
-                  disabled={currentPage === totalPages}
-                >
-                  Next
-                </button>
+                  <div className="flex items-center gap-2.5 text-base/5 font-medium">
+                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
+                      1
+                    </button>
+                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-green-600 bg-green-600/10">
+                      2
+                    </button>
+                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
+                      ...
+                    </button>
+                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
+                      7
+                    </button>
+                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
+                      8
+                    </button>
+                  </div>
+                  <button className="py-2.5 px-3 border border-primary rounded-full flex items-center gap-1 text-sm/5 text-primary font-medium">
+                    Next
+                    <CaretRight size={20} />
+                  </button>
+                </div> */}
+                <TablePagination totalPages={totalPages} />
               </div>
             </div>
           </div>
@@ -833,31 +898,28 @@ const Dashboard = () => {
           <div className="md:col-span-3 bg-white rounded-base overflow-hidden">
             <div className="flex items-center justify-between p-5">
               <h2 className="text-xl/6 font-semibold text-primary">
-                Most regular clients
+                Most Regular Clients
               </h2>
-              <SelectDropdown
-                options={monthsDropOptions}
+              <DaysSelectDropdown
                 value={isMonthsDropSelect}
                 onChange={setIsMonthsDropSelect}
-                className="!m-0"
-                subClass="!p-0 !border-0 !text-base/6 !font-medium !text-gray-500 gap-2"
-                DropClass="!w-[148px] right-0 !border-0"
+                DropClass=""
               />
             </div>
             <div className="w-full overflow-x-auto">
               <table className="min-w-full bg-white border-t border-gray-100">
                 <thead className="text-left">
-                  <tr className="bg-blue-100 uppercase">
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                  <tr className="bg-[#F9F9F9] uppercase">
+                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
                       Client Details
                     </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
                       Last Session
                     </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
                       Session Summary
                     </th>
-                    <th className="px-15px py-5 font-medium text-gray-500 text-sm/5">
+                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
                       Total Revenue
                     </th>
                   </tr>
@@ -873,7 +935,7 @@ const Dashboard = () => {
                     };
 
                     return (
-                      <tr key={index} className="align-top">
+                      <tr key={index} className="">
                         <td className="px-15px py-5">
                           <div className="flex items-center gap-3">
                             <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
@@ -895,61 +957,45 @@ const Dashboard = () => {
                               )}
                             </div>
                             <div>
-                              <p className="text-sm/5 font-medium text-primary">
+                              <p className="text-sm/5 text-primary font-semibold">
                                 {formatName(item.name)}
                               </p>
-                              <p className="text-xs_18 text-gray-400">
+                              <p className="text-xs_18 text-primary/70">
                                 {item.email}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="px-15px py-5">
-                          <p className="text-sm/5 text-primary">18 Sep,2024</p>
-                          <p className="text-sm/5 text-gray-400 pt-[3px]">
+                          <p className="text-sm/5 text-primary font-semibold">
+                            18 Sep,2024
+                          </p>
+                          <p className="text-sm/5 text-primary/70 pt-[3px]">
                             2.00 PM, 50 min
                           </p>
                         </td>
                         <td className="px-15px py-5">
-                          <p className="text-sm/5 text-primary">15 Session</p>
+                          <p className="text-sm/5 text-primary font-semibold">
+                            15 Session
+                          </p>
                           <p className="text-sm/5 text-[#14A347] pt-[3px]">
                             12 Completed
                           </p>
-                          <p className="text-sm/5 text-gray-400 pt-[3px]">
+                          <p className="text-sm/5 text-primary/70 pt-[3px]">
                             3 Pending
                           </p>
                         </td>
                         <td className="px-15px py-5">
-                          <p className="text-sm/5 text-primary">₹6,000 Total</p>
+                          <p className="text-sm/5 text-primary font-semibold">
+                            ₹6,000 Total
+                          </p>
                           <p className="text-sm/5 text-[#14A347] pt-[3px]">
                             +₹1,500 Collected
                           </p>
-                          <p className="text-sm/5 text-gray-400 pt-[3px]">
+                          <p className="text-sm/5 text-primary/70 pt-[3px]">
                             -₹4,500 Pending
                           </p>
                         </td>
-                        {/* <td className="px-15px py-[35px]">
-                        <div className=" flex items-center gap-5 text-sm/5">
-                          <p className="text-primary font-medium">
-                            {item.tSession} Session
-                          </p>
-                          <div className="text-gray-400">
-                            <p>{item.cSession} Completed</p>
-                            <p>{item.pSession} Pending</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="px-15px py-[35px]">
-                        <div className=" flex items-center gap-5 text-sm/5">
-                          <p className="text-primary font-medium">
-                            ₹{item.tRevenue} Total
-                          </p>
-                          <div className="text-gray-400">
-                            <p>₹{item.cRevenue} Completed</p>
-                            <p>₹{item.pRevenue} Pending</p>
-                          </div>
-                        </div>
-                      </td> */}
                       </tr>
                     );
                   })}
@@ -962,13 +1008,9 @@ const Dashboard = () => {
               <h2 className="text-xl/6 font-semibold text-primary">
                 Cancellation
               </h2>
-              <SelectDropdown
-                options={monthsDropOptions}
+              <DaysSelectDropdown
                 value={isMonthsDropSelect2}
                 onChange={setIsMonthsDropSelect2}
-                className="!m-0"
-                subClass="!p-0 !border-0 !text-base/6 !font-medium !text-gray-500 gap-2"
-                DropClass="!w-[148px] right-0 !border-0"
               />
             </div>
             <div className="flex items-center justify-center mt-5">
@@ -1016,24 +1058,24 @@ const Dashboard = () => {
             <input type="radio" name="reminder" className="w-4.5 h-4.5" />
           </label>
         </div>
-        <div className="flex items-center gap-3.5 pt-[50px]">
+        <div className="flex items-center justify-end gap-3.5 pt-[34px]">
           <Button
-            variant="outlined"
-            className={`w-full !px-0`}
+            variant="outlinedGreen"
+            className={`min-w-[157px]`}
             onClick={() => {
               setIsReminderModal(false);
             }}
           >
-            Cancel
+            No
           </Button>
           <Button
-            variant="filled"
-            className={`w-full`}
+            variant="filledGreen"
+            className={`min-w-[157px]`}
             onClick={() => {
               setIsReminderModal(false);
             }}
           >
-            Remind
+            Yes
           </Button>
         </div>
       </SessionDetailModal>
@@ -1044,25 +1086,26 @@ const Dashboard = () => {
         isClose={isCanceledSessionModal}
         setIsClose={setIsCanceledSessionModal}
       >
-        <p className="text-gray-500 text-sm/5 pt-30px">
-          Are you sure you want to mark this session as canceled? This action
+        <p className="text-gray-500 text-sm/5 pt-5 max-w-[465px]">
+          Are you sure you want to mark this session as a Cancel ? This action
           will notify the customer and update your records accordingly.
         </p>
-        <div className="grid grid-cols-2 gap-3.5 pt-[50px]">
+        <div className="flex items-center justify-end gap-3.5 pt-[34px]">
           <Button
-            variant="outlined"
+            variant="outlinedGreen"
             onClick={() =>
               handleModalTransition(
                 setIsCanceledSessionModal,
                 setIsTerminatingModal
               )
             }
-            className={`whitespace-nowrap`}
+            className={`min-w-[157px]`}
           >
             Cancel All Sessions
           </Button>
           <Button
-            variant="filled"
+            variant="filledGreen"
+            className={`min-w-[157px]`}
             onClick={() =>
               handleModalTransition(
                 setIsCanceledSessionModal,
@@ -1081,9 +1124,10 @@ const Dashboard = () => {
         isClose={isCancellationModal}
         setIsClose={setIsCancellationModal}
       >
-        <div className="grid grid-cols-2 gap-3.5 pt-[50px]">
+        <div className="flex items-center justify-end gap-3.5 pt-[34px]">
           <Button
-            variant="outlined"
+            variant="outlinedGreen"
+            className={`min-w-[157px]`}
             onClick={() =>
               handleModalTransition(
                 setIsCancellationModal,
@@ -1094,7 +1138,8 @@ const Dashboard = () => {
             No
           </Button>
           <Button
-            variant="filled"
+            variant="filledGreen"
+            className={`min-w-[157px]`}
             onClick={() =>
               handleModalTransition(
                 setIsCancellationModal,
@@ -1113,17 +1158,19 @@ const Dashboard = () => {
         isClose={isUpdatePaymentModal}
         setIsClose={setIsUpdatePaymentModal}
       >
-        <p className="text-gray-500 text-sm/5 pt-30px">
-          We are calling off this session. After you've got it, update the same
-          information in your payment records.
+        <p className="text-gray-500 text-sm/5 pt-5 max-w-[465px]">
+          We are calling off this session. after you have got it. cancellation
+          sum Remember to update the same information in your payment.
         </p>
-        <Button
-          variant="filled"
-          className="w-full col-span-2 mt-[50px]"
-          onClick={() => setIsUpdatePaymentModal(false)}
-        >
-          Okay, got it
-        </Button>
+        <div className="text-end pt-[34px]">
+          <Button
+            variant="filledGreen"
+            className="min-w-[157px]"
+            onClick={() => setIsUpdatePaymentModal(false)}
+          >
+            Okay, got it
+          </Button>
+        </div>
       </SessionDetailModal>
 
       {/* Are you terminating the client */}
@@ -1132,13 +1179,14 @@ const Dashboard = () => {
         isClose={isTerminatingModal}
         setIsClose={setIsTerminatingModal}
       >
-        <p className="text-gray-500 text-sm/5 pt-30px">
+        <p className="text-gray-500 text-sm/5  pt-5 max-w-[465px]">
           This action will end all services with the client. Please confirm to
           proceed.
         </p>
-        <div className="grid grid-cols-2 gap-3.5 pt-[50px]">
+        <div className="flex items-center justify-end gap-3.5 pt-[34px]">
           <Button
-            variant="outlined"
+            variant="outlinedGreen"
+            className={`min-w-[157px]`}
             onClick={() => {
               setIsTerminatingModal(false);
               setIsRescheduleSession(true);
@@ -1146,7 +1194,10 @@ const Dashboard = () => {
           >
             No
           </Button>
-          <Button variant="filled" onClick={() => setIsTerminatingModal(false)}>
+          <Button
+            variant="filledGreen"
+            onClick={() => setIsTerminatingModal(false)}
+          >
             Yes
           </Button>
         </div>

@@ -10,15 +10,15 @@ const Tabs = ({ tabs }) => {
 
   return (
     <div>
-      <ul className="flex items-center md:gap-[30px] gap-2 flex-wrap text-base/4 font-medium">
+      <ul className="flex items-center md:gap-0 gap-2 flex-wrap text-base/4 ">
         {tabs.map((tab) => (
           <li
             key={tab.label}
             onClick={() => handleTabClick(tab.label)}
-            className={`cursor-pointer p-2.5  ${
+            className={`cursor-pointer px-4 py-4.5  ${
               activeTab === tab.label
-                ? "text-blue-600 border-b border-blue-600"
-                : "text-gray-400"
+                ? "text-green-600 border-b border-green-600"
+                : "text-primary/50"
             }`}
           >
             {tab.label}

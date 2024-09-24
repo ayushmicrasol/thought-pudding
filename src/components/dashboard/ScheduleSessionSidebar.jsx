@@ -178,13 +178,13 @@ const ScheduleSessionSidebar = ({
           <div className="bg-white shadow-[0px_4px_43.4px_0px_#0000001A] px-5 py-2.5 grid grid-cols-2 gap-5 z-10">
             <Button
               onClick={() => setIsScheduleSessionModal(false)}
-              variant="outlined"
+              variant="outlinedGreen"
             >
               Cancel
             </Button>
             <Button
               onClick={() => setIsScheduleSessionModal(false)}
-              variant="filled"
+              variant="filledGreen"
             >
               Save
             </Button>

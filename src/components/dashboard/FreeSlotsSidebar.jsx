@@ -61,7 +61,7 @@ const FreeSlotsSidebar = ({ freeSlote, setFreeSlote }) => {
                 {recommendedWeek?.map((item, index) => (
                   <button
                     key={index}
-                    className="text-center p-3 rounded  text-sm/5 border border-[#D9D9D9] focus:border-blue-600 focus:bg-blue-600/5"
+                    className="text-center p-3 rounded  text-sm/5 border border-[#D9D9D9] focus:border-green-600 focus:bg-green-600/5"
                   >
                     <p className="font-medium text-primary">{item.date}</p>
                     <p className="text-gray-500">{item.time}</p>
@@ -141,10 +141,10 @@ const FreeSlotsSidebar = ({ freeSlote, setFreeSlote }) => {
 
           {/* sidebar footer */}
           <div className="bg-white shadow-[0px_4px_43.4px_0px_#0000001A] px-5 py-2.5 grid grid-cols-2 gap-5 z-10">
-            <Button onClick={() => setFreeSlote(false)} variant="outlined">
+            <Button onClick={() => setFreeSlote(false)} variant="outlinedGreen">
               Cancel
             </Button>
-            <Button onClick={() => setFreeSlote(false)} variant="filled">
+            <Button onClick={() => setFreeSlote(false)} variant="filledGreen">
               Save
             </Button>
           </div>

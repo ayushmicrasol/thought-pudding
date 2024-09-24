@@ -14,18 +14,20 @@ const SessionDetailModal = ({ title, children, isClose, setIsClose }) => {
       }`}
     >
       <div
-        className={`max-w-[427px] w-full transition-all duration-500 ${
+        className={`max-w-[578px] w-full transition-all duration-500 ${
           isClose ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
       >
         <div className="p-30px bg-white rounded-[10px] w-full">
-          <div className="text-right">
-            <button onClick={() => setIsClose(false)}>
-              <X size={20} />
-            </button>
-          </div>
-          <div className="text-center pt-3">
-            <h4 className="text-base/6 text-primary font-semibold">{title}</h4>
+          <div className=" pt-3">
+            <div className="flex items-center justify-between">
+              <h4 className="text-base/6 text-primary font-semibold">
+                {title}
+              </h4>
+              <button onClick={() => setIsClose(false)}>
+                <X size={20} />
+              </button>
+            </div>
             {children}
           </div>
         </div>

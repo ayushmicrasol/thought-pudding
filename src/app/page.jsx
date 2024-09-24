@@ -133,7 +133,7 @@ export default function Home() {
                 youʼre a solo practitioner or part of a collective. All in one
                 place.
               </p>
-              <div className="mt-6 flex items-center gap-30px justify-center">
+              <div className="mt-6 flex sm:flex-row flex-col items-center sm:gap-30px gap-3 justify-center">
                 <Button variant="filled" className={`flex items-center gap-2 `}>
                   Schedule a Demo
                   <ArrowUpRight className="text-xl" />
@@ -258,7 +258,7 @@ export default function Home() {
               Enhance your therapeutic practice, streamline operations, and
               focus on your clients' well-being
             </p>
-            <div className="pt-6 flex items-center justify-center gap-30px">
+            <div className="pt-6 flex flex-col sm:flex-row items-center justify-center sm:gap-30px gap-3">
               <Button variant="filled">Schedule a Demo</Button>
               <Button variant="default">Free Trial For 3 Months</Button>
             </div>

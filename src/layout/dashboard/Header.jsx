@@ -52,8 +52,8 @@ const Header = () => {
           {/* navigation manu */}
           <nav className="md:block hidden">
             <ul className="flex gap-3">
-              <li className="py-[18px] px-5 text-base/4 text-blue-600 font-semibold flex items-center gap-3 rounded-full cursor-pointer bg-blue-200">
-                <DashboardIcon className="w-6 h-6" pathFillColor="#2C58BB" />
+              <li className="py-[18px] px-5 text-base/4 text-yellow-600 font-semibold flex items-center gap-3 rounded-full cursor-pointer bg-yellow-100">
+                <DashboardIcon className="w-6 h-6" pathFillColor="#c58843" />
                 Dashboard
               </li>
               <li className="py-[18px] px-5 text-base/4 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer ">
