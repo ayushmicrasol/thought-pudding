@@ -166,7 +166,11 @@ const session = () => {
                   <p className=" text-2xl/9 text-primary font-medium">
                     {item.session}
                   </p>
-                  <p className="text-sm/4 text-green-400 flex items-center gap-1">
+                  <p
+                    className={`text-sm/4 flex items-center gap-1 ${
+                      item.title === "Cancel Session" ? "" : "text-green-400"
+                    }`}
+                  >
                     <ArrowUpRight size={16} /> {item.percentage}%
                   </p>
                 </div>

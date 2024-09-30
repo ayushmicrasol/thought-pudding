@@ -40,11 +40,13 @@ const ScheduleSessionSidebar = ({
       className={`fixed w-full h-full bg-black/20 top-0 left-0 z-[999] ${
         isScheduleSessionModal ? "visible" : "invisible"
       }`}
+      onClick={() => setIsScheduleSessionModal(false)}
     >
       <div
         className={`max-w-[416px] w-full  bg-white absolute top-0 right-0 h-full transition-all duration-300 ${
           isScheduleSessionModal ? "translate-x-0" : "translate-x-full"
         }`}
+        onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the sidebar
       >
         <div className="relative h-screen flex flex-col">
           {/* side bar header */}

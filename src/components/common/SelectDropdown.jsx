@@ -1,5 +1,5 @@
 import { Bell, CaretDown } from "@phosphor-icons/react";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const SelectDropdown = ({
   options = [],
@@ -13,14 +13,28 @@ const SelectDropdown = ({
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null); // To track the dropdown component
 
   const handleSelect = (option) => {
     onChange(option);
     setIsOpen(false);
   };
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={`relative mt-2 ${className}`} {...props}>
+    <div className={`relative mt-2 ${className}`} {...props} ref={dropdownRef}>
       <div
         onClick={() => setIsOpen(!isOpen)}
         className={`w-full py-3 px-2.5 border border-[#D9D9D9] rounded-lg text-sm/5 text-primary flex justify-between items-center cursor-pointer ${subClass}`}

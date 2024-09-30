@@ -1,7 +1,6 @@
 "use client";
 import { Clock } from "@phosphor-icons/react";
-import { useState } from "react";
-// import { FiClock } from "react-icons/fi"; // Import clock icon from react-icons
+import { useState, useEffect, useRef } from "react";
 
 const times = Array.from({ length: 24 }, (_, i) => {
   const hour = i < 10 ? `0${i}` : i; // Format hours
@@ -11,16 +10,30 @@ const times = Array.from({ length: 24 }, (_, i) => {
 const TimePicker = ({ className }) => {
   const [selectedTime, setSelectedTime] = useState("00:00");
   const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null); // To track the dropdown component
 
   const handleSelectTime = (time) => {
     setSelectedTime(time);
     setShowDropdown(false);
   };
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className={`relative mt-2 ${className}`}>
+    <div className={`relative mt-2 ${className}`} ref={dropdownRef}>
       <div
-        className={`flex items-center justify-between text-sm_18 py-3 px-2.5  border border-[#D9D9D9] rounded-lg ${
+        className={`flex items-center justify-between text-sm_18 py-3 px-2.5 border border-[#D9D9D9] rounded-lg ${
           selectedTime === "00:00" ? "text-gray-400" : "text-primary"
         }`}
         onClick={() => setShowDropdown(!showDropdown)}

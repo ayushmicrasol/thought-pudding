@@ -16,7 +16,7 @@ const Tabs = ({ tabs }) => {
             onClick={() => handleTabClick(tab.label)}
             className={`cursor-pointer px-4 py-4.5 transition-colors duration-300 ${
               activeTab === tab.label
-                ? "text-green-600 border-b border-green-600"
+                ? "text-green-600 border-b border-green-600 font-medium"
                 : "text-primary/50"
             }`}
           >
