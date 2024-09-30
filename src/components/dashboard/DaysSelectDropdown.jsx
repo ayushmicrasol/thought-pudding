@@ -60,7 +60,7 @@ const DaysSelectDropdown = ({
       </div>
       {isOpen && (
         <ul
-          className={`absolute z-10 mt-1 bg-white rounded-base shadow-lg max-h-60 overflow-auto ${DropClass} w-48 p-5 right-0 shadow-[0px_4px_15px_0px_#2C58BB1A]`}
+          className={`absolute z-10 mt-1 bg-white rounded-base shadow-lg max-h-60 overflow-auto ${DropClass} w-48 p-5 right-0 shadow-[0px_0px_15px_0px_#2C58BB1A]`}
         >
           {options.length === 0 ? (
             <li className="py-[10px] px-4 text-sm text-gray-500">

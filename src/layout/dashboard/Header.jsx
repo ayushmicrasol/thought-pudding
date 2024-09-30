@@ -11,6 +11,8 @@ import {
   SessionIcon,
   SettingIcon,
 } from "../../../public/assets/Svgs";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Header = () => {
   const [hasShadow, setHasShadow] = useState(false);
@@ -30,16 +32,20 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const pathname = usePathname();
   return (
     <Fragment>
       <header className=" sticky top-0 backdrop-blur-sm pt-3 z-[99]">
         <div
-          className={`bg-white p-5 flex items-center justify-between rounded-base transition-shadow duration-300 ${
-            hasShadow ? "shadow-[0px_4px_6.1px_0px_#E5E9FF80]" : ""
-          }`}
+          className={`bg-white p-5 flex items-center justify-between  transition-shadow duration-300 ${
+            pathname !== "/dashboard"
+              ? "rounded-t-base !shadow-none"
+              : "rounded-base"
+          } ${hasShadow ? "shadow-[0px_4px_6.1px_0px_#E5E9FF80]" : ""}`}
         >
           {/* logo  */}
-          <div className="max-w-[140px]">
+          <div className="max-w-[172px]">
             <Image
               src="/assets/images/logo.webp"
               alt="logo"
@@ -50,23 +56,76 @@ const Header = () => {
           </div>
 
           {/* navigation manu */}
+
           <nav className="md:block hidden">
             <ul className="flex gap-3">
-              <li className="py-[18px] px-5 text-base/4 text-yellow-600 font-semibold flex items-center gap-3 rounded-full cursor-pointer bg-yellow-100">
-                <DashboardIcon className="w-6 h-6" pathFillColor="#c58843" />
-                Dashboard
+              <li
+                className={`py-[18px] px-5 text-base/4 ${
+                  pathname === "/dashboard"
+                    ? "text-yellow-600 font-semibold bg-yellow-100"
+                    : "text-gray-500 font-medium"
+                } flex items-center gap-3 rounded-full cursor-pointer`}
+              >
+                <Link href="/dashboard" className="flex items-center gap-3">
+                  <DashboardIcon
+                    className="w-6 h-6"
+                    pathFillColor={
+                      pathname === "/dashboard" ? "#c58843" : "#5E585A"
+                    }
+                  />
+                  Dashboard
+                </Link>
               </li>
-              <li className="py-[18px] px-5 text-base/4 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer ">
-                <SessionIcon className="w-6 h-6" pathFillColor="#5E585A" />
-                Session
+              <li
+                className={`py-[18px] px-5 text-base/4 ${
+                  pathname === "/session"
+                    ? "text-yellow-600 font-semibold bg-yellow-100"
+                    : "text-gray-500 font-medium"
+                } flex items-center gap-3 rounded-full cursor-pointer`}
+              >
+                <Link href="/session" className="flex items-center gap-3">
+                  <SessionIcon
+                    className="w-6 h-6"
+                    pathFillColor={
+                      pathname === "/session" ? "#c58843" : "#5E585A"
+                    }
+                  />
+                  Session
+                </Link>
               </li>
-              <li className="py-[18px] px-5 text-base/4 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer">
-                <PaymentIcon className="w-6 h-6" pathFillColor="#5E585A" />
-                Payment
+              <li
+                className={`py-[18px] px-5 text-base/4 ${
+                  pathname === "/payment"
+                    ? "text-yellow-600 font-semibold bg-yellow-100"
+                    : "text-gray-500 font-medium"
+                } flex items-center gap-3 rounded-full cursor-pointer`}
+              >
+                <Link href="/payment" className="flex items-center gap-3">
+                  <PaymentIcon
+                    className="w-6 h-6"
+                    pathFillColor={
+                      pathname === "/payment" ? "#c58843" : "#5E585A"
+                    }
+                  />
+                  Payment
+                </Link>
               </li>
-              <li className="py-[18px] px-5 text-base/4 text-gray-500 font-medium flex items-center gap-3 rounded-full cursor-pointer">
-                <PatientIcon className="w-6 h-6" pathFillColor="#5E585A" />
-                Patient
+              <li
+                className={`py-[18px] px-5 text-base/4 ${
+                  pathname === "/patient"
+                    ? "text-yellow-600 font-semibold bg-yellow-100"
+                    : "text-gray-500 font-medium"
+                } flex items-center gap-3 rounded-full cursor-pointer`}
+              >
+                <Link href="/patient" className="flex items-center gap-3">
+                  <PatientIcon
+                    className="w-6 h-6"
+                    pathFillColor={
+                      pathname === "/patient" ? "#c58843" : "#5E585A"
+                    }
+                  />
+                  Patient
+                </Link>
               </li>
             </ul>
           </nav>

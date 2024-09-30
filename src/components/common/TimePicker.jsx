@@ -20,7 +20,7 @@ const TimePicker = ({ className }) => {
   return (
     <div className={`relative mt-2 ${className}`}>
       <div
-        className={`flex items-center justify-between text-sm_18 py-3 px-2.5  border border-[#D9D9D9] rounded ${
+        className={`flex items-center justify-between text-sm_18 py-3 px-2.5  border border-[#D9D9D9] rounded-lg ${
           selectedTime === "00:00" ? "text-gray-400" : "text-primary"
         }`}
         onClick={() => setShowDropdown(!showDropdown)}

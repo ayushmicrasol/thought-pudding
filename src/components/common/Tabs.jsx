@@ -1,4 +1,3 @@
-// components/Tabs.js
 import { useState } from "react";
 
 const Tabs = ({ tabs }) => {
@@ -15,7 +14,7 @@ const Tabs = ({ tabs }) => {
           <li
             key={tab.label}
             onClick={() => handleTabClick(tab.label)}
-            className={`cursor-pointer px-4 py-4.5  ${
+            className={`cursor-pointer px-4 py-4.5 transition-colors duration-300 ${
               activeTab === tab.label
                 ? "text-green-600 border-b border-green-600"
                 : "text-primary/50"
@@ -25,8 +24,14 @@ const Tabs = ({ tabs }) => {
           </li>
         ))}
       </ul>
-      <div className="">
-        {tabs.find((tab) => tab.label === activeTab)?.content}
+      <div className="overflow-hidden">
+        <div
+          className={`transition-opacity duration-300 ease-in-out ${
+            activeTab ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {tabs.find((tab) => tab.label === activeTab)?.content}
+        </div>
       </div>
     </div>
   );

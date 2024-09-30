@@ -38,6 +38,7 @@ module.exports = {
 
         green: {
           200: "#E4FFEE",
+          400: "#00A92B",
           500: "#00B641",
           600: "#2A5F61",
         },
@@ -73,6 +74,8 @@ module.exports = {
       },
       spacing: {
         4.5: "18px",
+        7.5: "30px",
+        8.5: "34px",
         "15px": "15px",
         "26px": "26px",
         "30px": "30px",
@@ -119,7 +122,7 @@ module.exports = {
         "8xl_22": ["96px", "22px"],
         "9xl_22": ["128px", "22px"],
 
-        /* 30 line height */
+        /* 26 line height */
         xs_26: ["12px", "26px"],
         sm_26: ["14px", "26px"],
         base_26: ["16px", "26px"],

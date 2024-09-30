@@ -17,6 +17,7 @@ import {
   CaretLeft,
   CaretRight,
   Check,
+  FunnelSimple,
   MagnifyingGlass,
 } from "@phosphor-icons/react";
 import CancellationChart from "@/components/dashboard/CancellationChart";
@@ -34,6 +35,8 @@ import Button from "@/components/common/Button";
 import Link from "next/link";
 import TablePagination from "@/components/common/TablePagination";
 import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
+import THeade from "@/components/table/THeade";
+import DashboardTBody from "@/components/table/DashboardTBody";
 
 const activity = [
   {
@@ -56,6 +59,17 @@ const activity = [
     count: "23",
     icon: <OrangeCalendarIcon className="w-30px h-auto" />,
   },
+];
+
+const sessionTableHeade = [
+  "Name",
+  "Time",
+  "status",
+  "Amount",
+  "this session Fee	",
+  "Previous Fee	",
+  "Appointment",
+  "actions",
 ];
 
 const sessionTable = [
@@ -155,6 +169,17 @@ const regularClientsTable = [
     cRevenue: "1,500",
     pRevenue: "4,500",
   },
+  {
+    img: "",
+    name: "Darshan Tarpada",
+    email: "darshant56@gmail.com",
+    tSession: "5",
+    cSession: "2",
+    pSession: "1",
+    tRevenue: "6,000",
+    cRevenue: "1,500",
+    pRevenue: "4,500",
+  },
 ];
 
 const sessionTabs = [
@@ -164,13 +189,12 @@ const sessionTabs = [
   { label: "Cancelled (02)" },
 ];
 
-const monthsDropOptions = ["Today", "Week", "This Month", "Last Month"];
-
 const Dashboard = () => {
   const [freeSlote, setFreeSlote] = useState(false);
   const [isScheduleSessionModal, setIsScheduleSessionModal] = useState(false);
   const [isRescheduleSession, setIsRescheduleSession] = useState(false);
   const [isReminderModal, setIsReminderModal] = useState(false);
+  const [isReminderMassageModal, setIsReminderMassageModal] = useState(false);
   const [isCanceledSessionModal, setIsCanceledSessionModal] = useState(false);
   const [isCancellationModal, setIsCancellationModal] = useState(false);
   const [isUpdatePaymentModal, setIsUpdatePaymentModal] = useState(false);
@@ -255,37 +279,11 @@ const Dashboard = () => {
     }
   }, []);
 
-  // session Dates Swiper and dropdown end -----------------------------
-
-  // table pagination start ---------------------
-
-  // const [isTablePagination, setIsTablePagination] = useState(false);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const totalPages = 6;
-
-  // const handlePageSelect = (page) => {
-  //   setCurrentPage(page);
-  //   setIsTablePagination(false);
-  // };
-
-  // const handleNext = () => {
-  //   if (currentPage < totalPages) {
-  //     setCurrentPage(currentPage + 1);
-  //   }
-  // };
-
-  // const handlePrevious = () => {
-  //   if (currentPage > 1) {
-  //     setCurrentPage(currentPage - 1);
-  //   }
-  // };
-
-  // table pagination end ---------------------
   const totalPages = 10; // Define total pages for pagination
 
   return (
     <DashboardLayout>
-      <div className="space-y-5">
+      <div className="space-y-5 pt-5">
         <div className="grid md:grid-cols-7 gap-5">
           <div className="bg-white px-5 py-11 rounded-base md:flex items-center justify-between md:col-span-12">
             <div className="max-w-[422px]">
@@ -596,11 +594,11 @@ const Dashboard = () => {
               <Tabs tabs={sessionTabs} />
 
               <div className="flex items-center gap-2 max-w-[351px] w-full py-15px px-5 border border-[#9B9DB7] rounded-full text-xs text-primary">
-                <MagnifyingGlass size={20} className="text-[#A2A4B4]" />
+                <MagnifyingGlass size={20} className="text-primary/50" />
                 <input
                   type="search"
                   placeholder="Search your client name and id"
-                  className="outline-none w-full"
+                  className="outline-none w-full placeholder:text-primary/50"
                 />
               </div>
             </div>
@@ -608,285 +606,17 @@ const Dashboard = () => {
             {/* session table */}
             <div className="pt-30px">
               <div className="w-full border border-gray-100 rounded-base overflow-x-auto">
-                <table className="w-full  bg-white ">
-                  <thead className="text-left">
-                    <tr className="bg-[#F9F9F9] uppercase">
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        Name
-                      </th>
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        Time
-                      </th>
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        status
-                      </th>
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        Amount
-                      </th>
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        this session Fee
-                      </th>
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        Previous Fee
-                      </th>
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        Appointment
-                      </th>
-                      <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
-                        actions
-                      </th>
-                    </tr>
-                  </thead>
-
-                  <tbody className="divide-y divide-primary/10">
-                    {sessionTable?.map((item, index) => {
-                      const formatName = (name) => {
-                        const nameParts = name.split(" ");
-                        const firstName = nameParts[0];
-                        const lastNameInitial = nameParts[1]?.charAt(0);
-                        return `${firstName} ${lastNameInitial} (${name})`;
-                      };
-
-                      return (
-                        <tr key={index}>
-                          <td className="p-15px">
-                            <div className="flex items-center gap-3 ">
-                              <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
-                                {item.img ? (
-                                  <img
-                                    src={item.img}
-                                    alt=""
-                                    className="w-full h-full"
-                                  />
-                                ) : (
-                                  <span className="text-xs_18 text-[#72748D]">
-                                    {formatName(item.name)
-                                      .split(" ")[0]
-                                      .charAt(0) +
-                                      formatName(item.name)
-                                        .split(" ")[1]
-                                        .charAt(0)}
-                                  </span>
-                                )}
-                              </div>
-                              <div>
-                                <p className="text-sm/5 font-medium text-primary">
-                                  {formatName(item.name)}
-                                </p>
-                                <p className="text-xs_18 text-primary/70">
-                                  {item.email}
-                                </p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="p-15px text-primary/70 text-sm/5">
-                            {item.time}
-                          </td>
-                          <td className="p-15px">
-                            <span
-                              className={`inline-block py-1.5 px-3  rounded-full text-sm/5 ${
-                                item.status.trim() === "Completed"
-                                  ? "bg-green-200 text-green-500"
-                                  : item.status.trim() === "Upcoming"
-                                  ? "bg-orange-200 text-orange-600"
-                                  : item.status.trim() === "Cancelled"
-                                  ? "bg-[#FFEDED] text-[#FF5959]"
-                                  : ""
-                              }`}
-                            >
-                              {item.status}
-                            </span>
-                          </td>
-                          <td className="p-15px text-primary text-sm/5 font-medium">
-                            {item.amount}
-                          </td>
-                          <td className="p-15px text-primary/70 text-sm/5">
-                            {item.sessionFee}
-                          </td>
-                          <td className="p-15px text-primary text-sm/5">
-                            <div className="flex items-center gap-3">
-                              {item.previousFee}{" "}
-                              {item.previousFee === "Pending" && (
-                                <div className="relative group cursor-pointer">
-                                  <span className="w-5 h-5 flex items-center justify-center border border-[#010101] rounded-full">
-                                    !
-                                  </span>
-                                  <div className="absolute w-[322px] py-30px px-5 top-full right-0 rounded-base bg-white shadow-[0px_4px_16px_0px_#2424241A] transition-all duration-500 opacity-0 hidden group-hover:block group-hover:opacity-100 z-10">
-                                    <h3 className="text-sm/5 text-primary font-medium">
-                                      Unpaid Session Payment
-                                    </h3>
-                                    <ul className="space-y-15px pt-[22px] text-sm/5">
-                                      <li className="flex items-center justify-between text-primary">
-                                        <p className="text-xs_18">
-                                          14th July,2024
-                                        </p>
-                                        <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
-                                          Unpaid
-                                        </span>
-                                      </li>
-                                      <li className="flex items-center justify-between text-primary">
-                                        <p className="text-xs_18">
-                                          10th July,2024
-                                        </p>
-                                        <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
-                                          Unpaid
-                                        </span>
-                                      </li>
-                                      <li className="flex items-center justify-between text-primary">
-                                        <p className="text-xs_18">
-                                          7th July,2024
-                                        </p>
-                                        <span className="py-[2px] px-3 inline-block bg-red-200 text-red-500 rounded-[5px] text-xs/5">
-                                          Unpaid
-                                        </span>
-                                      </li>
-                                    </ul>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                          <td className="p-15px">
-                            <div className="flex items-center justify-between gap-3 text-sm/6 font-medium">
-                              <Link
-                                href={`javascript:void(0)`}
-                                onClick={() =>
-                                  setIsRescheduleSession(!isRescheduleSession)
-                                }
-                                className="text-green-600 underline"
-                              >
-                                Reschedule
-                              </Link>
-                              <Link
-                                href={`javascript:void(0)`}
-                                className="text-green-600 underline"
-                              >
-                                Start Session
-                              </Link>
-                            </div>
-                          </td>
-                          <td className="p-15px">
-                            <div className="flex items-center justify-between gap-3">
-                              <RegularNotificationIcon
-                                className="w-5 h-5 cursor-pointer"
-                                pathFillColor="#242424"
-                                onClick={() =>
-                                  setIsReminderModal(!isReminderModal)
-                                }
-                              />
-                              <RegularBinIcon
-                                className="w-5 h-5  cursor-pointer"
-                                onClick={() =>
-                                  setIsCanceledSessionModal(
-                                    !isCanceledSessionModal
-                                  )
-                                }
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
+                <table className="w-full  bg-white">
+                  <THeade data={sessionTableHeade} />
+                  <DashboardTBody
+                    TableData={sessionTable}
+                    setIsRescheduleSession={setIsRescheduleSession}
+                    isRescheduleSession={isRescheduleSession}
+                    setIsReminderModal={setIsReminderModal}
+                    setIsCanceledSessionModal={setIsCanceledSessionModal}
+                    isCanceledSessionModal={isCanceledSessionModal}
+                  />
                 </table>
-                {/* <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
-                  <div className="relative inline-block text-left">
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => setIsTablePagination(!isTablePagination)}
-                        className="px-2.5 py-2.5 border border-primary rounded-lg text-sm/4 text-primary flex items-center gap-2 capitalize"
-                      >
-                        page : {currentPage.toString().padStart(2, "0")}{" "}
-                        <CaretDown
-                          size={20}
-                          className={`transition-all duration-300 ${
-                            isTablePagination ? "rotate-180" : "rotate-0"
-                          }`}
-                        />
-                      </button>
-                      <p className="text-sm/4 text-primary">
-                        Of {totalPages} Pages
-                      </p>
-                    </div>
-
-                    <div
-                      className={`absolute mt-2 w-full bg-white shadow-[0px_4px_12px_0px_#2C58BB1A] rounded-lg z-10 transition-all duration-500 overflow-y-auto ${
-                        isTablePagination ? "h-[200px]" : "h-0"
-                      }`}
-                    >
-                      <ul className="py-1 text-sm/4 text-gray-700">
-                        {Array.from(
-                          { length: totalPages },
-                          (_, i) => i + 1
-                        ).map((page) => (
-                          <li key={page}>
-                            <button
-                              onClick={() => handlePageSelect(page)}
-                              className={`block w-full text-left px-4 py-2 ${
-                                currentPage === page
-                                  ? "bg-blue-600/10 !text-blue-600"
-                                  : "hover:bg-gray-100/20"
-                              }`}
-                            >
-                              Page : {page.toString().padStart(2, "0")}
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-[11px]">
-                    <button
-                      onClick={handlePrevious}
-                      className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
-                        currentPage === 1
-                          ? "border-gray-300 text-gray-300 cursor-not-allowed"
-                          : "border-gray-400 text-gray-400 hover:border-primary hover:text-primary"
-                      }`}
-                      disabled={currentPage === 1}
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={handleNext}
-                      className={`py-2.5 px-5 rounded-lg border text-sm/4 ${
-                        currentPage === totalPages
-                          ? "border-gray-300 text-gray-300 cursor-not-allowed"
-                          : "border-primary text-primary hover:bg-primary hover:text-white"
-                      }`}
-                      disabled={currentPage === totalPages}
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div> */}
-                {/* <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-1px_16.5px_0px_#F6F0FF]">
-                  <button className="p-2 border border-primary rounded-full">
-                    <CaretLeft size={22} />
-                  </button>
-                  <div className="flex items-center gap-2.5 text-base/5 font-medium">
-                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
-                      1
-                    </button>
-                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-green-600 bg-green-600/10">
-                      2
-                    </button>
-                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
-                      ...
-                    </button>
-                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
-                      7
-                    </button>
-                    <button className="w-11 h-11 flex items-center justify-center rounded-full text-primary/50">
-                      8
-                    </button>
-                  </div>
-                  <button className="py-2.5 px-3 border border-primary rounded-full flex items-center gap-1 text-sm/5 text-primary font-medium">
-                    Next
-                    <CaretRight size={20} />
-                  </button>
-                </div> */}
                 <TablePagination totalPages={totalPages} />
               </div>
             </div>
@@ -928,10 +658,7 @@ const Dashboard = () => {
                 <tbody className="divide-y divide-gray-100">
                   {regularClientsTable?.map((item, index) => {
                     const formatName = (name) => {
-                      const nameParts = name.split(" ");
-                      const firstName = nameParts[0];
-                      const lastNameInitial = nameParts[1]?.charAt(0);
-                      return `${firstName} ${lastNameInitial} (${name})`;
+                      return name;
                     };
 
                     return (
@@ -1003,19 +730,39 @@ const Dashboard = () => {
               </table>
             </div>
           </div>
-          <div className="md:col-span-2 bg-white rounded-base overflow-hidden">
-            <div className="flex items-center justify-between p-5">
-              <h2 className="text-xl/6 font-semibold text-primary">
-                Cancellation
-              </h2>
-              <DaysSelectDropdown
-                value={isMonthsDropSelect2}
-                onChange={setIsMonthsDropSelect2}
-              />
-            </div>
-            <div className="flex items-center justify-center mt-5">
-              <div className="max-w-[338px] max-h-[338px] w-full h-full">
-                <CancellationChart />
+          <div className="md:col-span-2 bg-white rounded-base overflow-hidden p-5">
+            <div className="flex flex-col justify-between h-full">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl/6 font-semibold text-primary">
+                  Cancellation
+                </h2>
+                <DaysSelectDropdown
+                  value={isMonthsDropSelect2}
+                  onChange={setIsMonthsDropSelect2}
+                />
+              </div>
+              <div className="pt-[58px]">
+                <div className="max-w-[338px] max-h-[338px] w-full h-full mx-auto">
+                  <CancellationChart />
+                </div>
+                <div className="flex items-center gap-8.5 pt-6">
+                  <div>
+                    <p className="text-sm/5 text-primary">
+                      Loss due to cancellation
+                    </p>
+                    <p className="pt-1 text-primary text-xl_30 font-medium">
+                      ₹5,400
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm/5 text-primary">
+                      Cancellation fees collected
+                    </p>
+                    <p className="pt-1 text-primary text-xl_30 font-medium">
+                      ₹2,100
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1071,13 +818,52 @@ const Dashboard = () => {
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() => {
-              setIsReminderModal(false);
-            }}
+            onClick={() =>
+              handleModalTransition(
+                setIsReminderModal,
+                setIsReminderMassageModal
+              )
+            }
           >
             Yes
           </Button>
         </div>
+      </SessionDetailModal>
+
+      {/* Reminder massage Modal */}
+      <SessionDetailModal
+        title="Send reminder"
+        isClose={isReminderMassageModal}
+        setIsClose={setIsReminderMassageModal}
+        className={`!max-w-[450px]`}
+      >
+        <div className="text-base/7 text-primary pt-5">
+          <p>
+            To:{" "}
+            <span className="text-green-600">{`Hetvi <hetvi.micra@gmail.com>`}</span>
+          </p>
+          <p>
+            Subject: <span className="font-semibold">Payment Reminder 🔔</span>
+          </p>
+          <p className="text-green-600 font-semibold">Hi Hetvi,</p>
+          <p className="pt-5">
+            This is to remind you that your payment for session on{" "}
+          </p>
+          <p>
+            <span className="font-semibold">19 Sep 2024 at 11:10 AM</span> with
+            <span className="font-semibold">Parth Sojitra</span> has been
+            pending for sometime. Kindly clear it before your next session.
+          </p>
+        </div>
+        <Button
+          variant="filledGreen"
+          className={`w-full mt-7.5`}
+          onClick={() => {
+            setIsReminderMassageModal(false);
+          }}
+        >
+          send reminder
+        </Button>
       </SessionDetailModal>
 
       {/* Session Canceled */}
@@ -1196,6 +982,7 @@ const Dashboard = () => {
           </Button>
           <Button
             variant="filledGreen"
+            className={`min-w-[157px]`}
             onClick={() => setIsTerminatingModal(false)}
           >
             Yes

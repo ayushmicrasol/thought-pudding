@@ -23,7 +23,7 @@ const SelectDropdown = ({
     <div className={`relative mt-2 ${className}`} {...props}>
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full py-3 px-2.5 border border-[#D9D9D9] rounded text-sm/5 text-primary flex justify-between items-center cursor-pointer ${subClass}`}
+        className={`w-full py-3 px-2.5 border border-[#D9D9D9] rounded-lg text-sm/5 text-primary flex justify-between items-center cursor-pointer ${subClass}`}
         aria-haspopup="listbox"
       >
         <div className="flex items-center gap-2.5">
@@ -40,7 +40,7 @@ const SelectDropdown = ({
       </div>
       {isOpen && (
         <ul
-          className={`absolute z-10 mt-1 w-full bg-white border border-[#D9D9D9] rounded shadow-lg max-h-60 overflow-auto ${DropClass} shadow-[0px_4px_15px_0px_#0000001A] py-[10px]`}
+          className={`absolute z-10 mt-1 w-full bg-white border border-[#D9D9D9] rounded-lg shadow-lg max-h-60 overflow-auto ${DropClass} shadow-[0px_4px_15px_0px_#0000001A] py-[10px]`}
         >
           {options.length === 0 ? (
             <li className="py-[10px] px-4 text-sm text-gray-500">

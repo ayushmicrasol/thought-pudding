@@ -10,7 +10,7 @@ const DashboardLayout = ({ children }) => {
           <Header />
 
           {/* content */}
-          <div className="pt-5">{children}</div>
+          {children}
         </div>
       </div>
     </Fragment>

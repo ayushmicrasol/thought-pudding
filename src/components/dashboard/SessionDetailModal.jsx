@@ -1,7 +1,13 @@
 import { X } from "@phosphor-icons/react";
 import React, { useEffect } from "react";
 
-const SessionDetailModal = ({ title, children, isClose, setIsClose }) => {
+const SessionDetailModal = ({
+  title,
+  children,
+  isClose,
+  setIsClose,
+  className,
+}) => {
   // stop body scrollig
   useEffect(() => {
     document.body.style.overflow = isClose ? "hidden" : "auto";
@@ -14,12 +20,12 @@ const SessionDetailModal = ({ title, children, isClose, setIsClose }) => {
       }`}
     >
       <div
-        className={`max-w-[578px] w-full transition-all duration-500 ${
+        className={`max-w-[578px] w-full transition-all duration-500 ${className} ${
           isClose ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
       >
-        <div className="p-30px bg-white rounded-[10px] w-full">
-          <div className=" pt-3">
+        <div className="p-6 bg-white rounded-[10px] w-full">
+          <div className="">
             <div className="flex items-center justify-between">
               <h4 className="text-base/6 text-primary font-semibold">
                 {title}
