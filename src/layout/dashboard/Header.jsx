@@ -60,7 +60,7 @@ const Header = () => {
           <nav className="md:block hidden">
             <ul className="flex gap-3">
               <li
-                className={`py-[18px] px-5 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 ${
                   pathname === "/dashboard"
                     ? "text-yellow-600 font-semibold bg-yellow-100"
                     : "text-gray-500 font-medium"
@@ -77,7 +77,7 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-5 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 ${
                   pathname === "/session"
                     ? "text-yellow-600 font-semibold bg-yellow-100"
                     : "text-gray-500 font-medium"
@@ -94,7 +94,7 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-5 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 ${
                   pathname === "/payment"
                     ? "text-yellow-600 font-semibold bg-yellow-100"
                     : "text-gray-500 font-medium"
@@ -111,7 +111,7 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-5 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 ${
                   pathname === "/patient"
                     ? "text-yellow-600 font-semibold bg-yellow-100"
                     : "text-gray-500 font-medium"

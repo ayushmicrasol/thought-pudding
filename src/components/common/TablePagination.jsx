@@ -12,7 +12,7 @@ const TablePagination = ({ totalPages }) => {
   };
 
   return (
-    <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-2px_8px_0px_#2A5F611F]">
+    <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-2px_5px_0px_#2A5F610D]">
       <button
         className={`w-10 h-10 flex items-center justify-center border  rounded-full ${
           currentPage === 1

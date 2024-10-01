@@ -3,9 +3,7 @@ import React, { useState } from "react";
 import {
   RegularBinIcon,
   RegularNotificationIcon,
-} from "../../../public/assets/Svgs";
-import SessionDetailModal from "../dashboard/SessionDetailModal";
-import Button from "../common/Button";
+} from "../../../../../public/assets/Svgs";
 
 const SessionTBody = ({
   TableData,

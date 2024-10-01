@@ -3,7 +3,7 @@ import React from "react";
 import {
   RegularBinIcon,
   RegularNotificationIcon,
-} from "../../../public/assets/Svgs";
+} from "../../../../../public/assets/Svgs";
 
 const DashboardTBody = ({
   TableData,

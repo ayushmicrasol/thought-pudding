@@ -1,19 +1,16 @@
 "use client";
 import Button from "@/components/common/Button";
 import DatePicker from "@/components/common/DatePicker";
-import Input from "@/components/common/Input";
 import TablePagination from "@/components/common/TablePagination";
 import Tabs from "@/components/common/Tabs";
 import ActivityCard from "@/components/dashboard/common/ActivityCard";
-import SessionTBody from "@/components/dashboard/common/table/SessionTBody";
+import PaymentTBody from "@/components/dashboard/common/table/PaymentTBody";
 import THeade from "@/components/dashboard/common/table/THeade";
 import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
-import FreeSlotsSidebar from "@/components/dashboard/FreeSlotsSidebar";
-import RescheduleSidebar from "@/components/dashboard/RescheduleSidebar";
-import ScheduleSessionSidebar from "@/components/dashboard/ScheduleSessionSidebar";
 import SessionDetailModal from "@/components/dashboard/SessionDetailModal";
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
 import {
+  ArrowDownLeft,
   ArrowUpRight,
   FunnelSimple,
   MagnifyingGlass,
@@ -22,38 +19,40 @@ import {
 import React, { useState } from "react";
 
 const activity = [
-  { title: "Completed Session", session: "120", percentage: "+12" },
-  { title: "Reschedule Session", session: "58", percentage: "+08" },
-  { title: "Cancel Session", session: "12", percentage: "-06" },
-  { title: "Patient", session: "150", percentage: "+18" },
+  { title: "Received", session: "₹2,200", percentage: "+12" },
+  { title: "Pending", session: "₹1,200", percentage: "+08" },
+  { title: "Total Earnings", session: "₹3,200", percentage: "-06" },
 ];
 
 const sessionTabs = [
   { label: "All (52)" },
-  { label: "Upcoming (20)" },
-  { label: "Completed (30)" },
+  { label: "Paid On Time (20)" },
+  { label: "Still Pending (30)" },
+  { label: "Paid Delayed (05)" },
   { label: "Cancelled (02)" },
 ];
 
-const sessionTableHeade = [
+const paymentTableHeade = [
   "Name",
-  "Date",
+  "Session date",
   "Time",
-  "Payments",
-  "status",
-  "Appointment",
+  "Amount",
+  "Payment type",
+  "Mark as",
+  "Payment on",
   "actions",
 ];
 
-const sessionTable = [
+const paymentTable = [
   {
     img: "",
     name: "Abhi Sojitra",
     email: "abhi@gmail.com",
     date: "12 Sep, 2024",
     time: "03:40-04:15 PM",
-    payments: "1,000",
-    status: "Completed",
+    amount: "1,000",
+    paymentType: "Post Session",
+    paymentOn: "08 Sep, 2024",
   },
   {
     img: "",
@@ -61,8 +60,9 @@ const sessionTable = [
     email: "dishank@gmail.com",
     date: "08 Aug, 2024",
     time: "02:00-03:15 PM",
-    payments: "2,000",
-    status: "Cancelled",
+    amount: "2,000",
+    paymentType: "Post Session",
+    paymentOn: "12 Aug, 2024",
   },
   {
     img: "",
@@ -70,8 +70,9 @@ const sessionTable = [
     email: "darshant56@gmail.com",
     date: "22 July, 2024",
     time: "12:00-01:30 PM",
-    payments: "500",
-    status: "Cancelled",
+    amount: "500",
+    paymentType: "Post Session",
+    paymentOn: "",
   },
   {
     img: "",
@@ -79,8 +80,9 @@ const sessionTable = [
     email: "nehak@gmail.com",
     date: "18 March, 2024",
     time: "05:00-06:00 PM",
-    payments: "250",
-    status: "Upcoming",
+    amount: "250",
+    paymentType: "Post Session",
+    paymentOn: "",
   },
   {
     img: "",
@@ -88,30 +90,19 @@ const sessionTable = [
     email: "Divyesh@gmail.com",
     date: "05 Sep, 2024",
     time: "01:40-02:30 PM",
-    payments: "850",
-    status: "Upcoming",
+    amount: "850",
+    paymentType: "Post Session",
+    paymentOn: "22 May, 2024",
   },
 ];
-
 const totalPages = 10; // Define total pages for pagination
 
-const session = () => {
+const Payment = () => {
   const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("Today");
-
-  // sidebar
-  const [freeSlote, setFreeSlote] = useState(false);
-  const [isScheduleSessionModal, setIsScheduleSessionModal] = useState(false);
-  const [isRescheduleSession, setIsRescheduleSession] = useState(false);
-
-  // modals
-  const [isFilter, setIsFilter] = useState(false);
-  const [isUpdatePayment, setIsUpdatePayment] = useState(false);
   const [isReminderModal, setIsReminderModal] = useState(false);
   const [isReminderMassageModal, setIsReminderMassageModal] = useState(false);
-  const [isCanceledSessionModal, setIsCanceledSessionModal] = useState(false);
-  const [isCancellationModal, setIsCancellationModal] = useState(false);
-  const [isUpdatePaymentModal, setIsUpdatePaymentModal] = useState(false);
-  const [isTerminatingModal, setIsTerminatingModal] = useState(false);
+
+  const [isFilter, setIsFilter] = useState(false);
 
   function handleModalTransition(closeModal, openModal) {
     closeModal(false); // Close the currently open modal
@@ -123,11 +114,9 @@ const session = () => {
       <div className="bg-white">
         {/* Session header */}
         <div className="flex items-center justify-between p-5 bg-white  shadow-[0px_2px_8px_0px_#2A5F611A] sticky top-28 z-[90]">
-          <h1 className="text-2xl/9 text-primary font-semibold">Session</h1>
+          <h1 className="text-2xl/9 text-primary font-semibold">Payment</h1>
           <div className="flex items-center gap-5">
-            <Button variant="filled" onClick={() => setFreeSlote(!freeSlote)}>
-              Find me free slot
-            </Button>
+            <Button variant="filled">Find me free slot</Button>
           </div>
         </div>
 
@@ -141,7 +130,7 @@ const session = () => {
               DropClass=""
             />
           </div>
-          <div className="pt-5 grid grid-cols-4 gap-5">
+          <div className="pt-5 grid grid-cols-3 gap-5">
             {activity?.map((items, index) => (
               <ActivityCard
                 key={index}
@@ -155,7 +144,7 @@ const session = () => {
                     ? "border-[#1339FF]"
                     : index === 2
                     ? "border-[#FF5C00]"
-                    : "border-[#D813FF]"
+                    : ""
                 }
               />
             ))}
@@ -191,16 +180,11 @@ const session = () => {
           <div className="pt-10">
             <div className="w-full border border-gray-100 rounded-base overflow-x-auto">
               <table className="w-full  bg-white">
-                <THeade data={sessionTableHeade} />
-                <SessionTBody
-                  TableData={sessionTable}
-                  setIsRescheduleSession={setIsRescheduleSession}
-                  isRescheduleSession={isRescheduleSession}
-                  setIsUpdatePayment={setIsUpdatePayment}
-                  isUpdatePayment={isUpdatePayment}
+                <THeade data={paymentTableHeade} />
+                <PaymentTBody
+                  TableData={paymentTable}
                   setIsReminderModal={setIsReminderModal}
-                  setIsCanceledSessionModal={setIsCanceledSessionModal}
-                  isCanceledSessionModal={isCanceledSessionModal}
+                  isReminderModal={isReminderModal}
                 />
               </table>
               <TablePagination totalPages={totalPages} />
@@ -209,17 +193,6 @@ const session = () => {
         </div>
       </div>
 
-      {/* ====== Side Bars ====== */}
-
-      {/* FreeSlots Sidebar */}
-      <FreeSlotsSidebar freeSlote={freeSlote} setFreeSlote={setFreeSlote} />
-
-      {/* Reschedule Session sidebar */}
-      <RescheduleSidebar
-        isRescheduleSession={isRescheduleSession}
-        setIsRescheduleSession={setIsRescheduleSession}
-      />
-
       {/* ====== Session modals ====== */}
       {/* Filter Modal */}
       <SessionDetailModal
@@ -227,18 +200,56 @@ const session = () => {
         isClose={isFilter}
         setIsClose={setIsFilter}
       >
-        <div className="py-7.5 space-y-5">
-          <div>
-            <label className="text-base/5 text-primary font-medium">
-              Start Date
+        <div className="py-7.5">
+          <p className="text-base/5 text-primary font-medium">Client Status</p>
+          <div className="space-y-2.5 pt-3">
+            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
+              <input type="radio" name="Status" className="w-4.5 h-4.5" />
+              Last 7 Days
             </label>
-            <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
+              <input type="radio" name="Status" className="w-4.5 h-4.5" />
+              Last 15 Days
+            </label>
+            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
+              <input type="radio" name="Status" className="w-4.5 h-4.5" />
+              Last 30 Days
+            </label>
+            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
+              <input type="radio" name="Status" className="w-4.5 h-4.5" />
+              Custom Date
+            </label>
           </div>
-          <div>
-            <label className="text-base/5 text-primary font-medium">
-              End Date
+          <div className="space-y-5 pt-6">
+            <div>
+              <label className="text-base/5 text-primary font-medium">
+                Start Date
+              </label>
+              <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            </div>
+            <div>
+              <label className="text-base/5 text-primary font-medium">
+                End Date
+              </label>
+              <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            </div>
+          </div>
+          <p className="text-base/5 text-primary font-medium pt-6">
+            Payment Mark As
+          </p>
+          <div className="flex items-center gap-6 pt-3">
+            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
+              <input type="radio" name="Payment" className="w-4.5 h-4.5" />
+              Paid On Time
             </label>
-            <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
+              <input type="radio" name="Payment" className="w-4.5 h-4.5" />
+              Still Pending
+            </label>
+            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
+              <input type="radio" name="Payment" className="w-4.5 h-4.5" />
+              Paid Delayed
+            </label>
           </div>
         </div>
         <div className="flex items-center justify-end gap-3.5">
@@ -259,48 +270,6 @@ const session = () => {
             }}
           >
             Apply
-          </Button>
-        </div>
-      </SessionDetailModal>
-
-      {/* Upadate Payment Modal */}
-      <SessionDetailModal
-        title="Update Payment"
-        isClose={isUpdatePayment}
-        setIsClose={setIsUpdatePayment}
-      >
-        <div className="py-7.5 space-y-5">
-          <div>
-            <label className="text-base/5 text-primary font-medium">
-              Old Amount
-            </label>
-            <Input type={"number"} placeholder={"0"} icon={`rup`} />
-          </div>
-          <div>
-            <label className="text-base/5 text-primary font-medium">
-              New Amount
-            </label>
-            <Input type={"number"} placeholder={"0"} icon={`rup`} />
-          </div>
-        </div>
-        <div className="flex items-center justify-end gap-3.5">
-          <Button
-            variant="outlinedGreen"
-            className={`min-w-[157px]`}
-            onClick={() => {
-              setIsUpdatePayment(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="filledGreen"
-            className={`min-w-[157px]`}
-            onClick={() => {
-              setIsUpdatePayment(false);
-            }}
-          >
-            update
           </Button>
         </div>
       </SessionDetailModal>
@@ -385,132 +354,8 @@ const session = () => {
           send reminder
         </Button>
       </SessionDetailModal>
-
-      {/* Session Canceled */}
-      <SessionDetailModal
-        title="Session Canceled"
-        isClose={isCanceledSessionModal}
-        setIsClose={setIsCanceledSessionModal}
-      >
-        <p className="text-gray-500 text-sm/5 pt-5 max-w-[465px]">
-          Are you sure you want to mark this session as a Cancel ? This action
-          will notify the customer and update your records accordingly.
-        </p>
-        <div className="flex items-center justify-end gap-3.5 pt-[34px]">
-          <Button
-            variant="outlinedGreen"
-            onClick={() =>
-              handleModalTransition(
-                setIsCanceledSessionModal,
-                setIsTerminatingModal
-              )
-            }
-            className={`min-w-[157px]`}
-          >
-            Cancel All Sessions
-          </Button>
-          <Button
-            variant="filledGreen"
-            className={`min-w-[157px]`}
-            onClick={() =>
-              handleModalTransition(
-                setIsCanceledSessionModal,
-                setIsCancellationModal
-              )
-            }
-          >
-            Session Off
-          </Button>
-        </div>
-      </SessionDetailModal>
-
-      {/* Cancellation Fees */}
-      <SessionDetailModal
-        title="Is There a Cancellation Fees"
-        isClose={isCancellationModal}
-        setIsClose={setIsCancellationModal}
-      >
-        <div className="flex items-center justify-end gap-3.5 pt-[34px]">
-          <Button
-            variant="outlinedGreen"
-            className={`min-w-[157px]`}
-            onClick={() =>
-              handleModalTransition(
-                setIsCancellationModal,
-                setIsUpdatePaymentModal
-              )
-            }
-          >
-            No
-          </Button>
-          <Button
-            variant="filledGreen"
-            className={`min-w-[157px]`}
-            onClick={() =>
-              handleModalTransition(
-                setIsCancellationModal,
-                setIsUpdatePaymentModal
-              )
-            }
-          >
-            Yes
-          </Button>
-        </div>
-      </SessionDetailModal>
-
-      {/* Update Payment Session */}
-      <SessionDetailModal
-        title="Update Payment Session"
-        isClose={isUpdatePaymentModal}
-        setIsClose={setIsUpdatePaymentModal}
-      >
-        <p className="text-gray-500 text-sm/5 pt-5 max-w-[465px]">
-          We are calling off this session. after you have got it. cancellation
-          sum Remember to update the same information in your payment.
-        </p>
-        <div className="text-end pt-[34px]">
-          <Button
-            variant="filledGreen"
-            className="min-w-[157px]"
-            onClick={() => setIsUpdatePaymentModal(false)}
-          >
-            Okay, got it
-          </Button>
-        </div>
-      </SessionDetailModal>
-
-      {/* Are you terminating the client */}
-      <SessionDetailModal
-        title="Are you terminating the client"
-        isClose={isTerminatingModal}
-        setIsClose={setIsTerminatingModal}
-      >
-        <p className="text-gray-500 text-sm/5  pt-5 max-w-[465px]">
-          This action will end all services with the client. Please confirm to
-          proceed.
-        </p>
-        <div className="flex items-center justify-end gap-3.5 pt-[34px]">
-          <Button
-            variant="outlinedGreen"
-            className={`min-w-[157px]`}
-            onClick={() => {
-              setIsTerminatingModal(false);
-              setIsRescheduleSession(true);
-            }}
-          >
-            No
-          </Button>
-          <Button
-            variant="filledGreen"
-            className={`min-w-[157px]`}
-            onClick={() => setIsTerminatingModal(false)}
-          >
-            Yes
-          </Button>
-        </div>
-      </SessionDetailModal>
     </DashboardLayout>
   );
 };
 
-export default session;
+export default Payment;

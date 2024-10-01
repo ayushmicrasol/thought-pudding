@@ -3,7 +3,7 @@ import React from "react";
 const THeade = ({ data }) => {
   return (
     <thead className="text-left">
-      <tr className="bg-[#F9F9F9] uppercase">
+      <tr className="bg-[#F9F9F9] uppercase shadow-[0px_2px_8px_0px_#2A5F611F]">
         {data?.map((item, index) => (
           <th
             key={index}

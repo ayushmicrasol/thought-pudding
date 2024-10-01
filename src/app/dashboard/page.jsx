@@ -35,8 +35,8 @@ import Button from "@/components/common/Button";
 import Link from "next/link";
 import TablePagination from "@/components/common/TablePagination";
 import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
-import THeade from "@/components/table/THeade";
-import DashboardTBody from "@/components/table/DashboardTBody";
+import THeade from "@/components/dashboard/common/table/THeade";
+import DashboardTBody from "@/components/dashboard/common/table/DashboardTBody";
 
 const activity = [
   {
