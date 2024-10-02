@@ -132,17 +132,18 @@ const Patient = () => {
                 className="outline-none w-full placeholder:text-primary/50"
               />
               <span className="text-primary/50">|</span>
-              <button
-                className="flex items-center bg-green-600/5 py-1 px-2.5 rounded-full gap-3"
-                onClick={() => {
-                  setIsFilter(!isFilter);
-                }}
-              >
-                <FunnelSimple size={20} className="text-green-600" />
-                <div className="w-5 h-5 rounded-full border border-primary/20 text-primary flex items-center justify-center bg-white">
+              <div className="flex items-center bg-green-600/5 py-1 px-2.5 rounded-full gap-3">
+                <FunnelSimple
+                  size={20}
+                  className="text-green-600 cursor-pointer"
+                  onClick={() => {
+                    setIsFilter(!isFilter);
+                  }}
+                />
+                {/* <div className="w-5 h-5 rounded-full border border-primary/20 text-primary flex items-center justify-center bg-white">
                   <X size={12} />
-                </div>
-              </button>
+                </div> */}
+              </div>
             </div>
           </div>
           <div className="pt-10">

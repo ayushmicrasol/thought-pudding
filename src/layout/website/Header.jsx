@@ -3,6 +3,7 @@ import Button from "@/components/common/Button";
 import Login from "@/components/common/Login";
 import { ArrowUpRight, List, X } from "@phosphor-icons/react";
 import Image from "next/image";
+import Link from "next/link";
 import React, { Fragment, useEffect, useState } from "react";
 
 const Header = () => {
@@ -34,18 +35,15 @@ const Header = () => {
       >
         <div className="sm:py-6 py-4 px-4 relative z-[99]">
           <div className="container mx-auto flex justify-between items-center">
-            {/* <h2 className="sm:text-2xl_30 text-base/5 font-semibold text-gray-400">
-              Thought Pudding
-            </h2> */}
-            <div>
+            <Link href={`/`}>
               <Image
                 src="/assets/images/logo.webp"
                 alt="banner"
                 width={200}
                 height={200}
-                className="sm:max-w-[214px] max-w-40 h-auto"
+                className="sm:h-[47px] h-8  w-auto"
               />
-            </div>
+            </Link>
             <div
               className={`flex flex-col sm:flex-row sm:items-center sm:gap-12 gap-7 sm:static absolute top-full  bg-white w-full sm:w-auto px-4 sm:px-0 py-30px sm:py-0 z-30 transition-all duration-500 ${
                 menuOpen ? "left-0" : "-left-full"

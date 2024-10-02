@@ -29,11 +29,13 @@ const EditSessionSidebar = ({ isEditSession, setIsEditSession }) => {
       className={`fixed w-full h-full bg-black/20 top-0 left-0 z-[999] ${
         isEditSession ? "visible" : "invisible"
       }`}
+      onClick={() => setIsEditSession(false)}
     >
       <div
         className={`max-w-[416px] w-full  bg-white absolute top-0 right-0 h-full transition-all duration-300 ${
           isEditSession ? "translate-x-0" : "translate-x-full"
         }`}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="relative h-screen flex flex-col">
           {/* side bar header */}
@@ -140,10 +142,16 @@ const EditSessionSidebar = ({ isEditSession, setIsEditSession }) => {
 
           {/* side bar footer */}
           <div className="bg-white shadow-[0px_4px_43.4px_0px_#0000001A] px-5 py-2.5 grid grid-cols-2 gap-5 z-10">
-            <Button onClick={() => setIsEditSession(false)} variant="outlined">
+            <Button
+              onClick={() => setIsEditSession(false)}
+              variant="outlinedGreen"
+            >
               Cancel
             </Button>
-            <Button onClick={() => setIsEditSession(false)} variant="filled">
+            <Button
+              onClick={() => setIsEditSession(false)}
+              variant="filledGreen"
+            >
               Save
             </Button>
           </div>

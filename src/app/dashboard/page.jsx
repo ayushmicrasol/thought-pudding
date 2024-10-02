@@ -639,17 +639,17 @@ const Dashboard = () => {
             <div className="w-full overflow-x-auto">
               <table className="min-w-full bg-white border-t border-gray-100">
                 <thead className="text-left">
-                  <tr className="bg-[#F9F9F9] uppercase">
-                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                  <tr className="bg-green-600/5 shadow-[0px_2px_8px_0px_#2A5F611F] uppercase">
+                    <th className="px-15px py-5 font-semibold text-primary/70 text-sm/5">
                       Client Details
                     </th>
-                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                    <th className="px-15px py-5 font-semibold text-primary/70 text-sm/5">
                       Last Session
                     </th>
-                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                    <th className="px-15px py-5 font-semibold text-primary/70 text-sm/5">
                       Session Summary
                     </th>
-                    <th className="px-15px py-5 font-medium text-primary/70 text-sm/5">
+                    <th className="px-15px py-5 font-semibold text-primary/70 text-sm/5">
                       Total Revenue
                     </th>
                   </tr>
@@ -657,12 +657,8 @@ const Dashboard = () => {
 
                 <tbody className="divide-y divide-gray-100">
                   {regularClientsTable?.map((item, index) => {
-                    const formatName = (name) => {
-                      return name;
-                    };
-
                     return (
-                      <tr key={index} className="">
+                      <tr key={index}>
                         <td className="px-15px py-5">
                           <div className="flex items-center gap-3">
                             <div className="w-[34px] h-[34px] rounded-full border border-[#64748B33] bg-[#F5F5F7] overflow-hidden flex items-center justify-center">
@@ -673,21 +669,19 @@ const Dashboard = () => {
                                   className="w-full h-full"
                                 />
                               ) : (
-                                <span className="text-xs_18 text-[#72748D]">
-                                  {formatName(item.name)
-                                    .split(" ")[0]
-                                    .charAt(0) +
-                                    formatName(item.name)
-                                      .split(" ")[1]
-                                      .charAt(0)}
+                                <span className="text-xs_18 text-[#72748D] font-medium">
+                                  {item.name
+                                    .split(" ")
+                                    .map((n) => n.charAt(0))
+                                    .join("")}
                                 </span>
                               )}
                             </div>
                             <div>
                               <p className="text-sm/5 text-primary font-semibold">
-                                {formatName(item.name)}
+                                {item.name}
                               </p>
-                              <p className="text-xs_18 text-primary/70">
+                              <p className="text-xs_18 text-primary/70 font-medium">
                                 {item.email}
                               </p>
                             </div>
@@ -697,7 +691,7 @@ const Dashboard = () => {
                           <p className="text-sm/5 text-primary font-semibold">
                             18 Sep,2024
                           </p>
-                          <p className="text-sm/5 text-primary/70 pt-[3px]">
+                          <p className="text-sm/5 text-primary/70 pt-[3px] font-medium">
                             2.00 PM, 50 min
                           </p>
                         </td>
@@ -705,10 +699,10 @@ const Dashboard = () => {
                           <p className="text-sm/5 text-primary font-semibold">
                             15 Session
                           </p>
-                          <p className="text-sm/5 text-[#14A347] pt-[3px]">
+                          <p className="text-sm/5 text-[#14A347] pt-[3px] font-medium">
                             12 Completed
                           </p>
-                          <p className="text-sm/5 text-primary/70 pt-[3px]">
+                          <p className="text-sm/5 text-primary/70 pt-[3px] font-medium">
                             3 Pending
                           </p>
                         </td>
@@ -716,10 +710,10 @@ const Dashboard = () => {
                           <p className="text-sm/5 text-primary font-semibold">
                             ₹6,000 Total
                           </p>
-                          <p className="text-sm/5 text-[#14A347] pt-[3px]">
+                          <p className="text-sm/5 text-[#14A347] pt-[3px] font-medium">
                             +₹1,500 Collected
                           </p>
-                          <p className="text-sm/5 text-primary/70 pt-[3px]">
+                          <p className="text-sm/5 text-primary/70 pt-[3px] font-medium">
                             -₹4,500 Pending
                           </p>
                         </td>

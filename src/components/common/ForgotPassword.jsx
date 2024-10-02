@@ -13,31 +13,31 @@ const ForgotPassword = ({ forgotPasswordOpen, setForgotPasswordOpen }) => {
       }`}
     >
       <div
-        className={`max-w-[578px] w-full bg-yellow-50 rounded-base p-30px overflow-hidden transition-all duration-500 ${
+        className={`max-w-[578px] w-full bg-yellow-50 rounded-base p-6 overflow-hidden transition-all duration-500 ${
           forgotPasswordOpen
             ? "visible opacity-100 scale-100"
             : "invisible opacity-0 scale-75"
         }`}
       >
         <div>
-          <div className="flex justify-between items-center pt-3">
-            <h2 className="text-base/6 text-primary font-semibold capitalize ">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl/6 text-primary font-medium ">
               Forgot your password
             </h2>
             <X
-              className="text-primary text-xl cursor-pointer"
+              className="text-primary text-2xl cursor-pointer"
               onClick={() => setForgotPasswordOpen(false)}
             />
           </div>
-          <p className="text-xs/4 text-gray-400 font-medium pt-3">
+          <p className="text-base/6  text-gray-400 pt-7.5">
             Forgot your password? Simply enter your email address, and we’ll
             help you reset it
           </p>
-          <div className="space-y-4.5 pt-3">
+          <div className="space-y-4.5 pt-7.5">
             <div>
               <lable className="text-sm/5 text-primary">Email</lable>
               <Input
-                mainClass={`bg-white border-[#CADAFF]`}
+                mainClass={`bg-white`}
                 placeholder={`Enter Email Address`}
               />
             </div>

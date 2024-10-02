@@ -73,7 +73,7 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                 <button className="p-3 bg-white border border-green-600 w-full rounded mt-2 flex items-center justify-center gap-2.5 text-sm/5 text-primary">
                   <GoogleIcon className={`w-5 h-5`} /> Continue with Google
                 </button>
-                <div className="py-3 flex items-center text-sm text-primary/50 before:flex-1 before:border-t before:border-[#D9D9D9] before:me-6 after:flex-1 after:border-t after:border-[#D9D9D9] after:ms-6">
+                <div className="py-3 flex items-center text-sm text-primary/50 before:flex-1 before:border-t before:border-primary/40 before:me-6 after:flex-1 after:border-t after:border-primary/40 after:ms-6">
                   or
                 </div>
                 <div className="space-y-4.5">
@@ -93,8 +93,15 @@ const Login = ({ loginOpen, setLoginOpen }) => {
                     />
                   </div>
                   <div className="flex items-center justify-between !mt-3">
-                    <label htmlFor="" className="flex gap-2">
-                      <input type="checkbox" />
+                    <label
+                      form="remender"
+                      className="flex gap-2 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        name="remender"
+                        className="w-4.5 h-4.5 accent-green-600"
+                      />
                       <p className="text-xs_18 text-green-600">Remember Me</p>
                     </label>
                     <p

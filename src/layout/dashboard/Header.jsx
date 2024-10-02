@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { Fragment, useEffect, useState } from "react";
 
-import { CaretDown } from "@phosphor-icons/react";
+import { CaretDown, User } from "@phosphor-icons/react";
 import {
   DashboardIcon,
   NotificationIcon,
@@ -13,9 +13,12 @@ import {
 } from "../../../public/assets/Svgs";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Dropdown from "@/components/common/Dropdown";
 
 const Header = () => {
   const [hasShadow, setHasShadow] = useState(false);
+  const [profileDrop, setProfileDrop] = useState(false);
+  const [notification, setNotification] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,7 +46,7 @@ const Header = () => {
           } ${hasShadow ? "shadow-[0px_4px_6.1px_0px_#E5E9FF80]" : ""}`}
         >
           {/* logo  */}
-          <div className="max-w-[172px]">
+          <Link href="/" className="max-w-[172px]">
             <Image
               src="/assets/images/logo.webp"
               alt="logo"
@@ -51,7 +54,7 @@ const Header = () => {
               height={300}
               className="w-full"
             />
-          </div>
+          </Link>
 
           {/* navigation manu */}
 
@@ -130,23 +133,69 @@ const Header = () => {
 
           {/* profile area */}
           <div className="md:flex hidden items-center gap-6">
-            <button className="w-[30px] h-[30px]">
-              <SettingIcon className="w-full h-full" />
+            <button>
+              <SettingIcon className="w-7.5 h-7.5" />
             </button>
-            <button className="w-[30px] h-[30px]">
-              <NotificationIcon className="w-full h-full" />
-            </button>
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="rounded-full overflow-hidden p-[3px] border border-[#545454]">
-                <Image
-                  src="/assets/images/avatar.webp"
-                  alt="logo"
-                  width={300}
-                  height={300}
-                  className="w-10 h-10 object-cover"
-                />
+            <div className="relative">
+              <button onClick={() => setNotification(!notification)}>
+                <NotificationIcon className="w-7.5 h-7.5" />
+              </button>
+              <Dropdown
+                className={`w-[400px]`}
+                isOpen={notification}
+                setIsOpen={setNotification}
+              >
+                <h4 className="p-5 text-base/6 text-primary font-semibold shadow-[0px_2px_4px_0px_#2C58BB1F]">
+                  Notification
+                </h4>
+                <ul className="p-5">
+                  <li className="flex items-start gap-4">
+                    <div className="min-w-10 h-10 rounded-full bg-green-600/10 text-green-600 flex items-center justify-center">
+                      <User size={24} />
+                    </div>
+                    <div className="max-w-[290px]">
+                      <p className="text-sm/5 text-primary font-medium">
+                        Upcoming session with Abhi Sojitra in 2:20 AM
+                      </p>
+                      <p className="pt-2 text-xs_18 text-primary/50">
+                        2 Minute
+                      </p>
+                    </div>
+                  </li>
+                </ul>
+              </Dropdown>
+            </div>
+            <div className="relative">
+              <div
+                onClick={() => setProfileDrop(!profileDrop)}
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                <div className="rounded-full overflow-hidden p-[3px] border border-primary/50">
+                  <Image
+                    src="/assets/images/avatar.webp"
+                    alt="logo"
+                    width={300}
+                    height={300}
+                    className="w-10 h-10 object-cover"
+                  />
+                </div>
+                <CaretDown size={16} className=" text-primary" />
               </div>
-              <CaretDown className="w-4 text-[#6F6F6F]" />
+              <Dropdown
+                className={`w-[233px] py-4.5 px-15px`}
+                isOpen={profileDrop}
+                setIsOpen={setProfileDrop}
+              >
+                <ul className="text-primary font-medium text-base/6">
+                  <li className="hover:text-green-600 hover:translate-x-2 transition-all duration-300">
+                    <Link href={``}>My Profile</Link>
+                  </li>
+                  <hr className="my-[13px] border-green-600/15" />
+                  <li className="hover:text-green-600 hover:translate-x-2 transition-all duration-300">
+                    <Link href={``}>Log Out</Link>
+                  </li>
+                </ul>
+              </Dropdown>
             </div>
           </div>
         </div>

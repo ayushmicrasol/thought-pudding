@@ -19,12 +19,11 @@ const Input = ({ placeholder, type, className, mainClass, icon, ...props }) => {
   };
   return (
     <div
-      className={`relative mt-2 py-3 pl-2.5 pr-[30px] border border-[#D9D9D9] rounded-lg flex items-center gap-2.5 ${mainClass} focus-within:border-green-600`}
+      className={`relative mt-2 py-3 pl-2.5 pr-[30px] border border-green-600/20 rounded-lg flex items-center gap-2.5 ${mainClass} focus-within:border-green-600`}
     >
       {icon === "number" && <Phone size={20} />}
       {icon === "email" && <EnvelopeOpen size={20} />}
       {icon === "rup" && <CurrencyInr size={20} />}
-      
 
       <input
         type={type}
