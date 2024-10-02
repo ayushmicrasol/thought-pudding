@@ -111,14 +111,14 @@ const Payment = () => {
 
   return (
     <DashboardLayout>
-      <div className="bg-white">
+      <div className="bg-white mt-5 rounded-base overflow-hidden">
         {/* Session header */}
-        <div className="flex items-center justify-between p-5 bg-white  shadow-[0px_2px_8px_0px_#2A5F611A] sticky top-28 z-[90]">
+        {/* <div className="flex items-center justify-between p-5 bg-white  shadow-[0px_2px_8px_0px_#2A5F611A] sticky top-28 z-[90]">
           <h1 className="text-2xl/9 text-primary font-semibold">Payment</h1>
           <div className="flex items-center gap-5">
             <Button variant="filled">Find me free slot</Button>
           </div>
-        </div>
+        </div> */}
 
         {/* activity section */}
         <div className="p-5">
@@ -178,7 +178,7 @@ const Payment = () => {
             </div>
           </div>
           <div className="pt-10">
-            <div className="w-full border border-gray-100 rounded-base overflow-x-auto">
+            <div className="w-full border border-green-600/25 rounded-base overflow-x-auto">
               <table className="w-full  bg-white">
                 <THeade data={paymentTableHeade} />
                 <PaymentTBody

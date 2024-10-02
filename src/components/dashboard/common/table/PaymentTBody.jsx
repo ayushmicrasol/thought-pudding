@@ -107,6 +107,7 @@ const PaymentTBody = ({ TableData, setIsReminderModal, isReminderModal }) => {
               <RegularNotificationIcon
                 className="w-5 h-5 cursor-pointer"
                 pathFillColor="#242424"
+                strokeWidth={`1.5`}
                 onClick={() => setIsReminderModal(!isReminderModal)}
               />
             </div>

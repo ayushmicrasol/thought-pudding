@@ -1,20 +1,7 @@
 import Link from "next/link";
-import {
-  RegularBinIcon,
-  RegularNotificationIcon,
-} from "../../../../../public/assets/Svgs";
+import { PencilSimple } from "@phosphor-icons/react";
 
-const SessionTBody = ({
-  TableData,
-  setIsUpdatePayment,
-  isUpdatePayment,
-  setIsRescheduleSession,
-  isRescheduleSession,
-  setIsReminderModal,
-  isReminderModal,
-  setIsCanceledSessionModal,
-  isCanceledSessionModal,
-}) => {
+const PatientTBody = ({ TableData, setIsEditSession, isEditSession }) => {
   return (
     <tbody className="divide-y divide-primary/10">
       {TableData?.map((item, index) => {
@@ -45,13 +32,10 @@ const SessionTBody = ({
               </div>
             </td>
             <td className="p-15px text-primary/70 text-sm/5 font-medium">
-              {item.date}
-            </td>
-            <td className="p-15px text-primary/70 text-sm/5 font-medium">
-              {item.time}
+              +{item.number}
             </td>
             <td className="p-15px text-primary text-sm/5 font-semibold">
-              ₹ {item.payments}
+              {item.session} Session
             </td>
             <td className="p-15px">
               <span
@@ -68,38 +52,23 @@ const SessionTBody = ({
                 {item.status}
               </span>
             </td>
+
             <td className="p-15px">
               <div className="flex items-center gap-6 text-sm/6 font-medium">
-                <Link
-                  href={`javascript:void(0)`}
-                  onClick={() => setIsRescheduleSession(!isRescheduleSession)}
-                  className="text-green-600 underline"
-                >
-                  Reschedule
+                <Link href={`/payment`} className="text-green-600 underline">
+                  View Payment
                 </Link>
-                <Link
-                  href={`javascript:void(0)`}
-                  onClick={() => setIsUpdatePayment(!isUpdatePayment)}
-                  className="text-green-600 underline"
-                >
-                  Update Payment
+                <Link href={`/session`} className="text-green-600 underline">
+                  View Session
                 </Link>
               </div>
             </td>
             <td className="p-15px">
               <div className="flex items-center gap-5">
-                <RegularNotificationIcon
+                <PencilSimple
                   className="w-5 h-5 cursor-pointer"
                   pathFillColor="#242424"
-                  strokeWidth={`1.5`}
-                  onClick={() => setIsReminderModal(!isReminderModal)}
-                />
-                <RegularBinIcon
-                  className="w-5 h-5  cursor-pointer"
-                  strokeWidth={`1.5`}
-                  onClick={() =>
-                    setIsCanceledSessionModal(!isCanceledSessionModal)
-                  }
+                  onClick={() => setIsEditSession(!isEditSession)}
                 />
               </div>
             </td>
@@ -110,4 +79,4 @@ const SessionTBody = ({
   );
 };
 
-export default SessionTBody;
+export default PatientTBody;

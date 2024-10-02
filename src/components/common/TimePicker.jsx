@@ -42,23 +42,27 @@ const TimePicker = ({ className }) => {
         <Clock size={20} className="text-primary" />
       </div>
 
-      {showDropdown && (
-        <div className="absolute mt-1 w-full max-h-48 overflow-y-auto z-10 bg-white shadow-[0px_4px_12px_0px_#2C58BB1A] rounded-lg">
-          {times.map((time) => (
-            <div
-              key={time}
-              onClick={() => handleSelectTime(time)}
-              className={`px-4 py-2 cursor-pointer hover:bg-gray-100/20 transition duration-200 text-sm_18  ${
-                selectedTime === time
-                  ? "bg-blue-600/10 text-blue-600"
-                  : "text-primary"
-              }`}
-            >
-              {time}
-            </div>
-          ))}
-        </div>
-      )}
+      <div
+        className={`absolute mt-1 w-full max-h-48 overflow-y-auto z-10 bg-white shadow-[0px_4px_12px_0px_#2C58BB1A] rounded-lg transition-all duration-200 ${
+          showDropdown
+            ? "visible opacity-100 translate-y-0"
+            : "invisible opacity-0 -translate-y-5"
+        }`}
+      >
+        {times.map((time) => (
+          <div
+            key={time}
+            onClick={() => handleSelectTime(time)}
+            className={`px-4 py-2 cursor-pointer hover:bg-gray-100/20 transition duration-200 text-sm_18  ${
+              selectedTime === time
+                ? "bg-green-600/10 text-green-600"
+                : "text-primary"
+            }`}
+          >
+            {time}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

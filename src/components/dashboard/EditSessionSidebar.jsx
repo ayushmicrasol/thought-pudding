@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Input from "../common/Input";
 import SelectDropdown from "../common/SelectDropdown";
 import Button from "../common/Button";
+import DatePicker from "../common/DatePicker";
+import TimePicker from "../common/TimePicker";
 
 const rescheduleOption = ["This Session", "This Week"];
 const genderOption = ["Male", "Female", "Others"];
@@ -49,19 +51,19 @@ const EditSessionSidebar = ({ isEditSession, setIsEditSession }) => {
                 <label className="text-sm/5 text-primary font-medium">
                   Appointment Date
                 </label>
-                <Input type={"date"} placeholder={""} />
+                <DatePicker placeholder={`DD/MM/YYYY`} />
               </div>
               <div>
                 <label className="text-sm/5 text-primary font-medium">
                   Start Time
                 </label>
-                <Input type={"text"} placeholder={"00:00"} />
+                <TimePicker />
               </div>
               <div>
                 <label className="text-sm/5 text-primary font-medium">
                   End Time
                 </label>
-                <Input type={"text"} placeholder={"00:00"} />
+                <TimePicker />
               </div>
               <div className="col-span-2">
                 <label className="text-sm/5 text-primary font-medium">

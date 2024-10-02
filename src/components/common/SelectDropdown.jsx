@@ -66,7 +66,7 @@ const SelectDropdown = ({
                 key={index}
                 onClick={() => handleSelect(option)}
                 className={`py-[10px] px-4 text-sm text-primary cursor-pointer hover:bg-gray-100/20 ${
-                  value === option ? "bg-blue-600/10 !text-blue-600" : ""
+                  value === option ? "bg-green-600/10 !text-green-600" : ""
                 }`}
                 role="option"
               >

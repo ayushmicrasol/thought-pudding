@@ -38,10 +38,8 @@ const Header = () => {
     <Fragment>
       <header className=" sticky top-0 backdrop-blur-sm pt-3 z-[99]">
         <div
-          className={`bg-white p-5 flex items-center justify-between  transition-shadow duration-300 ${
-            pathname !== "/dashboard"
-              ? "rounded-t-base !shadow-none"
-              : "rounded-base"
+          className={`bg-white p-5 flex items-center justify-between rounded-base  transition-shadow duration-300 ${
+            pathname !== "/dashboard" ? "rounded-t-base" : "rounded-base"
           } ${hasShadow ? "shadow-[0px_4px_6.1px_0px_#E5E9FF80]" : ""}`}
         >
           {/* logo  */}
@@ -60,10 +58,10 @@ const Header = () => {
           <nav className="md:block hidden">
             <ul className="flex gap-3">
               <li
-                className={`py-[18px] px-6 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 font-medium ${
                   pathname === "/dashboard"
-                    ? "text-yellow-600 font-semibold bg-yellow-100"
-                    : "text-gray-500 font-medium"
+                    ? "text-yellow-600 bg-yellow-100"
+                    : "text-gray-500"
                 } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/dashboard" className="flex items-center gap-3">
@@ -77,10 +75,10 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-6 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 font-medium ${
                   pathname === "/session"
-                    ? "text-yellow-600 font-semibold bg-yellow-100"
-                    : "text-gray-500 font-medium"
+                    ? "text-yellow-600 bg-yellow-100"
+                    : "text-gray-500"
                 } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/session" className="flex items-center gap-3">
@@ -94,10 +92,10 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-6 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 font-medium ${
                   pathname === "/payment"
-                    ? "text-yellow-600 font-semibold bg-yellow-100"
-                    : "text-gray-500 font-medium"
+                    ? "text-yellow-600 bg-yellow-100"
+                    : "text-gray-500"
                 } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/payment" className="flex items-center gap-3">
@@ -111,10 +109,10 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-6 text-base/4 ${
+                className={`py-[18px] px-6 text-base/4 font-medium ${
                   pathname === "/patient"
-                    ? "text-yellow-600 font-semibold bg-yellow-100"
-                    : "text-gray-500 font-medium"
+                    ? "text-yellow-600 bg-yellow-100"
+                    : "text-gray-500"
                 } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/patient" className="flex items-center gap-3">

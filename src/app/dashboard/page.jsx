@@ -605,7 +605,7 @@ const Dashboard = () => {
 
             {/* session table */}
             <div className="pt-30px">
-              <div className="w-full border border-gray-100 rounded-base overflow-x-auto">
+              <div className="w-full border border-green-600/25 rounded-base overflow-x-auto">
                 <table className="w-full  bg-white">
                   <THeade data={sessionTableHeade} />
                   <DashboardTBody

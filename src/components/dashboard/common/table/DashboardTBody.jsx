@@ -17,10 +17,6 @@ const DashboardTBody = ({
   return (
     <tbody className="divide-y divide-primary/10">
       {TableData?.map((item, index) => {
-        const formatName = (name) => {
-          return name;
-        };
-
         return (
           <tr key={index}>
             <td className="p-15px">
@@ -29,21 +25,27 @@ const DashboardTBody = ({
                   {item.img ? (
                     <img src={item.img} alt="" className="w-full h-full" />
                   ) : (
-                    <span className="text-xs_18 text-[#72748D]">
-                      {formatName(item.name).split(" ")[0].charAt(0) +
-                        formatName(item.name).split(" ")[1].charAt(0)}
+                    <span className="text-xs_18 text-[#72748D] font-medium">
+                      {item.name
+                        .split(" ")
+                        .map((n) => n.charAt(0))
+                        .join("")}
                     </span>
                   )}
                 </div>
                 <div>
-                  <p className="text-sm/5 font-medium text-primary">
-                    {formatName(item.name)}
+                  <p className="text-sm/5 font-semibold text-primary">
+                    {item.name}
                   </p>
-                  <p className="text-xs_18 text-primary/70">{item.email}</p>
+                  <p className="text-xs_18 text-primary/70 font-medium">
+                    {item.email}
+                  </p>
                 </div>
               </div>
             </td>
-            <td className="p-15px text-primary/70 text-sm/5">{item.time}</td>
+            <td className="p-15px text-primary/70 text-sm/5 font-medium">
+              {item.time}
+            </td>
             <td className="p-15px">
               <span
                 className={`inline-block py-1.5 px-3  rounded-full text-sm/5 ${
@@ -59,18 +61,18 @@ const DashboardTBody = ({
                 {item.status}
               </span>
             </td>
-            <td className="p-15px text-primary text-sm/5 font-medium">
+            <td className="p-15px text-primary text-sm/5 font-semibold">
               {item.amount}
             </td>
-            <td className="p-15px text-primary/70 text-sm/5">
+            <td className="p-15px text-primary/70 text-sm/5 font-medium">
               {item.sessionFee}
             </td>
             <td className="p-15px text-primary text-sm/5">
               <div className="flex items-center gap-3">
-                {item.previousFee}{" "}
+                <p className="font-medium">{item.previousFee}</p>{" "}
                 {item.previousFee === "Pending" && (
                   <div className="relative group cursor-pointer">
-                    <span className="w-5 h-5 flex items-center justify-center border border-[#010101] rounded-full">
+                    <span className="w-5 h-5 flex items-center justify-center border-[1.5px] border-primary text-primary font-medium rounded-full">
                       !
                     </span>
                     <div className="absolute w-[322px] py-30px px-5 top-full right-0 rounded-base bg-white shadow-[0px_4px_16px_0px_#2424241A] transition-all duration-500 opacity-0 hidden group-hover:block group-hover:opacity-100 z-10">
@@ -103,7 +105,7 @@ const DashboardTBody = ({
               </div>
             </td>
             <td className="p-15px">
-              <div className="flex items-center justify-between gap-3 text-sm/6 font-medium">
+              <div className="flex items-center gap-6 text-sm/6 font-medium">
                 <Link
                   href={`javascript:void(0)`}
                   onClick={() => setIsRescheduleSession(!isRescheduleSession)}
@@ -120,14 +122,16 @@ const DashboardTBody = ({
               </div>
             </td>
             <td className="p-15px">
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center gap-5">
                 <RegularNotificationIcon
                   className="w-5 h-5 cursor-pointer"
                   pathFillColor="#242424"
+                  strokeWidth={`1.5`}
                   onClick={() => setIsReminderModal(!isReminderModal)}
                 />
                 <RegularBinIcon
                   className="w-5 h-5  cursor-pointer"
+                  strokeWidth={`1.5`}
                   onClick={() =>
                     setIsCanceledSessionModal(!isCanceledSessionModal)
                   }
