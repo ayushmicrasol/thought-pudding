@@ -15,6 +15,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Dropdown from "@/components/common/Dropdown";
 
+const notificationList = [
+  { title: "Upcoming session with Abhi Sojitra in 2:20 AM", time: "2 Minute" },
+  {
+    title: "Meet Pedhadiya payment status updated to Paid on time",
+    time: "30 Minute",
+  },
+  { title: "Neha kikani session is upcoming 12:00 AM", time: "12 Minute" },
+  { title: "Dishank Gajera payment successfully done !", time: "12 Minute" },
+];
+
 const Header = () => {
   const [hasShadow, setHasShadow] = useState(false);
   const [profileDrop, setProfileDrop] = useState(false);
@@ -148,20 +158,22 @@ const Header = () => {
                 <h4 className="p-5 text-base/6 text-primary font-semibold shadow-[0px_2px_4px_0px_#2C58BB1F]">
                   Notification
                 </h4>
-                <ul className="p-5">
-                  <li className="flex items-start gap-4">
-                    <div className="min-w-10 h-10 rounded-full bg-green-600/10 text-green-600 flex items-center justify-center">
-                      <User size={24} />
-                    </div>
-                    <div className="max-w-[290px]">
-                      <p className="text-sm/5 text-primary font-medium">
-                        Upcoming session with Abhi Sojitra in 2:20 AM
-                      </p>
-                      <p className="pt-2 text-xs_18 text-primary/50">
-                        2 Minute
-                      </p>
-                    </div>
-                  </li>
+                <ul className="px-5 divide-y divide-primary/10">
+                  {notificationList?.map((item, index) => (
+                    <li className="flex items-start gap-4 py-5">
+                      <div className="min-w-10 h-10 rounded-full bg-green-600/10 text-green-600 flex items-center justify-center">
+                        <User size={24} />
+                      </div>
+                      <div className="max-w-[290px]">
+                        <p className="text-sm/5 text-primary font-medium">
+                          {item.title}
+                        </p>
+                        <p className="pt-2 text-xs_18 text-primary/50">
+                          {item.time}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
                 </ul>
               </Dropdown>
             </div>
