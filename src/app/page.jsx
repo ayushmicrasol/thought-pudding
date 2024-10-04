@@ -263,7 +263,7 @@ export default function Home() {
               <Button variant="default">Free Trial For 3 Months</Button>
             </div>
           </div>
-          <div className="sm:mt-[50px] mt-7 mx-auto cursor-pointer sm:max-w-[822px] max-w-[283px] sm:h-[423px] h-36 rounded-2xl overflow-hidden relative group">
+          <div className="sm:mt-[50px] mt-7 mx-auto cursor-pointer sm:max-w-[822px] max-w-[283px] sm:h-[460px] h-36 rounded-[32px] overflow-hidden relative group">
             <video
               loop
               muted
