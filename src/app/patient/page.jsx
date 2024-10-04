@@ -84,6 +84,7 @@ const Patient = () => {
   const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("Today");
   const [isFilter, setIsFilter] = useState(false);
   const [isEditSession, setIsEditSession] = useState(false);
+  const [activeTable, setActiveTable] = useState(sessionTabs[0].label);
 
   return (
     <DashboardLayout>
@@ -122,7 +123,11 @@ const Patient = () => {
         {/* table */}
         <div className="p-5">
           <div className="flex items-center justify-between">
-            <Tabs tabs={sessionTabs} />
+            <Tabs
+              tabs={sessionTabs}
+              activeTab={activeTable}
+              setActiveTab={setActiveTable}
+            />
 
             <div className="flex items-center gap-2 max-w-[391px] w-full py-15px px-5 border border-[#9B9DB7] rounded-full text-xs text-primary">
               <MagnifyingGlass className="text-primary/50 min-w-5 w-5 h-5" />

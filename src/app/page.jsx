@@ -119,10 +119,10 @@ export default function Home() {
     }
   };
   return (
-    <div className="">
+    <div>
       <WebsiteLayout>
         {/* Hero section  */}
-        <section className="">
+        <section>
           <div className="bg-[url('/assets/images/home/bg-image.webp')] bg-cover bg-center bg-no-repeat">
             <div className="sm:py-120px pt-[60px] pb-50px px-4 sm:px-0 text-center">
               <h1 className="sm:text-[48px] sm:leading-[62px] text-2xl/8 font-semibold text-green-600 max-w-[900px] mx-auto">
@@ -263,7 +263,7 @@ export default function Home() {
               <Button variant="default">Free Trial For 3 Months</Button>
             </div>
           </div>
-          <div className="sm:mt-[50px] mt-7 mx-auto cursor-pointer sm:max-w-[822px] max-w-[283px] sm:h-[423px] h-36 rounded-lg overflow-hidden relative group">
+          <div className="sm:mt-[50px] mt-7 mx-auto cursor-pointer sm:max-w-[822px] max-w-[283px] sm:h-[423px] h-36 rounded-2xl overflow-hidden relative group">
             <video
               loop
               muted
@@ -281,7 +281,7 @@ export default function Home() {
             {!isPlaying && (
               <div className="absolute top-0 left-0 w-full h-full bg-black/35 flex items-center justify-center">
                 <button onClick={handlePlay} className="rounded-full">
-                  <PlayCircle weight="fill" className="text-white w-12 h-12" />
+                  <PlayCircle weight="fill" className="text-white w-20 h-20" />
                 </button>
               </div>
             )}

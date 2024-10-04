@@ -37,10 +37,21 @@ const tableData = [
 ];
 
 // Utility function to bold / strong specific text
+
 const strongText = (text, boldText) => {
-  const parts = text.split(new RegExp(`(${boldText})`, "gi"));
+  if (!text) return text; // Return text as is if it's empty or undefined
+
+  // Utility function to escape special regex characters in the boldText array
+  const escapeRegex = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // Escape special characters
+
+  // Create a single regex pattern to match any of the bold phrases
+  const regex = new RegExp(`(${boldText.map(escapeRegex).join("|")})`, "gi");
+
+  // Split the text based on the regex
+  const parts = text.split(regex);
+
   return parts.map((part, index) =>
-    part.toLowerCase() === boldText.toLowerCase() ? (
+    boldText.some((bold) => part.toLowerCase() === bold.toLowerCase()) ? (
       <span key={index} className="font-semibold">
         {part}
       </span>
@@ -50,21 +61,27 @@ const strongText = (text, boldText) => {
   );
 };
 
-const ListWrapper = ({ title, subTitle, listData, table }) => {
-  const boldText = "Settings-> Calendar Setting-> Sync Calendar";
+const ListWrapper = ({ title, subTitle, listData, table, pragraph }) => {
+  const boldText = [
+    "Settings-> Calendar Setting-> Sync Calendar",
+    "[Your Name] <> [Client Name]",
+  ];
+
   return (
     <div className="border border-green-600/30 rounded-base py-5 px-15px space-y-15px">
       <h2 className="text-base/6 text-primary font-semibold">{title}</h2>
       {subTitle && (
         <p className="text-sm/4 font-medium text-primary">{subTitle}</p>
       )}
+      {/* Rendering the list */}
       {listData && (
         <ul className="text-sm/5 text-primary/70 list-disc pl-15px space-y-15px">
-          {listData?.map((item, index) => (
+          {listData.map((item, index) => (
             <li key={index}>{strongText(item, boldText)}</li>
           ))}
         </ul>
       )}
+      {/* Rendering the table */}
       {table && (
         <table className="w-full bg-white border border-yellow-600/20 divide-y divide-yellow-600/20">
           <thead className="text-left">
@@ -78,19 +95,20 @@ const ListWrapper = ({ title, subTitle, listData, table }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-yellow-600/20">
-            {tableData?.map((items, index) => (
-              <tr className="divide-x divide-yellow-600/20">
+            {tableData.map((items, index) => (
+              <tr key={index} className="divide-x divide-yellow-600/20">
                 <td className="p-3 text-sm/5 font-medium text-primary">
                   {items.field}
                 </td>
                 <td className="p-3 text-sm/5 text-primary">
-                  {items.description}
+                  {strongText(items.description, boldText)}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       )}
+      {pragraph && <p className="text-sm/5 text-primary/70">{pragraph}</p>}
     </div>
   );
 };

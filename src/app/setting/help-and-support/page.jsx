@@ -8,7 +8,7 @@ const GettingStarted = [
   {
     title: "What is Thought Pudding for Therapists?",
     content:
-      "We verify every therapist individually and go through their degree, qualification  and license if required before approving access to the platform. In case you have a collective or clinic, the same process applies.",
+      "Thought Pudding for Therapists is a one-stop shop for all your needs as a psychotherapist in private practice. Our features help you streamline the administrative and business side of running a private practice. Our job is to help you because we know you help a thousand clients.",
   },
   {
     title: "Who is Thought Pudding for Therapists made for?",
@@ -106,6 +106,7 @@ const HelpSupportSetting = () => {
             title={`Calendar and Scheduling`}
             listData={CalendarScheduling}
             table
+            pragraph={`After entering these details, you'll have one last step: deciding if you'd like us to collect payments on your behalf`}
           />
         </div>
       </div>
