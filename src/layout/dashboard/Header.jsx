@@ -143,9 +143,9 @@ const Header = () => {
 
           {/* profile area */}
           <div className="md:flex hidden items-center gap-6">
-            <button>
+            <Link href={"/setting"}>
               <SettingIcon className="w-7.5 h-7.5" />
-            </button>
+            </Link>
             <div className="relative">
               <button onClick={() => setNotification(!notification)}>
                 <NotificationIcon className="w-7.5 h-7.5" />
