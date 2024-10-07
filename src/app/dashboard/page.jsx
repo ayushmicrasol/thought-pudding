@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { use, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   GreenUsersIcon,
   OrangeCalendarIcon,
@@ -19,7 +19,6 @@ import {
   Check,
   FunnelSimple,
   MagnifyingGlass,
-  X,
 } from "@phosphor-icons/react";
 import CancellationChart from "@/components/dashboard/CancellationChart";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -38,7 +37,6 @@ import TablePagination from "@/components/common/TablePagination";
 import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
 import THeade from "@/components/dashboard/common/table/THeade";
 import DashboardTBody from "@/components/dashboard/common/table/DashboardTBody";
-import Input from "@/components/common/Input";
 
 const activity = [
   {
@@ -202,7 +200,6 @@ const Dashboard = () => {
   const [isCancellationModal, setIsCancellationModal] = useState(false);
   const [isUpdatePaymentModal, setIsUpdatePaymentModal] = useState(false);
   const [isTerminatingModal, setIsTerminatingModal] = useState(false);
-  const dropdownRef = useRef(null);
 
   // select drop down stats
 
@@ -285,25 +282,6 @@ const Dashboard = () => {
 
   const totalPages = 10; // Define total pages for pagination
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsDateDrop(false); // Close dropdown
-      }
-    };
-
-    if (isDateDrop) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isDateDrop]);
-
   return (
     <DashboardLayout>
       <div className="space-y-5 pt-5">
@@ -358,7 +336,7 @@ const Dashboard = () => {
                 onClick={() => setFreeSlote(!freeSlote)}
                 variant="default"
               >
-                Find Me Free Slot
+                Find me free slot
               </Button>
               <Button
                 onClick={() =>
@@ -366,7 +344,7 @@ const Dashboard = () => {
                 }
                 variant="outlined"
               >
-                Schedule a Session
+                schedule a session
               </Button>
             </div>
           </div>
@@ -432,7 +410,7 @@ const Dashboard = () => {
           <div className="p-5">
             <div className="flex items-center justify-between">
               <h2 className="text-xl/6 font-semibold text-primary">Session</h2>
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative">
                 <button
                   className="relative flex items-center gap-2 text-base/6 font-medium text-gray-500"
                   onClick={() => setIsDateDrop(!isDateDrop)}
@@ -485,7 +463,7 @@ const Dashboard = () => {
                         {months.map((month) => (
                           <li
                             key={month}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4 hover:bg-gray-100/20 ${
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4  hover:bg-gray-100/20 ${
                               month === selectedMonth
                                 ? "bg-green-600/10 !text-green-600"
                                 : ""
@@ -505,7 +483,7 @@ const Dashboard = () => {
                         {years.map((year) => (
                           <li
                             key={year}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4 hover:bg-gray-100/20 ${
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4  hover:bg-gray-100/20 ${
                               year === selectedYear
                                 ? "bg-green-600/10 !text-green-600"
                                 : ""
@@ -812,30 +790,18 @@ const Dashboard = () => {
         isClose={isReminderModal}
         setIsClose={setIsReminderModal}
       >
-        <div className="pt-6 space-y-2.5">
+        <div className="pt-30px space-y-2.5">
           <label className="flex justify-between items-center text-sm/5 text-gray-500">
             Session Reminder
-            <input
-              type="radio"
-              name="reminder"
-              className="w-4.5 h-4.5 accent-green-600"
-            />
+            <input type="radio" name="reminder" className="w-4.5 h-4.5" />
           </label>
           <label className="flex justify-between items-center text-sm/5 text-gray-500">
             Payment Session
-            <input
-              type="radio"
-              name="reminder"
-              className="w-4.5 h-4.5 accent-green-600"
-            />
+            <input type="radio" name="reminder" className="w-4.5 h-4.5" />
           </label>
           <label className="flex justify-between items-center text-sm/5 text-gray-500">
             Set Both
-            <input
-              type="radio"
-              name="reminder"
-              className="w-4.5 h-4.5 accent-green-600"
-            />
+            <input type="radio" name="reminder" className="w-4.5 h-4.5" />
           </label>
         </div>
         <div className="flex items-center justify-end gap-3.5 pt-[34px]">
@@ -878,8 +844,8 @@ const Dashboard = () => {
           <p>
             Subject: <span className="font-semibold">Payment Reminder 🔔</span>
           </p>
-          <p className="text-green-600 font-semibold pt-4">Hi Hetvi,</p>
-          <p className="pt-[2px]">
+          <p className="text-green-600 font-semibold">Hi Hetvi,</p>
+          <p className="pt-5">
             This is to remind you that your payment for session on{" "}
           </p>
           <p>
@@ -895,7 +861,7 @@ const Dashboard = () => {
             setIsReminderMassageModal(false);
           }}
         >
-          Send Reminder
+          send reminder
         </Button>
       </SessionDetailModal>
 
@@ -939,7 +905,7 @@ const Dashboard = () => {
 
       {/* Cancellation Fees */}
       <SessionDetailModal
-        title="Is There a Cancellation Fees ? "
+        title="Is There a Cancellation Fees"
         isClose={isCancellationModal}
         setIsClose={setIsCancellationModal}
       >
@@ -979,7 +945,7 @@ const Dashboard = () => {
       >
         <p className="text-gray-500 text-sm/5 pt-5 max-w-[465px]">
           We are calling off this session. after you have got it. cancellation
-          sum remember to update the same information in your payment.
+          sum Remember to update the same information in your payment.
         </p>
         <div className="text-end pt-[34px]">
           <Button
@@ -994,7 +960,7 @@ const Dashboard = () => {
 
       {/* Are you terminating the client */}
       <SessionDetailModal
-        title="Are you terminating the client ?"
+        title="Are you terminating the client"
         isClose={isTerminatingModal}
         setIsClose={setIsTerminatingModal}
       >

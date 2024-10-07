@@ -6,7 +6,6 @@
   background: #f8f9ff;
 } */
 
-/* scroll bar style  */
 ::-webkit-scrollbar {
   width: 4px;
   height: 2px;
@@ -16,12 +15,6 @@
 ::-webkit-scrollbar-thumb {
   background-color: #d0d1d2;
   border-radius: 20px;
-}
-
-/* Hidden input type number field in arrow   */
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
 }
 
 .dashboard_container {
@@ -72,20 +65,3 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 /* marquee animation end */
-
-.nwxtbtn:hover .next-arrow {
-  animation: slide-in-left 0.6s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-}
-
-@keyframes slide-in-left {
-  0% {
-    transform: translateX(-8px);
-    opacity: 0;
-  }
-
-  100% {
-    transform: translateX(0px);
-    opacity: 1;
-  }
-}
-

@@ -14,10 +14,10 @@ const TablePagination = ({ totalPages }) => {
   return (
     <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-2px_5px_0px_#2A5F610D]">
       <button
-        className={`w-10 h-10 flex items-center justify-center border  rounded-full transition-all duration-500 ${
+        className={`w-10 h-10 flex items-center justify-center border  rounded-full ${
           currentPage === 1
             ? "border-primary/25 text-primary/25"
-            : "border-primary text-primary hover:border-green-600 hover:text-green-600"
+            : "border-primary text-primary"
         }`}
         onClick={() => changePage(currentPage - 1)}
         disabled={currentPage === 1}
@@ -56,16 +56,12 @@ const TablePagination = ({ totalPages }) => {
       </div>
 
       <button
-        className={`py-2.5 px-3 border border-primary rounded-full flex items-center gap-1 text-sm/5 text-primary font-medium nwxtbtn transition-all duration-500 ${
-          currentPage === 10
-            ? "border-primary/25 text-primary/25"
-            : "border-primary text-primary hover:bg-green-600 hover:border-green-600 hover:text-white"
-        }`}
+        className="py-2.5 px-3 border border-primary rounded-full flex items-center gap-1 text-sm/5 text-primary font-medium"
         onClick={() => changePage(currentPage + 1)}
         disabled={currentPage === totalPages}
       >
         Next
-        <CaretRight size={20} className="next-arrow" />
+        <CaretRight size={20} />
       </button>
     </div>
   );
