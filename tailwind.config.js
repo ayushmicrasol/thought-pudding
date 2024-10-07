@@ -108,7 +108,7 @@ module.exports = {
         "8xl_18": ["96px", "18px"],
         "9xl_18": ["128px", "18px"],
 
-        /* 18 line height */
+        /* 22 line height */
         xs_22: ["12px", "22px"],
         sm_22: ["14px", "22px"],
         base_22: ["16px", "22px"],

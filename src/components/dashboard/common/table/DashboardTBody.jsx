@@ -37,7 +37,7 @@ const DashboardTBody = ({
                   <p className="text-sm/5 font-semibold text-primary">
                     {item.name}
                   </p>
-                  <p className="text-xs_18 text-primary/70 font-medium">
+                  <p className="text-sm_22 text-primary/70 font-medium">
                     {item.email}
                   </p>
                 </div>

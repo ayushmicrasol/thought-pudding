@@ -2,7 +2,7 @@ import React from "react";
 
 const Button = ({ variant, children, className, ...props }) => {
   const baseStyles =
-    "sm:py-[15px] py-3.5 px-5 rounded-full text-sm/4 font-medium capitalize transition-all duration-300 hover:-translate-y-[2px]";
+    "sm:py-[15px] py-3.5 px-5 rounded-full text-sm/4 font-medium transition-all duration-300 hover:-translate-y-[2px]";
 
   const variants = {
     default: `${baseStyles} border border-yellow-600 bg-white text-yellow-600 hover:bg-yellow-600 hover:text-white`,

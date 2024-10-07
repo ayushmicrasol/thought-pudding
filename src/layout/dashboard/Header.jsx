@@ -49,7 +49,7 @@ const Header = () => {
   const pathname = usePathname();
   return (
     <Fragment>
-      <header className=" sticky top-0 backdrop-blur-sm pt-3 z-[99]">
+      <header className="sticky top-0 backdrop-blur-sm bg-white/40 pt-3 z-[99]">
         <div
           className={`bg-white p-5 flex items-center justify-between rounded-base  transition-shadow duration-300 ${
             pathname !== "/dashboard" ? "rounded-t-base" : "rounded-base"
