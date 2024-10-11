@@ -12,6 +12,7 @@ import {
   ClockIcon,
   RegularNotificationIcon,
 } from "../../public/assets/Svgs";
+import Link from "next/link";
 
 const GrowthDriven = [
   {
@@ -138,10 +139,18 @@ export default function Home() {
                 place.
               </p>
               <div className="mt-6 flex sm:flex-row flex-col items-center sm:gap-30px gap-3 justify-center">
-                <Button variant="filled" className={`flex items-center gap-2 `}>
-                  Schedule a Demo
-                  <ArrowUpRight className="text-xl" />
-                </Button>
+                <Link
+                  href="https://calendly.com/d/ckwm-cb8-7vc"
+                  target="_blank"
+                >
+                  <Button
+                    variant="filled"
+                    className={`flex items-center gap-2 `}
+                  >
+                    Schedule a Demo
+                    <ArrowUpRight className="text-xl" />
+                  </Button>
+                </Link>
                 <Button variant="default" className={``}>
                   Free Trial For 3 Months
                 </Button>
@@ -167,9 +176,18 @@ export default function Home() {
                 The best part? built by a therapist who has been in your shoes.
               </h2>
               <div className="flex items-center justify-center pt-6">
-                <Button variant="filled" className="flex items-center gap-1.5">
-                  Free trial request a demo <ArrowUpRight className="text-xl" />
-                </Button>
+                <Link
+                  href="https://calendly.com/d/ckwm-cb8-7vc"
+                  target="_blank"
+                >
+                  <Button
+                    variant="filled"
+                    className="flex items-center gap-1.5"
+                  >
+                    Free trial request a demo{" "}
+                    <ArrowUpRight className="text-xl" />
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -263,7 +281,9 @@ export default function Home() {
               focus on your clients&apos; well-being
             </p>
             <div className="pt-6 flex flex-col sm:flex-row items-center justify-center sm:gap-30px gap-3">
-              <Button variant="filled">Schedule a Demo</Button>
+              <Link href="https://calendly.com/d/ckwm-cb8-7vc" target="_blank">
+                <Button variant="filled">Schedule a Demo</Button>
+              </Link>
               <Button variant="default">Free Trial For 3 Months</Button>
             </div>
           </div>
