@@ -5,11 +5,22 @@ import axios, {
   AxiosRequestConfig,
 } from "axios";
 
+const authKey =
+  typeof window !== "undefined" ? localStorage.getItem("authKeyTh") : null;
+
+// const axiosInstance: AxiosInstance = axios.create({
+//   baseURL: process.env.BASE_API_URL as string,
+//   headers: {
+//     "Content-Type": "application/json",
+//     Authorization: authKey ? `Bearer ${authKey}` : "", // Use empty string if no token
+//   },
+// });
+
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: process.env.BASE_API_URL as string, // Ensure the type is explicitly a string,
   headers: {
     "Content-Type": "application/json",
-    Authorization: `${localStorage.getItem("authKeyTh")}`,
+    Authorization: `${authKey}`,
   },
 });
 
@@ -38,7 +49,6 @@ export const fetcher = async (args: string | [string, AxiosRequestConfig]) => {
   }
 };
 
-
 export const formatTime = (dateStr: string): string => {
   const date = new Date(dateStr);
   // Format the time as HH:MM AM/PM
@@ -57,5 +67,3 @@ export const formatDate = (dateStr: string): string => {
     day: "numeric",
   });
 };
-
-
