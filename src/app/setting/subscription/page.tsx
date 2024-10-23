@@ -1,6 +1,8 @@
 "use client";
 import Button from "@/components/common/Button";
 import SettingLayout from "@/layout/dashboard/SettingLayout";
+import { usePaymentHistory } from "@/services/setting.service";
+import { formatDate } from "@/utils/axios";
 import { CheckCircle } from "@phosphor-icons/react";
 import React from "react";
 
@@ -37,34 +39,47 @@ const subscriptionPlan = [
   },
 ];
 
-const paymentHistory = [
-  {
-    plan: "Satir",
-    amount: "₹1,000",
-    status: true,
-    validity: "30",
-    subscriptionDate: "5,Aug 2024 to 03,Nov 2024",
-    purchaseDate: "5,July 2024",
-  },
-  {
-    plan: "Winnicott",
-    amount: "₹500",
-    status: false,
-    validity: "90",
-    subscriptionDate: "5,Aug 2024 to 03,Nov 2024",
-    purchaseDate: "5,July 2024",
-  },
-  {
-    plan: "Free Trial Plan",
-    amount: "0",
-    status: true,
-    validity: "30",
-    subscriptionDate: "5,Aug 2024 to 03,Nov 2024",
-    purchaseDate: "5,July 2024",
-  },
-];
-
+// const paymentHistory = [
+//   {
+//     plan: "Satir",
+//     amount: "₹1,000",
+//     status: true,
+//     validity: "30",
+//     subscriptionDate: "5,Aug 2024 to 03,Nov 2024",
+//     purchaseDate: "5,July 2024",
+//   },
+//   {
+//     plan: "Winnicott",
+//     amount: "₹500",
+//     status: false,
+//     validity: "90",
+//     subscriptionDate: "5,Aug 2024 to 03,Nov 2024",
+//     purchaseDate: "5,July 2024",
+//   },
+//   {
+//     plan: "Free Trial Plan",
+//     amount: "0",
+//     status: true,
+//     validity: "30",
+//     subscriptionDate: "5,Aug 2024 to 03,Nov 2024",
+//     purchaseDate: "5,July 2024",
+//   },
+// ];
+export interface PaymentHistoryItem {
+  subscriptionId: {
+    name: string;
+    price: number;
+    status: string;
+    validDays: string;
+  };
+  validFrom: string;
+  validTill: string;
+  createdAt: string;
+}
 const Subscription = () => {
+  const { paymentHistoryData, paymentHistoryLoading } = usePaymentHistory();
+  console.log({ paymentHistoryData, paymentHistoryLoading });
+
   return (
     <SettingLayout>
       <div>
@@ -207,27 +222,42 @@ const Subscription = () => {
               </tr>
             </thead>
             <tbody>
-              {paymentHistory?.map((item, index) => (
-                <tr key={index} className="text-sm/5 text-primary">
-                  <td className="px-2.5 py-3">{index + 1}</td>
-                  <td className="px-2.5 py-3">{item.plan}</td>
-                  <td className="px-2.5 py-3">{item.amount}</td>
-                  <td className="px-2.5 py-3">
-                    <p
-                      className={`py-1.5 px-3 inline-block ${
-                        item.status === true
-                          ? "text-green-500 bg-green-200 rounded-full"
-                          : "text-red-500 bg-red-200 rounded-full"
-                      }  rounded-full`}
-                    >
-                      {item.status === true ? "Active" : "Inactive"}
-                    </p>
-                  </td>
-                  <td className="px-2.5 py-3">{item.validity}</td>
-                  <td className="px-2.5 py-3">{item.subscriptionDate}</td>
-                  <td className="px-2.5 py-3">{item.purchaseDate}</td>
-                </tr>
-              ))}
+              {(paymentHistoryData as PaymentHistoryItem[])?.map(
+                (item, index) => (
+                  <tr key={index} className="text-sm/5 text-primary">
+                    <td className="px-2.5 py-3">{index + 1}</td>
+                    <td className="px-2.5 py-3">
+                      {item?.subscriptionId?.name}
+                    </td>
+                    <td className="px-2.5 py-3">
+                      {item?.subscriptionId?.price}
+                    </td>
+                    <td className="px-2.5 py-3">
+                      <p
+                        className={`py-1.5 px-3 inline-block ${
+                          item?.subscriptionId?.status === "ACTIVE"
+                            ? "text-green-500 bg-green-200 rounded-full"
+                            : "text-red-500 bg-red-200 rounded-full"
+                        }  rounded-full`}
+                      >
+                        {item?.subscriptionId?.status === "ACTIVE"
+                          ? "Active"
+                          : "Inactive"}
+                      </p>
+                    </td>
+                    <td className="px-2.5 py-3">
+                      {item?.subscriptionId?.validDays} Days
+                    </td>
+                    <td className="px-2.5 py-3">
+                      {formatDate(item.validFrom)} to{" "}
+                      {formatDate(item.validTill)}
+                    </td>
+                    <td className="px-2.5 py-3">
+                      {formatDate(item.createdAt)}
+                    </td>
+                  </tr>
+                )
+              )}
             </tbody>
           </table>
         </div>

@@ -48,7 +48,12 @@ const endpoints = {
     therapistVpaUpdate: "/therapist/vpa/update",
     paymentMenuUpdate: "/therapist/menu/update",
     calendarResync: "/therapist/calendar/resync",
+    subscription: {
+      paymentHistory: "/therapist/subscription/active/get",
+    },
   },
+  verifyTherapist:"therapist/verify-therapist",
+  addPractice:"therapist/add-pratice"
 };
 
 export default endpoints;

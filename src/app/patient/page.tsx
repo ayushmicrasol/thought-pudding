@@ -20,8 +20,8 @@ import { useEffect, useState } from "react";
 
 const clientsTabs = [
   { label: "All", value: "" },
-  { label: "Active", value: "confirmed" },
-  { label: "Inactive", value: "pending" },
+  { label: "Confirmed", value: "confirmed" },
+  { label: "Pending", value: "pending" },
 ];
 
 const sessionTableHeader = [

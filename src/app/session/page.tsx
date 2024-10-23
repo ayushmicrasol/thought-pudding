@@ -56,7 +56,7 @@ const Session = () => {
   const searchParams =
     typeof window !== "undefined"
       ? new URLSearchParams(window.location.search)
-      : null;
+      : null; // Access the query params
 
   let clientId: string | null = null;
 

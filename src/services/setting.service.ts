@@ -9,7 +9,6 @@ const swrOptions = {
   revalidateOnReconnect: false,
 };
 
-
 // get setting therapist data
 export function useGetSettingData() {
   const url = `${endpoints.setting.therapistSettingData}`;
@@ -98,6 +97,27 @@ export function useGetResyncCalendarData() {
       resyncCalendarLoading: isLoading,
     }),
     [data, isLoading]
+  );
+
+  return memoizedValue;
+}
+
+type PaymentHistory = {
+  data: {
+    subscriptions: Array<unknown>;
+  };
+};
+export function usePaymentHistory() {
+  const url = `${endpoints.setting.subscription.paymentHistory}`;
+
+  const { data, isLoading } = useSWR<PaymentHistory>(url, fetcher, swrOptions);
+
+  const memoizedValue = useMemo(
+    () => ({
+      paymentHistoryData: data?.data?.subscriptions || [],
+      paymentHistoryLoading: isLoading,
+    }),
+    [data?.data?.subscriptions, isLoading]
   );
 
   return memoizedValue;

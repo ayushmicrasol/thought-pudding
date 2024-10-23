@@ -122,7 +122,7 @@ export default function Home() {
         <section>
           <div className="bg-[url('/assets/images/home/bg-image.webp')] bg-cover bg-center bg-no-repeat">
             <div className="sm:py-120px pt-[60px] pb-50px px-4 sm:px-0 text-center">
-              <h1 className="sm:text-[48px] sm:leading-[62px] text-2xl/8 font-semibold text-green-600 max-w-[900px] mx-auto">
+              <h1 className="sm:text-[48px] sm:leading-[62px] text-2xl/8 font-semibold text-primary max-w-[900px] mx-auto">
                 Your all-in-one support system for private practice
               </h1>
               <p className="pt-4 sm:max-w-[640px] mx-auto sm:text-lg/8 text-sm_18 text-primary/50">
