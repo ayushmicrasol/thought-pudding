@@ -1,11 +1,11 @@
 "use client";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+// import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
 const GoogleSignIn = () => {
   const router = useRouter();
   const queryParams = new URLSearchParams(window.location.search);
-
 
   const error403 = true;
 
