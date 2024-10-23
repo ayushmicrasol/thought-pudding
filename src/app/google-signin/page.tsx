@@ -7,8 +7,6 @@ const GoogleSignIn = () => {
   const router = useRouter();
   const queryParams = new URLSearchParams(window.location.search);
 
-  const error403 = true;
-
   const code = queryParams.get("code");
 
   const scope = queryParams.get("scope");
@@ -32,7 +30,6 @@ const GoogleSignIn = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-
       if (code) {
         console.log("code....", code);
         const response = await AuthService.verifyTherapist(code);
@@ -42,18 +39,15 @@ const GoogleSignIn = () => {
         const verified = response.data;
         if (verified?.newUser) {
           router.push("/?newUser=true"); // Uncomment if you want to redirect after verification
-        }
-        else if (verified?.isVerified) {
+        } else if (verified?.isVerified) {
           router.push("/dashboard");
-        }
-        else {
+        } else {
           router.push("/?verified=false");
         }
-      };
-    }
+      }
+    };
     fetchData();
   }, [code, scope]);
-
 
   // if (error403) {
   //   return (

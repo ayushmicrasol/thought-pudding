@@ -6,19 +6,16 @@ export class AuthService {
     return await axiosInstance.get(endpoints.login);
   }
 
-   static async verifyTherapist(code: string) {
+  static async verifyTherapist(code: string) {
     return await axiosInstance.post(
       `${endpoints.verifyTherapist}?code=${code}`
     );
   }
-  
- static async addPractice(formData : any) {
-  return await axiosInstance.post(
-    `${endpoints.addPractice}`,  
-    formData ,{
-    headers: { "Content-Type": "multipart/form-data" },
-  }                      
-  );
-}
 
+  static async addPractice(formData: FormData) {
+    console.log("formData", formData);
+    return await axiosInstance.post(`${endpoints.addPractice}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+  }
 }
