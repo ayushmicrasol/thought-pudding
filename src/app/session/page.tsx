@@ -24,7 +24,6 @@ import { fetcher, formatDate, formatTime } from "@/utils/axios";
 import endpoints from "@/utils/endpoints";
 import { FunnelSimple, MagnifyingGlass } from "@phosphor-icons/react";
 import moment from "moment";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { mutate } from "swr";
 import { FilterParams } from "@/services/session.service";
@@ -54,9 +53,16 @@ export interface SessionData {
 }
 
 const Session = () => {
-  const searchParams = useSearchParams();
+  const searchParams =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : null;
 
-  const clientId = searchParams.get("client"); // Get 'client' from query
+  let clientId: string | null = null;
+
+  if (searchParams) {
+    clientId = searchParams.get("client");
+  }
   console.log({ clientId }, "----------------- clintID");
 
   const [currentPage, setCurrentPage] = useState(1);
