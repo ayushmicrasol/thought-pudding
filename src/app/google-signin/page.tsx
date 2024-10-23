@@ -5,7 +5,9 @@ import React, { useEffect } from "react";
 
 const GoogleSignIn = () => {
   const router = useRouter();
-  const queryParams = new URLSearchParams(window.location.search);
+  const queryParams = new URLSearchParams(
+    typeof window !== "undefined" ? window.location.search : ""
+  );
 
   const code = queryParams.get("code");
 

@@ -12,7 +12,9 @@ const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
 
-  const queryParams = new URLSearchParams(window.location.search);
+  const queryParams = new URLSearchParams(
+    typeof window !== "undefined" ? window.location.search : ""
+  );
 
   const newUser = queryParams.get("newUser");
 
