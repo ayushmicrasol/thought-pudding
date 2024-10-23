@@ -5,14 +5,17 @@ import React, { useEffect } from "react";
 
 const GoogleSignIn = () => {
   const router = useRouter();
-  const queryParams = new URLSearchParams(window.location.search);
+  const queryParams =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : null;
 
   const error403 = true;
 
-  const code = queryParams.get("code");
+  const code = queryParams?.get("code");
 
-  const scope = queryParams.get("scope");
-  const errorQ = queryParams.get("error");
+  const scope = queryParams?.get("scope");
+  const errorQ = queryParams?.get("error");
 
   const redirectToHomePageWithOpenLoginPopup = () => {
     if (code && scope) {
