@@ -7,6 +7,7 @@ import Input from "./Input";
 import Button from "./Button";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { AuthService } from "@/services/auth.service";
 
 interface LoginProps {
   loginOpen: boolean;
@@ -23,7 +24,12 @@ const Login: React.FC<LoginProps> = ({ loginOpen, setLoginOpen }) => {
     };
   }, [loginOpen]);
 
-  const handleGoogleLogin = () => setStep(2);
+  const handleGoogleLogin = async () => {
+    const response = await AuthService.signInWithGoogle();
+    console.log("response", response);
+    window.location.href = response.data;
+    // setStep(2);
+  };
   const handleFormSubmit = () => setStep(3);
 
   const stepsText = {
@@ -57,6 +63,7 @@ const Login: React.FC<LoginProps> = ({ loginOpen, setLoginOpen }) => {
 
   // Formik setup
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
       therapist_name: "",
       practice_name: "",

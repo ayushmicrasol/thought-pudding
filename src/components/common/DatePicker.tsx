@@ -5,20 +5,27 @@ import { CalendarDots } from "@phosphor-icons/react";
 
 interface DatePickerProps {
   className?: string;
-  props?: React.HTMLProps<HTMLDivElement>;
+  value?: string; // Add value prop
+  onChange: (date: string) => void; // Add onChange prop
   placeholder?: string;
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
   className,
-  props,
+  value,
+  onChange,
   placeholder,
 }) => {
   return (
-    <div className={`mt-2 relative ${className}`} {...props}>
+    <div className={`mt-2 relative ${className}`}>
       <Flatpickr
         className="py-3 pl-2.5 pr-[30px] border border-[#D9D9D9] rounded-lg w-full outline-none text-sm_18 text-primary"
-        placeholder={`${placeholder}`}
+        value={value} // Bind the value
+        onChange={(dates) => onChange(dates[0]?.toISOString() || "")} // Handle date change
+        options={{
+          dateFormat: "d/m/Y", // You can adjust the format as needed
+        }}
+        placeholder={placeholder}
       />
       <CalendarDots
         size={20}

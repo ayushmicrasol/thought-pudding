@@ -14,16 +14,14 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Dropdown from "@/components/common/Dropdown";
+import { useGetSettingData } from "@/services/setting.service";
+import { useAllNotifications } from "@/services/notification.service";
 
-const notificationList = [
-  { title: "Upcoming session with Abhi Sojitra in 2:20 AM", time: "2 Minute" },
-  {
-    title: "Meet Pedhadiya payment status updated to Paid on time",
-    time: "30 Minute",
-  },
-  { title: "Neha kikani session is upcoming 12:00 AM", time: "12 Minute" },
-  { title: "Dishank Gajera payment successfully done !", time: "12 Minute" },
-];
+interface NotificationItem {
+  message: string;
+  updatedAt?: string;
+  createdAt: string;
+}
 
 const Header = () => {
   const pathname = usePathname();
@@ -31,7 +29,13 @@ const Header = () => {
   const [hasShadow, setHasShadow] = useState(false);
   const [profileDrop, setProfileDrop] = useState(false);
   const [notification, setNotification] = useState(false);
+  const [profileImage, setProfileImage] = useState(false);
 
+  const { therapistData } = useGetSettingData();
+
+  const { notificationData, notificationLoading } = useAllNotifications();
+
+  // Set hasShadow state based on scroll position
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -48,13 +52,19 @@ const Header = () => {
     };
   }, []);
 
+  // Update form values when therapistData is available
+  useEffect(() => {
+    if (therapistData) {
+      setProfileImage(therapistData?.profilePhoto);
+    }
+  }, [therapistData]);
+
   return (
     <Fragment>
       <header className=" sticky top-0 backdrop-blur-sm pt-3 z-[99]">
         <div
-          className={`bg-white p-5 flex items-center justify-between rounded-base  transition-shadow duration-300 ${
-            pathname !== "/dashboard" ? "rounded-t-base" : "rounded-base"
-          } ${hasShadow ? "shadow-[0px_4px_6.1px_0px_#E5E9FF80]" : ""}`}
+          className={`bg-white p-5 flex items-center justify-between rounded-base  transition-shadow duration-300 ${pathname !== "/dashboard" ? "rounded-t-base" : "rounded-base"
+            } ${hasShadow ? "shadow-[0px_4px_6.1px_0px_#E5E9FF80]" : ""}`}
         >
           {/* logo  */}
           <Link href="/" className="max-w-[172px]">
@@ -72,11 +82,10 @@ const Header = () => {
           <nav className="md:block hidden">
             <ul className="flex gap-3">
               <li
-                className={`py-[18px] px-6 text-base/4 font-medium ${
-                  pathname === "/dashboard"
-                    ? "text-yellow-600 bg-yellow-100"
-                    : "text-gray-500"
-                } flex items-center gap-3 rounded-full cursor-pointer`}
+                className={`py-[18px] px-6 text-base/4 font-medium ${pathname === "/dashboard"
+                  ? "text-yellow-600 bg-yellow-100"
+                  : "text-gray-500"
+                  } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/dashboard" className="flex items-center gap-3">
                   <DashboardIcon
@@ -89,11 +98,10 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-6 text-base/4 font-medium ${
-                  pathname === "/session"
-                    ? "text-yellow-600 bg-yellow-100"
-                    : "text-gray-500"
-                } flex items-center gap-3 rounded-full cursor-pointer`}
+                className={`py-[18px] px-6 text-base/4 font-medium ${pathname === "/session"
+                  ? "text-yellow-600 bg-yellow-100"
+                  : "text-gray-500"
+                  } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/session" className="flex items-center gap-3">
                   <SessionIcon
@@ -106,11 +114,10 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-6 text-base/4 font-medium ${
-                  pathname === "/payment"
-                    ? "text-yellow-600 bg-yellow-100"
-                    : "text-gray-500"
-                } flex items-center gap-3 rounded-full cursor-pointer`}
+                className={`py-[18px] px-6 text-base/4 font-medium ${pathname === "/payment"
+                  ? "text-yellow-600 bg-yellow-100"
+                  : "text-gray-500"
+                  } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/payment" className="flex items-center gap-3">
                   <PaymentIcon
@@ -123,11 +130,10 @@ const Header = () => {
                 </Link>
               </li>
               <li
-                className={`py-[18px] px-6 text-base/4 font-medium ${
-                  pathname === "/patient"
-                    ? "text-yellow-600 bg-yellow-100"
-                    : "text-gray-500"
-                } flex items-center gap-3 rounded-full cursor-pointer`}
+                className={`py-[18px] px-6 text-base/4 font-medium ${pathname === "/patient"
+                  ? "text-yellow-600 bg-yellow-100"
+                  : "text-gray-500"
+                  } flex items-center gap-3 rounded-full cursor-pointer`}
               >
                 <Link href="/patient" className="flex items-center gap-3">
                   <PatientIcon
@@ -160,21 +166,67 @@ const Header = () => {
                   Notification
                 </h4>
                 <ul className="px-5 divide-y divide-primary/10">
-                  {notificationList?.map((item, index) => (
-                    <li key={index} className="flex items-start gap-4 py-5">
-                      <div className="min-w-10 h-10 rounded-full bg-green-600/10 text-green-600 flex items-center justify-center">
-                        <User size={24} />
-                      </div>
-                      <div className="max-w-[290px]">
-                        <p className="text-sm/5 text-primary font-medium">
-                          {item.title}
-                        </p>
-                        <p className="pt-2 text-xs_18 text-primary/50">
-                          {item.time}
-                        </p>
-                      </div>
-                    </li>
-                  ))}
+                  {notificationLoading
+                    ? // Render Skeletons when loading
+                    Array.from({ length: 5 }).map((_, index) => (
+                      <li key={index} className="flex items-start gap-4 py-5">
+                        <div className="min-w-10 h-10 rounded-full bg-green-600/10 text-green-600 flex items-center justify-center">
+                          <div className="w-6 h-6 bg-green-300 animate-pulse rounded-full"></div>
+                        </div>
+                        <div className="max-w-[290px]">
+                          <p className="h-4 bg-primary/10 animate-pulse rounded w-3/4 mb-2"></p>
+                          <p className="h-4 bg-primary/10 animate-pulse rounded w-1/2"></p>
+                        </div>
+                      </li>
+                    ))
+                    : // Render Notification Data when not loading
+                    (notificationData as NotificationItem[])?.map((item, index) => (
+                      <li key={index} className="flex items-start gap-4 py-5">
+                        <div className="min-w-10 h-10 rounded-full bg-green-600/10 text-green-600 flex items-center justify-center">
+                          <User size={24} />
+                        </div>
+                        <div className="max-w-[290px]">
+                          <p className="text-sm/5 text-primary font-medium line-clamp-2">
+                            {(item as { message: string }).message}
+                          </p>
+                          <p className="pt-2 text-xs_18 text-primary/50">
+                            {item.updatedAt
+                              ? `Updated at: ${new Date(
+                                item.updatedAt
+                              ).toLocaleDateString([], {
+                                month: "short",
+                                day: "2-digit",
+                                year: "numeric",
+                              })} 
+                                  ,
+                                  ${new Date(item.updatedAt).toLocaleTimeString(
+                                [],
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                }
+                              )}`
+                              : `Created at: ${new Date(
+                                item.createdAt
+                              ).toLocaleDateString([], {
+                                month: "short",
+                                day: "2-digit",
+                                year: "numeric",
+                              })} 
+                                  ,
+                                  ${new Date(item.createdAt).toLocaleTimeString(
+                                [],
+                                {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                  hour12: true,
+                                }
+                              )}`}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
                 </ul>
               </Dropdown>
             </div>
@@ -183,13 +235,17 @@ const Header = () => {
                 onClick={() => setProfileDrop(!profileDrop)}
                 className="flex items-center gap-2 cursor-pointer"
               >
-                <div className="rounded-full overflow-hidden p-[3px] border border-primary/50">
+                <div className="rounded-full overflow-hidden p-[3px] border w-10 h-10 border-primary/50">
                   <Image
-                    src="/assets/images/avatar.webp"
+                    src={
+                      typeof profileImage === "string"
+                        ? profileImage
+                        : "/assets/images/avatar.webp"
+                    }
                     alt="logo"
                     width={300}
                     height={300}
-                    className="w-10 h-10 object-cover"
+                    className="w-full h-full object-cover rounded-full"
                   />
                 </div>
                 <CaretDown size={16} className=" text-primary" />

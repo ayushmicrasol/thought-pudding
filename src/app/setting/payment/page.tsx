@@ -2,10 +2,77 @@
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import SettingLayout from "@/layout/dashboard/SettingLayout";
-import React from "react";
+import {
+  paymentMenuUpdate,
+  therapistVpaUpdate,
+  useGetSettingData,
+} from "@/services/setting.service";
+import React, { useEffect, useState } from "react";
 import { RiErrorWarningLine } from "react-icons/ri";
 
 const PaymentSetting = () => {
+  const [vpa, setVpa] = useState(""); // State for VPA input
+  const [agreed, setAgreed] = useState(false); // State for checkbox
+  const [paymentGateway, setPaymentGateway] = useState(false); // State for Payment Link checkbox
+  const [paymentTracker, setPaymentTracker] = useState(false); // State for Payment 2.0 checkbox
+
+  // get payment activity data
+  const { therapistData } = useGetSettingData();
+
+  console.log(therapistData, "therapistData");
+
+  console.log(vpa, "vpa.............");
+  console.log(agreed, "agreed.............");
+
+  type PaymentMenuFormData = {
+    get(key: string): string | null;
+    append(key: string, value: string): void;
+  };
+
+  // Function to handle checkbox change
+  const handleCheckboxChange = () => {
+    setAgreed((prev) => !prev); // Toggle the checkbox state
+  };
+
+  // Function to handle payment setup
+  const setupPaymentMethod = async () => {
+    const formData = new FormData();
+    formData.append("vpa", vpa); // Append VPA to FormData
+
+    try {
+
+      // Replace the URL with your actual API endpoint
+      const response = await therapistVpaUpdate(formData as PaymentMenuFormData);
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error setting up payment method:", error);
+    }
+  };
+
+  // Function to handle saving settings
+  const setUpPaymentsSecond = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("paymentGateway", paymentGateway.toString()); // Append payment link status
+      formData.append("paymentTracker", paymentTracker.toString()); // Append payment tracker status
+
+      // Replace with your actual API endpoint
+      const response = await paymentMenuUpdate(formData as PaymentMenuFormData);
+
+      console.log(response.data);
+    } catch (error) {
+      console.log(error, "error...............");
+    }
+  };
+
+  useEffect(() => {
+    if (therapistData) {
+      setVpa(therapistData?.bankDetails?.upiId);
+      setPaymentGateway(therapistData?.menus?.paymentGateway);
+      setPaymentTracker(therapistData?.menus?.paymentTracker);
+    }
+  }, [therapistData]);
+
   return (
     <SettingLayout>
       <div>
@@ -20,8 +87,8 @@ const PaymentSetting = () => {
                 Enter VPA
               </label>
               <Input
-                value=""
-                onChange={() => {}}
+                value={vpa}
+                onChange={(e) => setVpa(e.target.value)}
                 name="vpa"
                 type={`text`}
                 placeholder={`Enter Your Current Password`}
@@ -36,10 +103,12 @@ const PaymentSetting = () => {
                 <input
                   type="checkbox"
                   name="remender"
-                  className="w-4 h-4 accent-green-600 "
+                  className="w-4 h-4 accent-green-600"
+                  checked={agreed}
+                  onChange={handleCheckboxChange}
                 />
                 <p className="text-sm/5 text-primary">
-                  Agree to term & conditions
+                  Agree to terms & conditions
                 </p>
               </label>
             </div>
@@ -50,7 +119,12 @@ const PaymentSetting = () => {
               receive. Thanks!
             </p>
             <div className="text-end pt-5">
-              <Button variant="filled" className={`w-[144px]`}>
+              <Button
+                disabled={!(agreed && vpa)}
+                variant="filled"
+                className={`w-[144px]`}
+                onClick={setupPaymentMethod}
+              >
                 Setup method
               </Button>
             </div>
@@ -68,6 +142,9 @@ const PaymentSetting = () => {
                   type="checkbox"
                   name="payment"
                   className="w-4 h-4 accent-green-600 "
+                  checked={paymentGateway}
+                  onChange={(e) => setPaymentGateway(e.target.checked)} // Handle checkbox change
+                  disabled={true}
                 />
                 <p className="text-sm/5 text-primary">Payment Link</p>
               </label>
@@ -84,6 +161,9 @@ const PaymentSetting = () => {
                   type="checkbox"
                   name="payment2"
                   className="w-4 h-4 accent-green-600 "
+                  checked={paymentTracker}
+                  onChange={(e) => setPaymentTracker(e.target.checked)} // Handle checkbox change
+                  disabled={therapistData?.menus?.paymentTracker}
                 />
                 <p className="text-sm/5 text-primary">
                   Payment 2.0 (Payment Tracker)
@@ -95,7 +175,11 @@ const PaymentSetting = () => {
               </p>
             </div>
             <div className="text-end pt-5 ">
-              <Button variant="filled" className={`w-[144px]`}>
+              <Button
+                variant="filled"
+                className={`w-[144px]`}
+                onClick={setUpPaymentsSecond}
+              >
                 Save
               </Button>
             </div>

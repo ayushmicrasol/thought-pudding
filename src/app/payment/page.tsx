@@ -4,26 +4,29 @@ import DatePicker from "@/components/common/DatePicker";
 import TablePagination from "@/components/common/TablePagination";
 import Tabs from "@/components/common/Tabs";
 import ActivityCard from "@/components/dashboard/common/ActivityCard";
-import PaymentTBody from "@/components/dashboard/common/table/PaymentTBody";
+import PaymentTBody, {
+  Item,
+} from "@/components/dashboard/common/table/PaymentTBody";
 import THeader from "@/components/dashboard/common/table/THeader";
 import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
 import SessionDetailModal from "@/components/dashboard/SessionDetailModal";
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
+import {
+  FilterParams,
+  getTemplateTest,
+  useGetPayments,
+  useGetPaytracker,
+} from "@/services/payment.service";
 import { FunnelSimple, MagnifyingGlass } from "@phosphor-icons/react";
-import { useState } from "react";
-
-const activity = [
-  { title: "Received", session: "₹2,200", percentage: "+12" },
-  { title: "Pending", session: "₹1,200", percentage: "+08" },
-  { title: "Total Earnings", session: "₹3,200", percentage: "-06" },
-];
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const sessionTabs = [
-  { label: "All (52)" },
-  { label: "Paid On Time (20)" },
-  { label: "Still Pending (30)" },
-  { label: "Paid Delayed (05)" },
-  { label: "Cancelled (02)" },
+  { label: "All", value: "" },
+  { label: "Paid On Time", value: "paidOnTime" },
+  { label: "Still Pending", value: "stillPending" },
+  { label: "Paid Delayed", value: "paidDelayed" },
+  { label: "Cancelled", value: "cancelled" },
 ];
 
 const paymentTableHeader = [
@@ -37,67 +40,122 @@ const paymentTableHeader = [
   "actions",
 ];
 
-const paymentTable = [
-  {
-    img: "",
-    name: "Abhi Sojitra",
-    email: "abhi@gmail.com",
-    date: "12 Sep, 2024",
-    time: "03:40-04:15 PM",
-    amount: "1,000",
-    paymentType: "Post Session",
-    paymentOn: "08 Sep, 2024",
-  },
-  {
-    img: "",
-    name: "Dishank Gajera",
-    email: "dishank@gmail.com",
-    date: "08 Aug, 2024",
-    time: "02:00-03:15 PM",
-    amount: "2,000",
-    paymentType: "Post Session",
-    paymentOn: "12 Aug, 2024",
-  },
-  {
-    img: "",
-    name: "Darshan Tarpada",
-    email: "darshant56@gmail.com",
-    date: "22 July, 2024",
-    time: "12:00-01:30 PM",
-    amount: "500",
-    paymentType: "Post Session",
-    paymentOn: "",
-  },
-  {
-    img: "",
-    name: "Neha Kikani",
-    email: "nehak@gmail.com",
-    date: "18 March, 2024",
-    time: "05:00-06:00 PM",
-    amount: "250",
-    paymentType: "Post Session",
-    paymentOn: "",
-  },
-  {
-    img: "",
-    name: "Divyesh Sojitra",
-    email: "Divyesh@gmail.com",
-    date: "05 Sep, 2024",
-    time: "01:40-02:30 PM",
-    amount: "850",
-    paymentType: "Post Session",
-    paymentOn: "22 May, 2024",
-  },
-];
-const totalPages = 10; // Define total pages for pagination
+interface singlePaymentData {
+  clientId?: {
+    _id: string;
+  };
+  _id?: string;
+}
+
+interface TemplateData {
+  receiverData?: {
+    name: string;
+    email: string;
+  };
+  emailSubject?: string;
+  emailBody?: string;
+}
+
+interface PaymentTrackerData {
+  collected_payment?: {
+    data: number;
+    change: number;
+  };
+  pending_payment?: {
+    data: number;
+    change: number;
+  };
+  total_earnings?: {
+    data: number;
+    change: number;
+  };
+}
 
 const Payment = () => {
+  const searchParams = useSearchParams(); // Access the query params
+
+  const clientId = searchParams.get("client"); // Get 'client' from query
+  console.log({ clientId }, "----------------- clintID");
+
   const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("Today");
   const [isReminderModal, setIsReminderModal] = useState(false);
   const [isReminderMassageModal, setIsReminderMassageModal] = useState(false);
-  const [activeTable, setActiveTable] = useState(sessionTabs[0].label);
+  const [activeTable, setActiveTable] = useState(sessionTabs[0]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [singlePaymentData, setSinglePaymentData] = useState<singlePaymentData>(
+    {}
+  );
+
+  const [templateData, setTemplateData] = useState<TemplateData | null>(null);
+
+  console.log(templateData, "templateData............................");
+
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearchText, setDebouncedSearchText] = useState("");
 
   const [isFilter, setIsFilter] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const [selectedStatus, setSelectedStatus] = useState("custom"); // default to custom date
+  const [searchStartDate, setSearchStartDate] = useState<string | null>(null);
+  const [searchEndDate, setSearchEndDate] = useState<string | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState("");
+
+  const [filterparams, setFilterparams] = useState<FilterParams>({});
+  const pageSize = 5; // Set the page size as required
+
+  const query =
+    `pageSize=${pageSize}&pageNumber=${currentPage}&${
+      activeTable?.value
+    }=true&searchText=${debouncedSearchText}&clientName=${clientId ?? ""}` +
+    ((filterparams.searchStartDate && filterparams.searchEndDate) ||
+    filterparams.paymentStatus
+      ? `&startDate=${filterparams.searchStartDate}&endDate=${filterparams.searchEndDate}&${filterparams.paymentStatus}=true`
+      : "");
+
+  // get payment listing
+  const { paymentData, paymentLoading, paymentCount } = useGetPayments({
+    pageSize,
+    currentPage,
+    activeTable: activeTable?.value,
+    debouncedSearchText,
+    filterparams,
+    clientId: clientId ?? "" // Convert null to undefined
+  });
+
+  // get payment activity data
+  const { paymentTrackerData } = useGetPaytracker(startDate, endDate) as {
+    paymentTrackerData: PaymentTrackerData;
+  };
+
+  const activity = [
+    {
+      title: "Received",
+      session: `₹${paymentTrackerData?.collected_payment?.data ?? 0}`,
+      percentage: `${paymentTrackerData?.collected_payment?.change ?? 0}`,
+    },
+    {
+      title: "Pending",
+      session: `₹${paymentTrackerData?.pending_payment?.data ?? 0}`,
+      percentage: `${paymentTrackerData?.pending_payment?.change ?? 0}`,
+    },
+    {
+      title: "Total Earnings",
+      session: `₹${paymentTrackerData?.total_earnings?.data ?? 0}`,
+      percentage: `${paymentTrackerData?.total_earnings?.change ?? 0}`,
+    },
+  ];
+
+  console.log(paymentTrackerData, "paymentTrackerData");
+
+  const totalPages = Math.ceil(paymentCount / pageSize);
+
+  // set search value
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearchText(searchText), 500);
+    return () => clearTimeout(handler);
+  }, [searchText]);
 
   function handleModalTransition(
     closeModal: (value: boolean) => void,
@@ -106,6 +164,73 @@ const Payment = () => {
     closeModal(false); // Close the currently open modal
     openModal(true); // Open the next modal
   }
+
+  async function getTemplateBodyData() {
+    const response = await getTemplateTest(
+      singlePaymentData?.clientId?._id ?? "",
+      singlePaymentData?._id ?? "",
+      isReminderModal
+    );
+
+    console.log(response, "response........................");
+    setTemplateData(response?.data); // Set the response data in state
+  }
+
+  const handleStatusChange = (status: string) => {
+    setSelectedStatus(status);
+
+    // Get today's date
+    const today = new Date();
+
+    // Clear start and end dates if another option is selected
+    if (status !== "custom") {
+      let startDate, endDate;
+
+      switch (status) {
+        case "last7":
+          startDate = new Date(today);
+          startDate.setDate(today.getDate() - 7);
+          endDate = today;
+          break;
+        case "last15":
+          startDate = new Date(today);
+          startDate.setDate(today.getDate() - 15);
+          endDate = today;
+          break;
+        case "last30":
+          startDate = new Date(today);
+          startDate.setDate(today.getDate() - 30);
+          endDate = today;
+          break;
+        default:
+          startDate = null;
+          endDate = null;
+      }
+
+      // Convert to ISO string with timezone
+      const isoStartDate = startDate ? startDate.toISOString() : null;
+      const isoEndDate = endDate ? endDate.toISOString() : null;
+
+      setSearchStartDate(isoStartDate); // Set the calculated start date in ISO format
+      setSearchEndDate(isoEndDate); // Set the calculated end date in ISO format
+    } else {
+      // If "custom" is selected, clear the dates
+      setSearchStartDate(null);
+      setSearchEndDate(null);
+    }
+  };
+
+  const handleApplySearchFilter = () => {
+    // Set filterParams to valuen trigger a new API call
+    setFilterparams({
+      searchStartDate: searchStartDate ?? "",
+      searchEndDate: searchEndDate ?? "",
+      paymentStatus,
+    });
+
+    // Close the modal after applying the filter
+    setIsFilter(false);
+  };
 
   return (
     <DashboardLayout>
@@ -128,6 +253,8 @@ const Payment = () => {
                 setIsMonthsDropSelect(value as string)
               }
               DropClass=""
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
             />
           </div>
           <div className="pt-5 grid grid-cols-3 gap-5">
@@ -156,8 +283,9 @@ const Payment = () => {
           <div className="flex items-center justify-between">
             <Tabs
               tabs={sessionTabs}
-              activeTab={activeTable}
-              setActiveTab={setActiveTable}
+              activeTab={activeTable?.label}
+              setActiveTab={(tab) => setActiveTable(tab)}
+              sessionCount={paymentCount}
             />
 
             <div className="flex items-center gap-2 max-w-[391px] w-full py-15px px-5 border border-[#9B9DB7] rounded-full text-xs text-primary">
@@ -166,6 +294,7 @@ const Payment = () => {
                 type="search"
                 placeholder="Search your client name and id"
                 className="outline-none w-full placeholder:text-primary/50"
+                onChange={(e) => setSearchText(e.target.value)}
               />
               <span className="text-primary/50">|</span>
               <div className="flex items-center bg-green-600/5 py-1 px-2.5 rounded-full gap-3">
@@ -187,12 +316,21 @@ const Payment = () => {
               <table className="w-full  bg-white">
                 <THeader data={paymentTableHeader} />
                 <PaymentTBody
-                  TableData={paymentTable}
+                  TableData={paymentData}
+                  paymentLoading={paymentLoading}
                   setIsReminderModal={setIsReminderModal}
                   isReminderModal={isReminderModal}
+                  setSinglePaymentData={(item: Item) =>
+                    setSinglePaymentData(item as unknown as singlePaymentData)
+                  }
+                  query={query}
                 />
               </table>
-              <TablePagination totalPages={totalPages} />
+              <TablePagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </div>
         </div>
@@ -208,53 +346,86 @@ const Payment = () => {
         <div className="py-7.5">
           <p className="text-base/5 text-primary font-medium">Client Status</p>
           <div className="space-y-2.5 pt-3">
-            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
-              <input type="radio" name="Status" className="w-4.5 h-4.5" />
-              Last 7 Days
-            </label>
-            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
-              <input type="radio" name="Status" className="w-4.5 h-4.5" />
-              Last 15 Days
-            </label>
-            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
-              <input type="radio" name="Status" className="w-4.5 h-4.5" />
-              Last 30 Days
-            </label>
-            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
-              <input type="radio" name="Status" className="w-4.5 h-4.5" />
-              Custom Date
-            </label>
-          </div>
-          <div className="space-y-5 pt-6">
-            <div>
-              <label className="text-base/5 text-primary font-medium">
-                Start Date
+            {["last7", "last15", "last30", "custom"].map((option) => (
+              <label
+                key={option}
+                className="flex items-center gap-2.5 text-sm/5 text-gray-500"
+              >
+                <input
+                  type="radio"
+                  name="Status"
+                  className="w-4.5 h-4.5"
+                  checked={selectedStatus === option}
+                  onChange={() => handleStatusChange(option)}
+                />
+                {option === "custom"
+                  ? "Custom Date"
+                  : `Last ${
+                      option === "last7"
+                        ? "7"
+                        : option === "last15"
+                        ? "15"
+                        : "30"
+                    } Days`}
               </label>
-              <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
-            </div>
-            <div>
-              <label className="text-base/5 text-primary font-medium">
-                End Date
-              </label>
-              <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
-            </div>
+            ))}
           </div>
+
+          {selectedStatus === "custom" && (
+            <div className="space-y-5 pt-6">
+              <div>
+                <label className="text-base/5 text-primary font-medium">
+                  Start Date
+                </label>
+                <DatePicker
+                  value={searchStartDate ?? ""}
+                  placeholder={`DD/MM/YYYY`}
+                  className={`!mt-3`}
+                  onChange={(date) => {
+                    setSearchStartDate(date);
+                  }}
+                />
+              </div>
+              <div>
+                <label className="text-base/5 text-primary font-medium">
+                  End Date
+                </label>
+                <DatePicker
+                  value={searchEndDate ?? ""}
+                  placeholder={`DD/MM/YYYY`}
+                  className={`!mt-3`}
+                  onChange={(date) => {
+                    setSearchEndDate(date);
+                  }}
+                />
+              </div>
+            </div>
+          )}
+
           <p className="text-base/5 text-primary font-medium pt-6">
             Payment Mark As
           </p>
           <div className="flex items-center gap-6 pt-3">
-            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
-              <input type="radio" name="Payment" className="w-4.5 h-4.5" />
-              Paid On Time
-            </label>
-            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
-              <input type="radio" name="Payment" className="w-4.5 h-4.5" />
-              Still Pending
-            </label>
-            <label className="flex items-center gap-2.5 text-sm/5 text-gray-500">
-              <input type="radio" name="Payment" className="w-4.5 h-4.5" />
-              Paid Delayed
-            </label>
+            {["paidOnTime", "stillPending", "paidDelayed"].map(
+              (paymentOption) => (
+                <label
+                  key={paymentOption}
+                  className="flex items-center gap-2.5 text-sm/5 text-gray-500"
+                >
+                  <input
+                    type="radio"
+                    name="Payment"
+                    className="w-4.5 h-4.5"
+                    onChange={() => setPaymentStatus(paymentOption)}
+                  />
+                  {paymentOption === "paidOnTime"
+                    ? "Paid On Time"
+                    : paymentOption === "stillPending"
+                    ? "Still Pending"
+                    : "Paid Delayed"}
+                </label>
+              )
+            )}
           </div>
         </div>
         <div className="flex items-center justify-end gap-3.5">
@@ -270,9 +441,11 @@ const Payment = () => {
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() => {
-              setIsFilter(false);
-            }}
+            disabled={
+              selectedStatus === "custom" &&
+              (!searchStartDate || !searchEndDate)
+            }
+            onClick={handleApplySearchFilter}
           >
             Apply
           </Button>
@@ -312,12 +485,13 @@ const Payment = () => {
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() =>
+            onClick={() => {
               handleModalTransition(
                 setIsReminderModal,
                 setIsReminderMassageModal
-              )
-            }
+              );
+              getTemplateBodyData();
+            }}
           >
             Yes
           </Button>
@@ -334,12 +508,13 @@ const Payment = () => {
         <div className="text-base/7 text-primary pt-5">
           <p>
             To:{" "}
-            <span className="text-green-600">{`Hetvi <hetvi.micra@gmail.com>`}</span>
+            <span className="text-green-600">{`${templateData?.receiverData?.name} <${templateData?.receiverData?.email}>`}</span>
           </p>
           <p>
-            Subject: <span className="font-semibold">Payment Reminder 🔔</span>
+            Subject:{" "}
+            <span className="font-semibold">{templateData?.emailSubject}</span>
           </p>
-          <p className="text-green-600 font-semibold">Hi Hetvi,</p>
+          {/* <p className="text-green-600 font-semibold">Hi Hetvi,</p>
           <p className="pt-5">
             This is to remind you that your payment for session on{" "}
           </p>
@@ -347,13 +522,17 @@ const Payment = () => {
             <span className="font-semibold">19 Sep 2024 at 11:10 AM</span> with
             <span className="font-semibold">Parth Sojitra</span> has been
             pending for sometime. Kindly clear it before your next session.
-          </p>
+          </p> */}
+          <div
+            dangerouslySetInnerHTML={{ __html: templateData?.emailBody ?? "" }}
+          />
         </div>
         <Button
           variant="filledGreen"
           className={`w-full mt-7.5`}
           onClick={() => {
             setIsReminderMassageModal(false);
+            getTemplateBodyData();
           }}
         >
           send reminder

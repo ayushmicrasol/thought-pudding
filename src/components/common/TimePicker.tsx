@@ -3,22 +3,37 @@ import { Clock } from "@phosphor-icons/react";
 import { useState, useEffect, useRef } from "react";
 
 interface TimePickerProps {
-  className?: string; // Define className as an optional string
+  className?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 const times = Array.from({ length: 24 }, (_, i) => {
-  const hour = i < 10 ? `0${i}` : i; // Format hours
-  return `${hour}:00`; // Every hour on the hour
+  const hour = i < 10 ? `0${i}` : i;
+  return `${hour}:00`;
 });
 
-const TimePicker: React.FC<TimePickerProps> = ({ className }) => {
-  const [selectedTime, setSelectedTime] = useState("00:00");
+const TimePicker: React.FC<TimePickerProps> = ({
+  className,
+  value,
+  onChange,
+}) => {
+  const [selectedTime, setSelectedTime] = useState(value || "00:00");
   const [showDropdown, setShowDropdown] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null); // To track the dropdown component
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (value) {
+      setSelectedTime(value);
+    }
+  }, [value]);
 
   const handleSelectTime = (time: string) => {
     setSelectedTime(time);
     setShowDropdown(false);
+    if (onChange) {
+      onChange(time);
+    }
   };
 
   const handleClickOutside = (event: MouseEvent) => {

@@ -2,21 +2,31 @@ import React, { useState, useRef, useEffect } from "react";
 
 type Tab = {
   label: string;
+  value: string;
   content?: React.ReactNode;
 };
 
 type TabsProps = {
   tabs: Tab[];
   activeTab: string;
-  setActiveTab: (tab: string) => void;
+  setActiveTab: (tab: Tab) => void;
+  sessionCount: number; // Add this line
 };
 
-const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, setActiveTab }) => {
+
+
+
+const Tabs: React.FC<TabsProps> = ({
+  tabs,
+  activeTab,
+  setActiveTab,
+  sessionCount,
+}) => {
   const [indicatorStyle, setIndicatorStyle] = useState<React.CSSProperties>({});
   const tabRefs = useRef<(HTMLLIElement | null)[]>([]); // Properly typing as HTMLLIElement
 
-  const handleTabClick = (label: string, index: number) => {
-    setActiveTab(label);
+  const handleTabClick = (tab: Tab, index: number) => {
+    setActiveTab(tab);
     moveIndicator(index);
   };
 
@@ -38,22 +48,27 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, setActiveTab }) => {
   return (
     <div>
       <ul className="relative flex items-center md:gap-0 gap-2 flex-wrap text-base/4">
-        {tabs.map((tab, index) => (
-          <li
-            key={tab.label}
-            ref={(el) => {
-              tabRefs.current[index] = el; // Ensure no return value
-            }}
-            onClick={() => handleTabClick(tab.label, index)}
-            className={`cursor-pointer px-4 py-4.5 transition-colors duration-300 ${
-              activeTab === tab.label
-                ? "text-green-600 font-medium"
-                : "text-primary/50"
-            }`}
-          >
-            {tab.label}
-          </li>
-        ))}
+        {tabs.map(
+          (tab, index) => (
+            console.log(tab),
+            (
+              <li
+                key={tab.label}
+                ref={(el) => {
+                  tabRefs.current[index] = el; // Ensure no return value
+                }}
+                onClick={() => handleTabClick(tab, index)}
+                className={`cursor-pointer px-4 py-4.5 transition-colors duration-300 ${activeTab === tab.label
+                  ? "text-green-600 font-medium"
+                  : "text-primary/50"
+                  }`}
+              >
+                {tab.label} {activeTab === tab.label && `(${sessionCount})`}{" "}
+                {/* Example usage */}
+              </li>
+            )
+          )
+        )}
         {/* Sliding border indicator */}
         <span
           className="absolute bottom-0 h-[1.5px] bg-green-600 transition-all duration-300"
@@ -62,9 +77,8 @@ const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, setActiveTab }) => {
       </ul>
       <div className="overflow-hidden">
         <div
-          className={`transition-opacity duration-300 ease-in-out ${
-            activeTab ? "opacity-100" : "opacity-0"
-          }`}
+          className={`transition-opacity duration-300 ease-in-out ${activeTab ? "opacity-100" : "opacity-0"
+            }`}
         >
           {tabs.find((tab) => tab.label === activeTab)?.content}
         </div>

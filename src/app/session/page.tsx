@@ -5,28 +5,35 @@ import Input from "@/components/common/Input";
 import TablePagination from "@/components/common/TablePagination";
 import Tabs from "@/components/common/Tabs";
 import ActivityCard from "@/components/dashboard/common/ActivityCard";
-import SessionTBody from "@/components/dashboard/common/table/SessionTBody";
+import SessionTBody, {
+  Item,
+} from "@/components/dashboard/common/table/SessionTBody";
 import THeader from "@/components/dashboard/common/table/THeader";
 import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
-import FreeSlotsSidebar from "@/components/dashboard/FreeSlotsSidebar";
 import RescheduleSidebar from "@/components/dashboard/RescheduleSidebar";
 import SessionDetailModal from "@/components/dashboard/SessionDetailModal";
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
+import {
+  deleteSchedules,
+  scheduleReminder,
+  updatePayment,
+  useGetScheduleCount,
+  useGetSchedules,
+} from "@/services/session.service";
+import { fetcher, formatDate, formatTime } from "@/utils/axios";
+import endpoints from "@/utils/endpoints";
 import { FunnelSimple, MagnifyingGlass } from "@phosphor-icons/react";
-import { useState } from "react";
-
-const activity = [
-  { title: "Completed Session", session: "120", percentage: "+12" },
-  { title: "Reschedule Session", session: "58", percentage: "+08" },
-  { title: "Cancel Session", session: "12", percentage: "-06" },
-  { title: "Patient", session: "150", percentage: "+18" },
-];
+import moment from "moment";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { mutate } from "swr";
+import { FilterParams } from "@/services/session.service";
 
 const sessionTabs = [
-  { label: "All (52)" },
-  { label: "Upcoming (20)" },
-  { label: "Completed (30)" },
-  { label: "Cancelled (02)" },
+  { label: "All ", value: "" },
+  { label: "Upcoming ", value: "upcoming" },
+  { label: "Completed ", value: "completed" },
+  { label: "Cancelled ", value: "cancelled" },
 ];
 
 const sessionTableHeader = [
@@ -39,63 +46,31 @@ const sessionTableHeader = [
   "actions",
 ];
 
-const sessionTable = [
-  {
-    img: "",
-    name: "Abhi Sojitra",
-    email: "abhi@gmail.com",
-    date: "12 Sep, 2024",
-    time: "03:40-04:15 PM",
-    payments: "1,000",
-    status: "Completed",
-  },
-  {
-    img: "",
-    name: "Dishank Gajera",
-    email: "dishank@gmail.com",
-    date: "08 Aug, 2024",
-    time: "02:00-03:15 PM",
-    payments: "2,000",
-    status: "Cancelled",
-  },
-  {
-    img: "",
-    name: "Darshan Tarpada",
-    email: "darshant56@gmail.com",
-    date: "22 July, 2024",
-    time: "12:00-01:30 PM",
-    payments: "500",
-    status: "Cancelled",
-  },
-  {
-    img: "",
-    name: "Neha Kikani",
-    email: "nehak@gmail.com",
-    date: "18 March, 2024",
-    time: "05:00-06:00 PM",
-    payments: "250",
-    status: "Upcoming",
-  },
-  {
-    img: "",
-    name: "Divyesh Sojitra",
-    email: "Divyesh@gmail.com",
-    date: "05 Sep, 2024",
-    time: "01:40-02:30 PM",
-    payments: "850",
-    status: "Upcoming",
-  },
-];
-
-const totalPages = 10; // Define total pages for pagination
+export interface SessionData {
+  name?: string;
+  email?: string;
+  tillDate?: Date;
+  fromDate?: Date;
+}
 
 const Session = () => {
+  const searchParams = useSearchParams();
+
+  const clientId = searchParams.get("client"); // Get 'client' from query
+  console.log({ clientId }, "----------------- clintID");
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const pageSize = 5; // Set the page size as required
+
   const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("Today");
 
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearchText, setDebouncedSearchText] = useState("");
+  const [activeTable, setActiveTable] = useState(sessionTabs[0]);
+
   // sidebar
-  const [freeSlote, setFreeSlote] = useState(false);
   const [isRescheduleSession, setIsRescheduleSession] = useState(false);
-  const [activeTable, setActiveTable] = useState(sessionTabs[0].label);
 
   // modals
   const [isFilter, setIsFilter] = useState(false);
@@ -106,6 +81,84 @@ const Session = () => {
   const [isCancellationModal, setIsCancellationModal] = useState(false);
   const [isUpdatePaymentModal, setIsUpdatePaymentModal] = useState(false);
   const [isTerminatingModal, setIsTerminatingModal] = useState(false);
+  const [singleSessionID, setSingleSessionID] = useState("");
+  const [paymentID, setPaymentID] = useState("");
+  const [rescheduleSessionID, setRescheduleSessionID] = useState("");
+
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [newAmount, setNewAmount] = useState<string | "">("");
+
+  const [searchStartDate, setSearchStartDate] = useState<string | null>(null);
+  const [searchEndDate, setSearchEndDate] = useState<string | null>(null);
+  const [filterparams, setFilterparams] = useState<FilterParams>({}); // Control refetching
+
+  // activity section start
+  const { scheduleCountData } = useGetScheduleCount(startDate, endDate) as {
+    scheduleCountData: {
+      completed_sessions?: number;
+      rescheduled_sessions?: number;
+      cancelled_sessions?: number;
+    };
+  };
+
+  const activity = [
+    {
+      title: "Completed Session",
+      session: `${scheduleCountData?.completed_sessions || 0}`,
+      percentage: "",
+    },
+    {
+      title: "Reschedule Session",
+      session: `${scheduleCountData?.rescheduled_sessions || 0}`,
+      percentage: "",
+    },
+    {
+      title: "Cancel Session",
+      session: `${scheduleCountData?.cancelled_sessions || 0}`,
+      percentage: "",
+    },
+  ];
+  // activity section end
+
+  // send remider start
+  const [singleSessionData, setSingleSessionData] =
+    useState<SessionData | null>(null);
+
+  async function reminderSessionData() {
+    const response = await scheduleReminder(singleSessionID);
+    console.log(response, "response........................");
+  }
+
+  console.log(filterparams, "filterparams....................");
+
+  const query =
+    `pageSize=${pageSize}&pageNumber=${currentPage}&status=${activeTable.value}` +
+    `&searchText=${debouncedSearchText}` +
+    `&client=${clientId ?? ""}` +
+    (filterparams &&
+    filterparams?.searchStartDate &&
+    filterparams?.searchEndDate
+      ? `&startDate=${filterparams?.searchStartDate}&endDate=${filterparams?.searchEndDate}`
+      : "");
+
+  const { sessionData, sessionLoading, sessionCount } = useGetSchedules({
+    pageSize,
+    currentPage,
+    activeTable: activeTable.value,
+    debouncedSearchText,
+    clientId: clientId?.toString() ?? "",
+    filterparams,
+  });
+
+  const totalPages = Math.ceil(sessionCount / pageSize);
+  console.log({ sessionData, sessionLoading, sessionCount });
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearchText(searchText), 500);
+    return () => clearTimeout(handler);
+  }, [searchText]);
 
   function handleModalTransition(
     closeModal: (value: boolean) => void,
@@ -115,18 +168,39 @@ const Session = () => {
     openModal(true); // Open the next modal
   }
 
+  const deleteSingleSession = async () => {
+    try {
+      await deleteSchedules(singleSessionID);
+      console.log("Session deleted successfully.");
+
+      const url = `${endpoints.sessions.schedules}?${query}`;
+
+      // Log the URL to verify it's correct
+      console.log(url, "mutate URL");
+
+      mutate(url, async () => {
+        await fetcher(url);
+      });
+    } catch (error) {
+      console.error("Failed to delete the session.", error);
+    }
+  };
+
+  const handleApplySearchFilter = () => {
+    // Set filterParams to valuen trigger a new API call
+    setFilterparams({
+      searchStartDate: searchStartDate ?? "",
+      searchEndDate: searchEndDate ?? "",
+    });
+
+    // Close the modal after applying the filter
+    setIsFilter(false);
+  };
+
   return (
     <DashboardLayout>
       <div className="bg-white mt-5 rounded-base overflow-hidden">
         {/* Session header */}
-        {/* <div className="flex items-center justify-between p-5 bg-white  shadow-[0px_2px_8px_0px_#2A5F611A] sticky top-28 z-[90]">
-          <h1 className="text-2xl/9 text-primary font-semibold">Session</h1>
-          <div className="flex items-center gap-5">
-            <Button variant="filled" onClick={() => setFreeSlote(!freeSlote)}>
-              Find me free slot
-            </Button>
-          </div>
-        </div> */}
 
         {/* activity section */}
         <div className="p-5">
@@ -138,23 +212,23 @@ const Session = () => {
                 setIsMonthsDropSelect(value as string)
               }
               DropClass=""
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
             />
           </div>
-          <div className="pt-5 grid grid-cols-4 gap-5">
+          <div className="pt-5 grid grid-cols-3 gap-5">
             {activity?.map((items, index) => (
               <ActivityCard
                 key={index}
                 title={items.title}
                 count={items.session}
-                percentage={items.percentage}
+                percentage=""
                 borderColor={
                   index === 0
                     ? "border-[#48A400]"
                     : index === 1
                     ? "border-[#1339FF]"
-                    : index === 2
-                    ? "border-[#FF5C00]"
-                    : "border-[#D813FF]"
+                    : "border-[#FF5C00]"
                 }
               />
             ))}
@@ -166,8 +240,9 @@ const Session = () => {
           <div className="flex items-center justify-between">
             <Tabs
               tabs={sessionTabs}
-              activeTab={activeTable}
-              setActiveTab={setActiveTable}
+              activeTab={activeTable.label}
+              setActiveTab={(tab) => setActiveTable(tab)}
+              sessionCount={sessionCount}
             />
 
             <div className="flex items-center gap-2 max-w-[391px] w-full py-15px px-5 border border-[#9B9DB7] rounded-full text-xs text-primary">
@@ -176,6 +251,8 @@ const Session = () => {
                 type="search"
                 placeholder="Search your client name and id"
                 className="outline-none w-full placeholder:text-primary/50"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
               />
               <span className="text-primary/50">|</span>
               <div className="flex items-center bg-green-600/5 py-1 px-2.5 rounded-full gap-3">
@@ -186,18 +263,17 @@ const Session = () => {
                     setIsFilter(!isFilter);
                   }}
                 />
-                {/* <div className="w-5 h-5 rounded-full border border-primary/20 text-primary flex items-center justify-center bg-white">
-                  <X size={12} />
-                </div> */}
               </div>
             </div>
           </div>
+
           <div className="pt-10">
             <div className="w-full border border-green-600/25 rounded-base overflow-x-auto">
               <table className="w-full  bg-white">
                 <THeader data={sessionTableHeader} />
                 <SessionTBody
-                  TableData={sessionTable}
+                  TableData={sessionData}
+                  sessionLoading={sessionLoading}
                   setIsRescheduleSession={setIsRescheduleSession}
                   isRescheduleSession={isRescheduleSession}
                   setIsUpdatePayment={setIsUpdatePayment}
@@ -205,25 +281,31 @@ const Session = () => {
                   setIsReminderModal={setIsReminderModal}
                   setIsCanceledSessionModal={setIsCanceledSessionModal}
                   isCanceledSessionModal={isCanceledSessionModal}
+                  setSingleSessionID={setSingleSessionID}
+                  setPaymentID={setPaymentID}
+                  setRescheduleSessionID={setRescheduleSessionID}
+                  setSingleSessionData={(item: Item) =>
+                    setSingleSessionData(item as unknown as SessionData)
+                  }
                 />
               </table>
-              <TablePagination totalPages={totalPages} />
+              <TablePagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </div>
         </div>
       </div>
-
       {/* ====== Side Bars ====== */}
-
-      {/* FreeSlots Sidebar */}
-      <FreeSlotsSidebar freeSlote={freeSlote} setFreeSlote={setFreeSlote} />
-
       {/* Reschedule Session sidebar */}
       <RescheduleSidebar
         isRescheduleSession={isRescheduleSession}
         setIsRescheduleSession={setIsRescheduleSession}
+        singleSessionID={rescheduleSessionID}
+        query={query}
       />
-
       {/* ====== Session modals ====== */}
       {/* Filter Modal */}
       <SessionDetailModal
@@ -236,13 +318,28 @@ const Session = () => {
             <label className="text-base/5 text-primary font-medium">
               Start Date
             </label>
-            <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            <DatePicker
+              value={searchStartDate ?? ""}
+              // value={searchStartDate ? searchStartDate.toISOString() : ""}
+              placeholder={`DD/MM/YYYY`}
+              className={`!mt-3`}
+              onChange={(date) => {
+                setSearchStartDate(date);
+              }}
+            />
           </div>
           <div>
             <label className="text-base/5 text-primary font-medium">
               End Date
             </label>
-            <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            <DatePicker
+              value={searchEndDate ?? ""}
+              placeholder={`DD/MM/YYYY`}
+              className={`!mt-3`}
+              onChange={(date) => {
+                setSearchEndDate(date);
+              }}
+            />
           </div>
         </div>
         <div className="flex items-center justify-end gap-3.5">
@@ -258,15 +355,12 @@ const Session = () => {
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() => {
-              setIsFilter(false);
-            }}
+            onClick={handleApplySearchFilter}
           >
             Apply
           </Button>
         </div>
       </SessionDetailModal>
-
       {/* Upadate Payment Modal */}
       <SessionDetailModal
         title="Update Payment"
@@ -282,9 +376,10 @@ const Session = () => {
               value=""
               onChange={() => {}}
               name="oldAmount"
-              type={"number"}
-              placeholder={"0"}
-              icon={`rup`}
+              type="number"
+              placeholder="0"
+              icon="rup"
+              disabled={true}
             />
           </div>
           <div>
@@ -292,12 +387,12 @@ const Session = () => {
               New Amount
             </label>
             <Input
-              value=""
-              onChange={() => {}}
+              value={newAmount}
+              onChange={(e) => setNewAmount(e.target.value)}
               name="newAmount"
-              type={"number"}
-              placeholder={"0"}
-              icon={`rup`}
+              type="number"
+              placeholder="0"
+              icon="rup"
             />
           </div>
         </div>
@@ -305,24 +400,45 @@ const Session = () => {
           <Button
             variant="outlinedGreen"
             className={`min-w-[157px]`}
-            onClick={() => {
-              setIsUpdatePayment(false);
-            }}
+            onClick={() => setIsUpdatePayment(false)}
+            disabled={isUpdating} // Disable button when updating
           >
             Cancel
           </Button>
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() => {
-              setIsUpdatePayment(false);
+            onClick={async () => {
+              if (newAmount) {
+                setIsUpdating(true);
+                try {
+                  await updatePayment(paymentID, newAmount);
+                  console.log("Payment updated successfully.");
+
+                  const url = `${endpoints.sessions.schedules}?${query}`;
+
+                  // Log the URL to verify it's correct
+                  console.log(url, "mutate URL");
+
+                  mutate(url, async () => {
+                    // This callback can be used to fetch updated data if needed
+                    await fetcher(url);
+                  });
+
+                  setIsUpdatePayment(false);
+                } catch (error) {
+                  console.error("Payment update failed:", error);
+                } finally {
+                  setIsUpdating(false);
+                }
+              }
             }}
+            disabled={isUpdating} // Disable button when updating
           >
-            update
+            {isUpdating ? "Updating..." : "Update"}
           </Button>
         </div>
       </SessionDetailModal>
-
       {/* Reminder Modal */}
       <SessionDetailModal
         title="Reminder"
@@ -356,18 +472,17 @@ const Session = () => {
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() =>
+            onClick={() => {
               handleModalTransition(
                 setIsReminderModal,
                 setIsReminderMassageModal
-              )
-            }
+              );
+            }}
           >
             Yes
           </Button>
         </div>
       </SessionDetailModal>
-
       {/* Reminder massage Modal */}
       <SessionDetailModal
         title="Send reminder"
@@ -378,18 +493,30 @@ const Session = () => {
         <div className="text-base/7 text-primary pt-5">
           <p>
             To:{" "}
-            <span className="text-green-600">{`Hetvi <hetvi.micra@gmail.com>`}</span>
+            <span className="text-green-600">{`${
+              singleSessionData?.name || "-"
+            } <${singleSessionData?.email || "-"}>`}</span>
           </p>
           <p>
             Subject: <span className="font-semibold">Payment Reminder 🔔</span>
           </p>
-          <p className="text-green-600 font-semibold">Hi Hetvi,</p>
+          <p className="text-green-600 font-semibold">
+            {singleSessionData?.name || "-"}
+          </p>
           <p className="pt-5">
             This is to remind you that your payment for session on{" "}
           </p>
           <p>
-            <span className="font-semibold">19 Sep 2024 at 11:10 AM</span> with
-            <span className="font-semibold">Parth Sojitra</span> has been
+            <span className="font-semibold">
+              {singleSessionData &&
+                formatDate(
+                  moment(singleSessionData.tillDate).format("YYYY-MM-DD")
+                )}{" "}
+              at{" "}
+              {singleSessionData &&
+                formatTime(moment(singleSessionData.fromDate).format("HH:mm"))}
+            </span>{" "}
+            with <span className="font-semibold">Parth Sojitra</span> has been
             pending for sometime. Kindly clear it before your next session.
           </p>
         </div>
@@ -398,12 +525,12 @@ const Session = () => {
           className={`w-full mt-7.5`}
           onClick={() => {
             setIsReminderMassageModal(false);
+            reminderSessionData();
           }}
         >
           send reminder
         </Button>
       </SessionDetailModal>
-
       {/* Session Canceled */}
       <SessionDetailModal
         title="Session Canceled"
@@ -441,10 +568,9 @@ const Session = () => {
           </Button>
         </div>
       </SessionDetailModal>
-
       {/* Cancellation Fees */}
       <SessionDetailModal
-        title="Is There a Cancellation Fees"
+        title="Is There a Cancellation Fees?"
         isClose={isCancellationModal}
         setIsClose={setIsCancellationModal}
       >
@@ -464,18 +590,17 @@ const Session = () => {
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() =>
+            onClick={() => {
               handleModalTransition(
                 setIsCancellationModal,
                 setIsUpdatePaymentModal
-              )
-            }
+              );
+            }}
           >
             Yes
           </Button>
         </div>
       </SessionDetailModal>
-
       {/* Update Payment Session */}
       <SessionDetailModal
         title="Update Payment Session"
@@ -490,13 +615,15 @@ const Session = () => {
           <Button
             variant="filledGreen"
             className="min-w-[157px]"
-            onClick={() => setIsUpdatePaymentModal(false)}
+            onClick={() => {
+              setIsUpdatePaymentModal(false);
+              deleteSingleSession();
+            }}
           >
             Okay, got it
           </Button>
         </div>
       </SessionDetailModal>
-
       {/* Are you terminating the client */}
       <SessionDetailModal
         title="Are you terminating the client"

@@ -6,7 +6,7 @@ const WebsiteLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   return (
-    <div className="h-full">
+    <div className="h-full bg-white">
       <Header />
       <div>
         <div>{children}</div>

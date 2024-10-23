@@ -6,6 +6,7 @@ import DashboardLayout from "@/layout/dashboard/DashboardLayout";
 import { CaretDown, Check, MagnifyingGlass } from "@phosphor-icons/react";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
+import { Swiper as SwiperType } from "swiper/types"; //
 import { Swiper, SwiperSlide } from "swiper/react";
 import {
   GreenUsersIcon,
@@ -26,28 +27,14 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 import THeader from "@/components/dashboard/common/table/THeader";
-const activity = [
-  {
-    title: " Received payment",
-    count: "₹220",
-    icon: <ReceivedPayIcon className="w-30px h-auto" />,
-  },
-  {
-    title: "Pending payment",
-    count: "₹220",
-    icon: <PendingPayIcon className="w-30px h-auto" />,
-  },
-  {
-    title: "Patient",
-    count: "56",
-    icon: <GreenUsersIcon className="w-30px h-auto" />,
-  },
-  {
-    title: "Session",
-    count: "23",
-    icon: <OrangeCalendarIcon className="w-30px h-auto" />,
-  },
-];
+import { useGetDashboardStats } from "../../services/dashboard.service";
+import {
+  deleteSchedules,
+  useGetSchedules,
+} from "@/services/session.service";
+import endpoints from "@/utils/endpoints";
+import { mutate } from "swr";
+import { useGetSettingData } from "@/services/setting.service";
 
 const sessionTableHeader = [
   "Name",
@@ -58,69 +45,6 @@ const sessionTableHeader = [
   "Previous Fee	",
   "Appointment",
   "actions",
-];
-
-const sessionTable = [
-  {
-    img: "",
-    name: "Abhi Sojitra",
-    email: "abhi@gmail.com",
-    time: "03:40-04:15 PM",
-    status: "Completed",
-    amount: "₹ 2,200",
-    sessionFee: "Paid on time",
-    previousFee: "Cleared",
-  },
-  {
-    img: "",
-    name: "Dishank Gajera",
-    email: "dishankgajera00@gmail.com",
-    time: "02:00-03:15 PM",
-    status: "Cancelled",
-    amount: "₹ 700",
-    sessionFee: "Pending",
-    previousFee: "Cleared",
-  },
-  {
-    img: "",
-    name: "Darshan Tarpada",
-    email: "darshant56@gmail.com",
-    time: "12:00-01:30 PM",
-    status: "Cancelled",
-    amount: "₹ 1,800",
-    sessionFee: "Pending",
-    previousFee: "Pending",
-  },
-  {
-    img: "",
-    name: "Neha Kikani",
-    email: "nehak@gmail.com",
-    time: "05:00-06:00 PM",
-    status: "Upcoming",
-    amount: "₹ 3,200",
-    sessionFee: "Pending",
-    previousFee: "Pending",
-  },
-  {
-    img: "",
-    name: "Divyesh Sojitra",
-    email: "divyeh@gmail.com",
-    time: "01:40-02:30 PM",
-    status: "Upcoming",
-    amount: "₹ 2,200",
-    sessionFee: "Pending",
-    previousFee: "Cleared",
-  },
-  {
-    img: "",
-    name: "Ayush Dobariya",
-    email: "ayu@gmail.com",
-    time: "01:40-02:30 PM",
-    status: "Upcoming",
-    amount: "₹ 2",
-    sessionFee: "Pending",
-    previousFee: "Pending",
-  },
 ];
 
 const regularClientsTable = [
@@ -171,14 +95,24 @@ const regularClientsTable = [
 ];
 
 const sessionTabs = [
-  { label: "All (52)" },
-  { label: "Upcoming (20)" },
-  { label: "Completed (30)" },
-  { label: "Cancelled (02)" },
+  { label: "All ", value: "" },
+  { label: "Upcoming ", value: "upcoming" },
+  { label: "Completed ", value: "completed" },
+  { label: "Cancelled ", value: "cancelled" },
 ];
 
+const dateFormatter = (year: string, month: string, day: number): string => {
+  const monthIndex = new Date(`${month} 1, ${year}`).getMonth(); // Get the month index (0-based)
+
+  // Create a Date object and set the time to noon to avoid timezone issues
+  const date = new Date(Number(year), monthIndex, day, 12, 0, 0); // Set hours to 12:00 PM
+
+  const formattedDate = date.toISOString(); // Convert to ISO format
+  return formattedDate;
+};
+
 const Dashboard = () => {
-  const [activeTable, setActiveTable] = useState(sessionTabs[0].label);
+  const [activeTable, setActiveTable] = useState(sessionTabs[0]);
   const [freeSlote, setFreeSlote] = useState(false);
   const [isScheduleSessionModal, setIsScheduleSessionModal] = useState(false);
   const [isRescheduleSession, setIsRescheduleSession] = useState(false);
@@ -188,6 +122,10 @@ const Dashboard = () => {
   const [isCancellationModal, setIsCancellationModal] = useState(false);
   const [isUpdatePaymentModal, setIsUpdatePaymentModal] = useState(false);
   const [isTerminatingModal, setIsTerminatingModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearchText, setDebouncedSearchText] = useState("");
+  const [singleSessionID, setSingleSessionID] = useState("");
 
   // select drop down stats
 
@@ -203,17 +141,78 @@ const Dashboard = () => {
     openModal(true); // Open the next modal
   }
 
+  const currentMonth = new Date().toLocaleString("default", { month: "short" }); // e.g., "Oct"
+  const currentYear = new Date().getFullYear().toString(); // e.g., "2024"
+  const today = new Date().getDate().toString().padStart(2, "0");
+
   // session Dates Swiper and dropdown start ------------------------------------
   const [isDateDrop, setIsDateDrop] = useState(false);
   const [activeTab, setActiveTab] = useState("month");
-  const [selectedMonth, setSelectedMonth] = useState("Jan");
-  const [selectedYear, setSelectedYear] = useState("2023");
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  const [selectedYear, setSelectedYear] = useState(currentYear);
   const [dates, setDates] = useState<{ day: string; weekday: string }[]>([]);
+  const [finalDate, setFinalDate] = useState<string>(new Date().toISOString());
+  const [activeDate, setActiveDate] = useState(today);
+  const swiperRef = useRef<SwiperType | null>(null); // Swiper instance or null
+  const [hasAutoScrolled, setHasAutoScrolled] = useState(false);
+
+  console.log(finalDate, "finalDate...............................");
 
   // Define refs with proper typing
   const prevRef = useRef<HTMLDivElement | null>(null);
   const nextRef = useRef<HTMLDivElement | null>(null);
-  const totalPages = 10; // Define total pages for pagination
+  // const totalPages = 10; // Define total pages for pagination
+  const pageSize = 5;
+
+  const { therapistData } = useGetSettingData();
+
+  // get session schedules
+  const { sessionData, sessionLoading, sessionCount } = useGetSchedules({
+    pageSize,
+    currentPage,
+    activeTable: activeTable?.value,
+    debouncedSearchText,
+    finalDate,
+    filterparams: {},
+  });
+
+  const totalPages = Math.ceil(sessionCount / pageSize);
+  console.log({ sessionData, sessionLoading, sessionCount });
+
+  // get payment activity data
+  const { dashboardStatsData } = useGetDashboardStats() as unknown as {
+    dashboardStatsData: {
+      receivedPayment: number;
+      pendingPayments: number;
+      clients: number;
+      schedules: number;
+    };
+  };
+
+  console.log(dashboardStatsData, "dashboardStatsData.....................");
+
+  const activity = [
+    {
+      title: "Received payment",
+      count: `${dashboardStatsData?.receivedPayment || 0}`,
+      icon: <ReceivedPayIcon className="w-30px h-auto" />,
+    },
+    {
+      title: "Pending payment",
+      count: `${dashboardStatsData?.pendingPayments || 0}`,
+      icon: <PendingPayIcon className="w-30px h-auto" />,
+    },
+    {
+      title: "Patient",
+      count: `${dashboardStatsData?.clients || 0}`,
+      icon: <GreenUsersIcon className="w-30px h-auto" />,
+    },
+    {
+      title: "Session",
+      count: `${dashboardStatsData?.schedules || 0}`,
+      icon: <OrangeCalendarIcon className="w-30px h-auto" />,
+    },
+  ];
 
   const months = [
     "Jan",
@@ -231,9 +230,36 @@ const Dashboard = () => {
   ];
   const years = Array.from({ length: 20 }, (_, i) => 2024 - i);
 
-  useEffect(() => {
-    generateDates(selectedMonth, Number(selectedYear));
-  }, [selectedMonth, selectedYear]);
+  const deleteSingleSession = async () => {
+    try {
+      await deleteSchedules(singleSessionID);
+      console.log("Session deleted successfully.");
+
+      // Call mutate to refresh the data after deletion
+      const query = `pageSize=${pageSize}&pageNumber=${currentPage}`;
+      const url = `${endpoints.sessions.schedules}?${query}`;
+      await mutate(url); // This will trigger a re-fetch of the data
+    } catch (error) {
+      console.error("Failed to delete the session.", error);
+    }
+  };
+
+  const handleSelectMonth = (month: string) => {
+    setSelectedMonth(month);
+    setIsDateDrop(false);
+  };
+
+  const handleSelectYear = (year: number) => {
+    setSelectedYear(year.toString());
+    setIsDateDrop(false);
+  };
+
+  const handleDateClick = (day: number) => {
+    setActiveDate(day.toString()); // Set the clicked date as active
+    const fullDate = dateFormatter(selectedYear, selectedMonth, day);
+    setFinalDate(fullDate);
+    console.log("Selected Date:", fullDate);
+  };
 
   const generateDates = (month: string, year: number) => {
     // Generate the dates based on the selected month and year
@@ -248,15 +274,25 @@ const Dashboard = () => {
     setDates(dateArray);
   };
 
-  const handleSelectMonth = (month: string) => {
-    setSelectedMonth(month);
-    setIsDateDrop(false);
-  };
+  // Find the index of the initial active slide (based on activeDate)
+  const initialSlideIndex = dates.findIndex((date) => date.day === activeDate);
 
-  const handleSelectYear = (year: number) => {
-    setSelectedYear(year.toString());
-    setIsDateDrop(false);
-  };
+  // Use effect to slide to the active slide on load (only once)
+  useEffect(() => {
+    if (!hasAutoScrolled && swiperRef.current && initialSlideIndex !== -1) {
+      (swiperRef.current).slideTo(initialSlideIndex, 0);
+      setHasAutoScrolled(true); // Set flag to prevent further auto-scrolls
+    }
+  }, [initialSlideIndex, hasAutoScrolled]);
+
+  useEffect(() => {
+    generateDates(selectedMonth, Number(selectedYear));
+  }, [selectedMonth, selectedYear]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearchText(searchText), 500);
+    return () => clearTimeout(handler);
+  }, [searchText]);
 
   return (
     <DashboardLayout>
@@ -282,7 +318,7 @@ const Dashboard = () => {
           <div className="bg-white px-5 py-10 rounded-base flex items-center justify-between md:col-span-3">
             <div>
               <h2 className="text-lg/6 font-semibold text-primary">
-                Hi Anusha!
+                Hi {therapistData?.name}!
               </h2>
               <p className="text-base/5 text-primary/70 pt-3">
                 You have an exciting week ahead of you
@@ -343,17 +379,16 @@ const Dashboard = () => {
             {activity?.map((item, index) => (
               <div
                 key={index}
-                className={`p-5  rounded-base flex justify-between items-center ${
-                  item.title.trim() === "Received payment"
-                    ? "bg-[#FBE9D0]"
-                    : item.title.trim() === "Pending payment"
+                className={`p-5  rounded-base flex justify-between items-center ${item.title.trim() === "Received payment"
+                  ? "bg-[#FBE9D0]"
+                  : item.title.trim() === "Pending payment"
                     ? "bg-[#D8E5FF]"
                     : item.title.trim() === "Patient"
-                    ? "bg-[#FBD7D8]"
-                    : item.title.trim() === "Session"
-                    ? "bg-[#F8DBFF]"
-                    : ""
-                }`}
+                      ? "bg-[#FBD7D8]"
+                      : item.title.trim() === "Session"
+                        ? "bg-[#F8DBFF]"
+                        : ""
+                  }`}
               >
                 <div>
                   <p className="text-2xl/7 font-medium text-primary">
@@ -364,17 +399,16 @@ const Dashboard = () => {
                   </p>
                 </div>
                 <div
-                  className={`p-4 rounded-full ${
-                    item.title.trim() === "Received payment"
-                      ? "bg-[#FFD7A0]"
-                      : item.title.trim() === "Pending payment"
+                  className={`p-4 rounded-full ${item.title.trim() === "Received payment"
+                    ? "bg-[#FFD7A0]"
+                    : item.title.trim() === "Pending payment"
                       ? "bg-[#A0BEFF]"
                       : item.title.trim() === "Patient"
-                      ? "bg-[#FDC0C1]"
-                      : item.title.trim() === "Session"
-                      ? "bg-[#F1C2FE]"
-                      : ""
-                  }`}
+                        ? "bg-[#FDC0C1]"
+                        : item.title.trim() === "Session"
+                          ? "bg-[#F1C2FE]"
+                          : ""
+                    }`}
                 >
                   {item.icon}
                 </div>
@@ -396,23 +430,20 @@ const Dashboard = () => {
                   <span>{`${selectedMonth}, ${selectedYear}`}</span>
                   <CaretDown
                     size={20}
-                    className={`transition-all duration-300 ${
-                      isDateDrop ? "rotate-180" : ""
-                    }`}
+                    className={`transition-all duration-300 ${isDateDrop ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
                 <div
-                  className={`absolute top-full right-0 w-[360px] bg-white rounded-2xl shadow-[0px_4px_12px_0px_#2C58BB1A] overflow-hidden transition-all duration-300 z-20 ${
-                    isDateDrop ? "h-[428px]" : "h-0"
-                  }`}
+                  className={`absolute top-full right-0 w-[360px] bg-white rounded-2xl shadow-[0px_4px_12px_0px_#2C58BB1A] overflow-hidden transition-all duration-300 z-20 ${isDateDrop ? "h-[428px]" : "h-0"
+                    }`}
                 >
                   <div className="grid grid-cols-2 gap-2.5">
                     <button
-                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${
-                        activeTab === "month"
-                          ? "text-primary"
-                          : "text-primary/70"
-                      }`}
+                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${activeTab === "month"
+                        ? "text-primary"
+                        : "text-primary/70"
+                        }`}
                       onClick={() => setActiveTab("month")}
                     >
                       {selectedMonth}{" "}
@@ -421,11 +452,10 @@ const Dashboard = () => {
                       )}
                     </button>
                     <button
-                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${
-                        activeTab === "year"
-                          ? "text-primary"
-                          : "text-primary/70"
-                      }`}
+                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${activeTab === "year"
+                        ? "text-primary"
+                        : "text-primary/70"
+                        }`}
                       onClick={() => setActiveTab("year")}
                     >
                       {selectedYear}
@@ -441,11 +471,10 @@ const Dashboard = () => {
                         {months.map((month) => (
                           <li
                             key={month}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4  hover:bg-gray-100/20 ${
-                              month === selectedMonth
-                                ? "bg-green-600/10 !text-green-600"
-                                : ""
-                            }`}
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4  hover:bg-gray-100/20 ${month === selectedMonth
+                              ? "bg-green-600/10 !text-green-600"
+                              : ""
+                              }`}
                             onClick={() => handleSelectMonth(month)}
                           >
                             <div className="w-6">
@@ -461,11 +490,10 @@ const Dashboard = () => {
                         {years.map((year) => (
                           <li
                             key={year}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4  hover:bg-gray-100/20 ${
-                              String(year) === selectedYear
-                                ? "bg-green-600/10 !text-green-600"
-                                : ""
-                            }`}
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4  hover:bg-gray-100/20 ${String(year) === selectedYear
+                              ? "bg-green-600/10 !text-green-600"
+                              : ""
+                              }`}
                             onClick={() => handleSelectYear(year)}
                           >
                             <div className="w-6">
@@ -495,18 +523,27 @@ const Dashboard = () => {
                     nextEl: nextRef.current,
                   }}
                   onSwiper={(swiper) => {
-                    console.log(swiper);
+                    swiperRef.current = swiper; // Capture the swiper instance
                     // Swiper navigation initialization
                     // swiper.params.navigation.prevEl = prevRef.current;
                     // swiper.params.navigation.nextEl = nextRef.current;
                     // swiper.navigation.init();
                     // swiper.navigation.update();
                   }}
+                  initialSlide={
+                    initialSlideIndex !== -1 ? initialSlideIndex : 0
+                  } // Set the initial slide to the activeDate
                 >
                   {dates.map((date) => (
                     <SwiperSlide key={date.day}>
                       <div className=" flex items-center justify-center text-center">
-                        <button className="text-primary focus:text-blue-600 hover:text-blue-600 group transition-all duration-500 relative z-30">
+                        <button
+                          className={` group transition-all duration-500 relative z-30 ${activeDate === date.day
+                            ? "text-yellow-600 font-semibold "
+                            : "text-primary"
+                            }`}
+                          onClick={() => handleDateClick(Number(date.day))}
+                        >
                           <p className="text-[26px] leading-[30px] group-hover:font-semibold group-focus:font-semibold">
                             {date.day}
                           </p>
@@ -576,8 +613,9 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <Tabs
                 tabs={sessionTabs}
-                activeTab={activeTable}
-                setActiveTab={setActiveTable}
+                activeTab={activeTable.label}
+                setActiveTab={(tab) => setActiveTable(tab)}
+                sessionCount={sessionCount}
               />
 
               <div className="flex items-center gap-2 max-w-[351px] w-full py-15px px-5 border border-[#9B9DB7] rounded-full text-xs text-primary">
@@ -586,6 +624,7 @@ const Dashboard = () => {
                   type="search"
                   placeholder="Search your client name and id"
                   className="outline-none w-full placeholder:text-primary/50"
+                  onChange={(e) => setSearchText(e.target.value)}
                 />
               </div>
             </div>
@@ -596,15 +635,20 @@ const Dashboard = () => {
                 <table className="w-full  bg-white">
                   <THeader data={sessionTableHeader} />
                   <DashboardTBody
-                    TableData={sessionTable}
+                    TableData={sessionData}
+                    sessionLoading={sessionLoading}
                     setIsRescheduleSession={setIsRescheduleSession}
-                    isRescheduleSession={isRescheduleSession}
                     setIsReminderModal={setIsReminderModal}
                     setIsCanceledSessionModal={setIsCanceledSessionModal}
                     isCanceledSessionModal={isCanceledSessionModal}
+                    setSingleSessionID={setSingleSessionID}
                   />
                 </table>
-                <TablePagination totalPages={totalPages} />
+                <TablePagination
+                  totalPages={totalPages}
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             </div>
           </div>
@@ -759,6 +803,7 @@ const Dashboard = () => {
       <RescheduleSidebar
         isRescheduleSession={isRescheduleSession}
         setIsRescheduleSession={setIsRescheduleSession}
+        singleSessionID={singleSessionID}
       />
 
       {/* ====== Session modals ====== */}
@@ -883,7 +928,7 @@ const Dashboard = () => {
 
       {/* Cancellation Fees */}
       <SessionDetailModal
-        title="Is There a Cancellation Fees"
+        title="Is There a Cancellation Fees?"
         isClose={isCancellationModal}
         setIsClose={setIsCancellationModal}
       >
@@ -929,7 +974,10 @@ const Dashboard = () => {
           <Button
             variant="filledGreen"
             className="min-w-[157px]"
-            onClick={() => setIsUpdatePaymentModal(false)}
+            onClick={() => {
+              setIsUpdatePaymentModal(false);
+              deleteSingleSession();
+            }}
           >
             Okay, got it
           </Button>

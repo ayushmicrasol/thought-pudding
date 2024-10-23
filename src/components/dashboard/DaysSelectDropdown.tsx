@@ -1,7 +1,31 @@
 import { Bell, CaretDown } from "@phosphor-icons/react";
 import React, { useState, useEffect, useRef } from "react";
 
-const options = ["Today", "Week", "This Month", "Last Month"];
+// const options = ["Today", "Week", "This Month", "Last Month"];
+const today = new Date();
+
+const options = [
+  {
+    label: "Today",
+    startDate: new Date(today), // New instance to avoid mutation
+    endDate: new Date(today),   // New instance to avoid mutation
+  },
+  {
+    label: "Week",
+    startDate: new Date(today.setDate(today.getDate() - today.getDay())), // Start of the week
+    endDate: new Date(today.setDate(today.getDate() + 6)), // End of the week
+  },
+  {
+    label: "This Month",
+    startDate: new Date(today.getFullYear(), today.getMonth(), 1), // Start of this month
+    endDate: new Date(today.getFullYear(), today.getMonth() + 1, 0), // End of this month
+  },
+  {
+    label: "Last Month",
+    startDate: new Date(today.getFullYear(), today.getMonth() - 1, 1), // Start of last month
+    endDate: new Date(today.getFullYear(), today.getMonth(), 0), // End of last month
+  },
+];
 
 interface DaysSelectDropdownProps {
   options?: Array<unknown>;
@@ -11,6 +35,9 @@ interface DaysSelectDropdownProps {
   DropClass?: string;
   placeholder?: string;
   icon?: React.ReactNode;
+  setStartDate?: (startDate: Date) => void;
+  // Add this property
+  setEndDate?: (endDate: Date) => void; // Add this property
 }
 
 const DaysSelectDropdown: React.FC<DaysSelectDropdownProps> = ({
@@ -20,6 +47,8 @@ const DaysSelectDropdown: React.FC<DaysSelectDropdownProps> = ({
   DropClass = "",
   placeholder = "Select...",
   icon,
+  setStartDate,
+  setEndDate,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,9 +92,8 @@ const DaysSelectDropdown: React.FC<DaysSelectDropdownProps> = ({
           {value || placeholder}
         </div>
         <span
-          className={`transform transition-transform duration-300 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`transform transition-transform duration-300 ${isOpen ? "rotate-180" : ""
+            }`}
         >
           <CaretDown size={20} />
         </span>
@@ -82,12 +110,21 @@ const DaysSelectDropdown: React.FC<DaysSelectDropdownProps> = ({
             options.map((option, index) => (
               <li
                 key={index}
-                onClick={() => handleSelect(option)}
-                className={`py-[10px] px-4 text-sm text-primary cursor-pointer hover:bg-gray-100/20 rounded-lg ${
-                  value === option ? "bg-green-600/10 !text-green-600" : ""
-                }`}
+                onClick={() => {
+                  handleSelect(option?.label);
+                  if (setStartDate) {
+                    setStartDate(option?.startDate as Date);
+                  }
+                  if (setEndDate) {
+                    setEndDate(option?.endDate as Date);
+                  }
+                }}
+                className={`py-[10px] px-4 text-sm text-primary cursor-pointer hover:bg-gray-100/20 rounded-lg ${value === option?.label
+                  ? "bg-green-600/10 !text-green-600"
+                  : ""
+                  }`}
               >
-                {option}
+                {option?.label}
               </li>
             ))
           )}

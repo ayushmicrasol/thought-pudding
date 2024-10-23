@@ -12,7 +12,6 @@ import {
   ClockIcon,
   RegularNotificationIcon,
 } from "../../public/assets/Svgs";
-import Link from "next/link";
 
 const GrowthDriven = [
   {
@@ -80,30 +79,23 @@ const clientReview = [
   {
     image: "/assets/images/home/client.webp",
     paragraph:
-      "I have been using Thought Pudding for many months and have watched closely as the website has developed into the tool it is today. Thought Pudding integrates a plethora of several tools that helps therapists streamline their administrative tasks. Tracking payments is the task I dread the most, and Thought Pudding helps with just a few clicks! An invaluable tool for early career therapists",
+      "This system has saved me about 30% of my time. Scheduling, client management, and payments are now faster and more efficient!",
     rating: "5.0",
-    name: "Dr Ishita Gupta",
+    name: "Dr Puran sharma",
   },
   {
     image: "/assets/images/home/client2.webp",
     paragraph:
-      "Thought Pudding has been so helpful for me in all the ways possible. It is affordable for therapists, simple to use, easy to schedule sessions to track and monitor the sessions provided for the clients. It also has features to calculate the payments I have received and are pending from my clients. It has made my work as a therapist so simple and easy. I would recommend it to all my friends and colleagues to benefit from Thought Pudding.",
+      "This system has saved me about 30% of my time. Scheduling, client management, and payments are now faster and more efficient!",
     rating: "5.0",
-    name: "Dr Jagadeesan S ",
+    name: "Dr sweta puran",
   },
   {
     image: "/assets/images/home/client3.webp",
     paragraph:
-      "Thought pudding is like an efficient personal assistant who predicts my needs, solves the problems and communicates the output to me! Using the platform has made my practice significantly easier and I no longer have to focus on administrative tasks. Recommend to any therapist looking to focus on therapy with clients and leave everything else to Thought Pudding.",
+      "This system has saved me about 30% of my time. Scheduling, client management, and payments are now faster and more efficient!",
     rating: "5.0",
-    name: "Dr Anushka",
-  },
-  {
-    image: "/assets/images/home/client4.webp",
-    paragraph:
-      "As a private practitioner, switching between roles and apps tends to get frustrating. Thought Pudding has been a huge help in reducing my workload in this regard. I have been using the platform for more than 5 months now. You know it has been created keeping therapists in mind, offering everything I need to streamline my appointments without the administrative headache. My personal favourite feature is the automated reminders (via email) which have helped me and my clients avoid last-minute cancellations. It has also helped me track payments seamlessly.",
-    rating: "5.0",
-    name: "Dr Jennifer Antony",
+    name: "Dr Puran sharma",
   },
 ];
 
@@ -130,7 +122,7 @@ export default function Home() {
         <section>
           <div className="bg-[url('/assets/images/home/bg-image.webp')] bg-cover bg-center bg-no-repeat">
             <div className="sm:py-120px pt-[60px] pb-50px px-4 sm:px-0 text-center">
-              <h1 className="sm:text-[48px] sm:leading-[62px] text-2xl/8 font-semibold text-green-600 max-w-[900px] mx-auto">
+              <h1 className="sm:text-[48px] sm:leading-[62px] text-2xl/8 font-semibold text-primary max-w-[900px] mx-auto">
                 Your all-in-one support system for private practice
               </h1>
               <p className="pt-4 sm:max-w-[640px] mx-auto sm:text-lg/8 text-sm_18 text-primary/50">
@@ -139,18 +131,10 @@ export default function Home() {
                 place.
               </p>
               <div className="mt-6 flex sm:flex-row flex-col items-center sm:gap-30px gap-3 justify-center">
-                <Link
-                  href="https://calendly.com/d/ckwm-cb8-7vc"
-                  target="_blank"
-                >
-                  <Button
-                    variant="filled"
-                    className={`flex items-center gap-2 `}
-                  >
-                    Schedule a Demo
-                    <ArrowUpRight className="text-xl" />
-                  </Button>
-                </Link>
+                <Button variant="filled" className={`flex items-center gap-2 `}>
+                  Schedule a Demo
+                  <ArrowUpRight className="text-xl" />
+                </Button>
                 <Button variant="default" className={``}>
                   Free Trial For 3 Months
                 </Button>
@@ -176,22 +160,13 @@ export default function Home() {
                 The best part? built by a therapist who has been in your shoes.
               </h2>
               <div className="flex items-center justify-center pt-6">
-                <Link
-                  href="https://calendly.com/d/ckwm-cb8-7vc"
-                  target="_blank"
-                >
-                  <Button
-                    variant="filled"
-                    className="flex items-center gap-1.5"
-                  >
-                    Free trial request a demo{" "}
-                    <ArrowUpRight className="text-xl" />
-                  </Button>
-                </Link>
+                <Button variant="filled" className="flex items-center gap-1.5">
+                  Free trial request a demo <ArrowUpRight className="text-xl" />
+                </Button>
               </div>
             </div>
 
-            <div className="sm:pt-20 pt-30px sm:space-y-20 space-y-50px">
+            <div className="sm:pt-20 pt-[30px] sm:space-y-20 space-y-[50px]">
               {GrowthDriven.map((item, index) => (
                 <div
                   key={index}
@@ -281,9 +256,7 @@ export default function Home() {
               focus on your clients&apos; well-being
             </p>
             <div className="pt-6 flex flex-col sm:flex-row items-center justify-center sm:gap-30px gap-3">
-              <Link href="https://calendly.com/d/ckwm-cb8-7vc" target="_blank">
-                <Button variant="filled">Schedule a Demo</Button>
-              </Link>
+              <Button variant="filled">Schedule a Demo</Button>
               <Button variant="default">Free Trial For 3 Months</Button>
             </div>
           </div>
@@ -348,8 +321,10 @@ export default function Home() {
               {clientReview.map((item, index) => (
                 <div
                   key={index}
-                  className={`sm:min-w-[581px] sm:w-[581px] min-w-[343px] w-[342px]  grid grid-cols-3 sm:mx-6 mx-2.5  overflow-hidden rounded-base review_card ${
-                    index % 2 === 0 ? "bg-[#FFFDF1]" : "bg-[#FFF5ED]"
+                  className={`sm:min-w-[581px] sm:w-[581px] min-w-[343px] w-[342px] sm:h-[211px] h-[152px] grid grid-cols-3 sm:mx-6 mx-2.5  overflow-hidden rounded-base review_card ${
+                    index % 2 === 0
+                      ? "bg-[#FFFDF1]"
+                      : "bg-[#FFF5ED] sm:-translate-y-5"
                   }`}
                 >
                   <div className="h-full rounded-base overflow-hidden">
@@ -392,8 +367,10 @@ export default function Home() {
               {clientReview.map((item, index) => (
                 <div
                   key={index}
-                  className={`sm:min-w-[581px] sm:w-[581px] min-w-[343px] w-[342px] grid grid-cols-3 sm:mx-6 mx-2.5  overflow-hidden rounded-base review_card ${
-                    index % 2 === 0 ? "bg-[#FFFDF1]" : "bg-[#FFF5ED]"
+                  className={`sm:min-w-[581px] sm:w-[581px] min-w-[343px] w-[342px] sm:h-[211px] h-[152px] grid grid-cols-3 sm:mx-6 mx-2.5  overflow-hidden rounded-base review_card ${
+                    index % 2 === 0
+                      ? "bg-[#FFF5ED] sm:-translate-y-5"
+                      : "bg-[#FFFDF1]"
                   }`}
                 >
                   <div className="h-full rounded-base overflow-hidden">

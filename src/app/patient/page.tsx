@@ -7,23 +7,21 @@ import ActivityCard from "@/components/dashboard/common/ActivityCard";
 import PatientTBody from "@/components/dashboard/common/table/PatientTBody";
 import THeader from "@/components/dashboard/common/table/THeader";
 import DaysSelectDropdown from "@/components/dashboard/DaysSelectDropdown";
-import EditSessionSidebar from "@/components/dashboard/EditSessionSidebar";
+import EditClientSidebar from "@/components/dashboard/EditClientSidebar";
 import SessionDetailModal from "@/components/dashboard/SessionDetailModal";
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
+import {
+  FilterParams,
+  useGetClientCount,
+  useGetClients,
+} from "@/services/clients.service";
 import { FunnelSimple, MagnifyingGlass } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const activity = [
-  { title: "Total Patient", count: "120", percentage: "+12" },
-  { title: "New Patient", count: "58", percentage: "+08" },
-  { title: "Active Patient", count: "12", percentage: "-06" },
-  { title: "In Active Patient", count: "150", percentage: "+18" },
-];
-
-const sessionTabs = [
-  { label: "All (52)" },
-  { label: "Active (20)" },
-  { label: "Inactive (30)" },
+const clientsTabs = [
+  { label: "All", value: "" },
+  { label: "Active", value: "confirmed" },
+  { label: "Inactive", value: "pending" },
 ];
 
 const sessionTableHeader = [
@@ -35,56 +33,83 @@ const sessionTableHeader = [
   "actions",
 ];
 
-const sessionTable = [
-  {
-    img: "",
-    name: "Abhi Sojitra",
-    email: "abhi@gmail.com",
-    number: "91-95582-20108",
-    session: "4",
-    status: "Completed",
-  },
-  {
-    img: "",
-    name: "Dishank Gajera",
-    email: "dishank@gmail.com",
-    number: "91-92562-45210",
-    session: "2",
-    status: "Cancelled",
-  },
-  {
-    img: "",
-    name: "Darshan Tarpada",
-    email: "darshant56@gmail.com",
-    number: "91-85215-45215",
-    session: "6",
-    status: "Cancelled",
-  },
-  {
-    img: "",
-    name: "Neha Kikani",
-    email: "nehak@gmail.com",
-    number: "91-90256-78521",
-    session: "10",
-    status: "Upcoming",
-  },
-  {
-    img: "",
-    name: "Divyesh Sojitra",
-    email: "Divyesh@gmail.com",
-    number: "91-78521-69853",
-    session: "8",
-    status: "Upcoming",
-  },
-];
-
-const totalPages = 10; // Define total pages for pagination
-
 const Patient = () => {
   const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("Today");
   const [isFilter, setIsFilter] = useState(false);
-  const [isEditSession, setIsEditSession] = useState(false);
-  const [activeTable, setActiveTable] = useState(sessionTabs[0].label);
+  const [isEditClient, setIsEditClient] = useState(false);
+  const [singleClientById, setSingleClientById] = useState("");
+  const [activeTable, setActiveTable] = useState(clientsTabs[0]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
+  const [searchText, setSearchText] = useState("");
+  const [debouncedSearchText, setDebouncedSearchText] = useState("");
+
+  const [searchStartDate, setSearchStartDate] = useState<string | null>(null);
+  const [searchEndDate, setSearchEndDate] = useState<string | null>(null);
+
+  const [filterparams, setFilterparams] = useState<FilterParams>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 5; // Set the page size as required
+
+  const query =
+    `pageSize=${pageSize}&pageNumber=${currentPage}&status=${activeTable}&searchText=${debouncedSearchText}` +
+    (filterparams && filterparams.searchStartDate && filterparams.searchEndDate
+      ? `&startDate=${filterparams.searchStartDate}&endDate=${filterparams.searchEndDate}`
+      : "");
+
+  const { clientsData, clientsLoading, clientsCount } = useGetClients(
+    pageSize,
+    currentPage,
+    activeTable.value,
+    debouncedSearchText,
+    filterparams
+  );
+
+  const totalPages = Math.ceil(clientsCount / pageSize);
+  console.log({ clientsData, clientsLoading, clientsCount });
+  console.log(activeTable.value, "-----------");
+  console.log(singleClientById, "singleClientById......................");
+
+  // activity section start
+  const { clientsCountData } = useGetClientCount(startDate, endDate) as {
+    clientsCountData: { new?: number; active?: number; in_active?: number };
+  };
+
+  const activity = [
+    {
+      title: "New Patient",
+      count: `${clientsCountData?.new || 0}`,
+      percentage: "",
+    },
+    {
+      title: "Active Patient",
+      count: `${clientsCountData?.active || 0}`,
+      percentage: "",
+    },
+    {
+      title: "In Active Patient",
+      count: `${clientsCountData?.in_active || 0}`,
+      percentage: "",
+    },
+  ];
+
+  const handleApplySearchFilter = () => {
+    // Set filterParams to valuen trigger a new API call
+    setFilterparams({
+      searchStartDate: searchStartDate ?? "",
+      searchEndDate: searchEndDate ?? "",
+    });
+
+    // Close the modal after applying the filter
+    setIsFilter(false);
+  };
+
+  // set search value
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedSearchText(searchText), 500);
+    return () => clearTimeout(handler);
+  }, [searchText]);
 
   return (
     <DashboardLayout>
@@ -99,9 +124,11 @@ const Patient = () => {
                 setIsMonthsDropSelect(value as string)
               }
               DropClass=""
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
             />
           </div>
-          <div className="pt-5 grid grid-cols-4 gap-5">
+          <div className="pt-5 grid grid-cols-3 gap-5">
             {activity?.map((items, index) => (
               <ActivityCard
                 key={index}
@@ -126,9 +153,10 @@ const Patient = () => {
         <div className="p-5">
           <div className="flex items-center justify-between">
             <Tabs
-              tabs={sessionTabs}
-              activeTab={activeTable}
-              setActiveTab={setActiveTable}
+              tabs={clientsTabs}
+              activeTab={activeTable.label}
+              setActiveTab={(tab) => setActiveTable(tab)}
+              sessionCount={clientsCount}
             />
 
             <div className="flex items-center gap-2 max-w-[391px] w-full py-15px px-5 border border-[#9B9DB7] rounded-full text-xs text-primary">
@@ -137,6 +165,7 @@ const Patient = () => {
                 type="search"
                 placeholder="Search your client name and id"
                 className="outline-none w-full placeholder:text-primary/50"
+                onChange={(e) => setSearchText(e.target.value)}
               />
               <span className="text-primary/50">|</span>
               <div className="flex items-center bg-green-600/5 py-1 px-2.5 rounded-full gap-3">
@@ -158,20 +187,29 @@ const Patient = () => {
               <table className="w-full  bg-white">
                 <THeader data={sessionTableHeader} />
                 <PatientTBody
-                  TableData={sessionTable}
-                  setIsEditSession={setIsEditSession}
-                  isEditSession={isEditSession}
+                  TableData={clientsData}
+                  clientsLoading={clientsLoading}
+                  setIsEditClient={setIsEditClient}
+                  isEditClient={isEditClient}
+                  setSingleClientById={setSingleClientById}
                 />
               </table>
-              <TablePagination totalPages={totalPages} />
+              <TablePagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                onPageChange={setCurrentPage}
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <EditSessionSidebar
-        isEditSession={isEditSession}
-        setIsEditSession={setIsEditSession}
+      <EditClientSidebar
+        isEditClient={isEditClient}
+        setIsEditClient={setIsEditClient}
+        singleClientById={singleClientById}
+        query={query}
+        // singleClientsData={singleClientsData}
       />
       {/* Filter Modal */}
       <SessionDetailModal
@@ -184,13 +222,25 @@ const Patient = () => {
             <label className="text-base/5 text-primary font-medium">
               Start Date
             </label>
-            <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            <DatePicker
+              placeholder={`DD/MM/YYYY`}
+              className={`!mt-3`}
+              onChange={(date) => {
+                setSearchStartDate(date);
+              }}
+            />
           </div>
           <div>
             <label className="text-base/5 text-primary font-medium">
               End Date
             </label>
-            <DatePicker placeholder={`DD/MM/YYYY`} className={`!mt-3`} />
+            <DatePicker
+              placeholder={`DD/MM/YYYY`}
+              className={`!mt-3`}
+              onChange={(date) => {
+                setSearchEndDate(date);
+              }}
+            />
           </div>
         </div>
         <div className="flex items-center justify-end gap-3.5">
@@ -206,9 +256,7 @@ const Patient = () => {
           <Button
             variant="filledGreen"
             className={`min-w-[157px]`}
-            onClick={() => {
-              setIsFilter(false);
-            }}
+            onClick={handleApplySearchFilter}
           >
             Apply
           </Button>

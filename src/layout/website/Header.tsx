@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/common/Button";
 import Login from "@/components/common/Login";
 import { ArrowUpRight, List, X } from "@phosphor-icons/react";
 import Image from "next/image";
@@ -50,36 +51,27 @@ const Header = () => {
               }`}
             >
               <ul className="flex flex-col sm:flex-row sm:items-center sm:gap-38px gap-2.5 text-primary font-medium sm:text-lg/5 text-base/6">
-                {/* <li className="py-2.5 px-1.5 sm:p-0  cursor-pointer hover:text-green-600 transition-all duration-500 relative">
+                <li className="py-2.5 px-1.5 sm:p-0  cursor-pointer hover:text-green-600 transition-all duration-500 relative">
                   Blog
-                </li> */}
+                </li>
                 <li
                   className="py-2.5 px-1.5 sm:p-0 cursor-pointer hover:text-green-600 transition-all duration-500 relative"
-                  // onClick={() => setLoginOpen(!loginOpen)}
+                  onClick={() => setLoginOpen(!loginOpen)}
                 >
-                  <Link
-                    href={`https://app.thoughtpudding.com/login`}
-                    target="_blank"
-                  >
-                    Login
-                  </Link>
+                  Login
                 </li>
               </ul>
-              <Link
-                href={`https://calendly.com/d/ckwm-cb8-7vc`}
-                target="_blank"
-                className={`flex items-center gap-2 sm:py-[15px] py-3.5 px-5 rounded-full text-sm/4 font-medium capitalize transition-all duration-300 hover:-translate-y-[2px]  bg-yellow-600 text-white hover:bg-green-600 hover:shadow-[0px_2px_4px_0px_#2A5F6166]`}
-              >
+              <Button variant="filled" className={`flex items-center gap-2 `}>
                 Schedule a Demo
                 <ArrowUpRight className="text-xl" />
-              </Link>
+              </Button>
             </div>
             <button
               className="sm:hidden"
               onClick={() => setMenuOpen(!menuOpen)}
             >
               {menuOpen ? (
-                <X size={24} className="text-green-600 font-semibold" />
+                <X size={24} className="text-blue-600 font-semibold" />
               ) : (
                 <List size={24} className="text-primary" />
               )}

@@ -1,24 +1,26 @@
-// components/Pagination.js
 import { CaretLeft, CaretRight } from "@phosphor-icons/react";
-import { useState } from "react";
 
 interface TablePaginationProps {
-  totalPages: number; // Define the type for totalPages
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void; // Add this prop
 }
 
-const TablePagination: React.FC<TablePaginationProps> = ({ totalPages }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
+const TablePagination: React.FC<TablePaginationProps> = ({
+  totalPages,
+  currentPage,
+  onPageChange,
+}) => {
   const changePage = (page: number) => {
     if (page > 0 && page <= totalPages) {
-      setCurrentPage(page);
+      onPageChange(page);
     }
   };
 
   return (
     <div className="flex justify-between items-center py-[11px] px-5 mt-5 shadow-[0px_-2px_5px_0px_#2A5F610D]">
       <button
-        className={`w-10 h-10 flex items-center justify-center border  rounded-full ${
+        className={`w-10 h-10 flex items-center justify-center border rounded-full ${
           currentPage === 1
             ? "border-primary/25 text-primary/25"
             : "border-primary text-primary"
