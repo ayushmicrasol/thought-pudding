@@ -18,7 +18,6 @@ import {
   useGetPaytracker,
 } from "@/services/payment.service";
 import { FunnelSimple, MagnifyingGlass } from "@phosphor-icons/react";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const sessionTabs = [
@@ -72,9 +71,16 @@ interface PaymentTrackerData {
 }
 
 const Payment = () => {
-  const searchParams = useSearchParams(); // Access the query params
+  const searchParams =
+    typeof window !== "undefined"
+      ? new URLSearchParams(window.location.search)
+      : null; // Access the query params
 
-  const clientId = searchParams.get("client"); // Get 'client' from query
+  let clientId: string | null = null;
+
+  if (searchParams) {
+    clientId = searchParams.get("client");
+  }
   console.log({ clientId }, "----------------- clintID");
 
   const [isMonthsDropSelect, setIsMonthsDropSelect] = useState("Today");
@@ -121,7 +127,7 @@ const Payment = () => {
     activeTable: activeTable?.value,
     debouncedSearchText,
     filterparams,
-    clientId: clientId ?? "" // Convert null to undefined
+    clientId: clientId ?? "", // Convert null to undefined
   });
 
   // get payment activity data
