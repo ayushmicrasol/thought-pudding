@@ -26,6 +26,7 @@ const Login: React.FC<LoginProps> = ({
   const [isFormLoading, setIsFormLoading] = useState(false);
 
   useEffect(() => {
+
     document.body.style.overflow = loginOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
@@ -41,11 +42,8 @@ const Login: React.FC<LoginProps> = ({
 
   const handleFormSubmit = async () => {
     setIsFormLoading(true);
-    const formData = new FormData();
+    const formData = { ...formik.values };  // Copy Formik values into formData
 
-    Object.entries(formik.values).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
     console.log("formData", formData);
     try {
       const response = await AuthService.addPractice(formData);
