@@ -44,7 +44,7 @@ const GoogleSignIn = () => {
         } else if (verified?.isVerified) {
           router.push("/dashboard");
         } else {
-          router.push("/?verified=false");
+          router.push("/?status=not-verified");
         }
       }
     };

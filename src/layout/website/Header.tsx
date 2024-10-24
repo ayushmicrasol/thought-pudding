@@ -18,16 +18,17 @@ const Header = () => {
 
   const newUser = queryParams.get("newUser");
 
-  const verified = queryParams.get("verified");
+  const status = queryParams.get("status");
 
   console.log("newUser", newUser);
-  console.log("verified", typeof verified);
+  console.log("verified", typeof status);
+  console.log("status", status);
 
   useEffect(() => {
-    if (verified === "false" || newUser) {
+    if (status === "not-verified" || newUser) {
       setLoginOpen(true);
     }
-  }, [verified, newUser]);
+  }, [status, newUser]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -47,9 +48,8 @@ const Header = () => {
   return (
     <Fragment>
       <header
-        className={`bg-white shadow-[0px_4px_6.1px_0px_#E5E9FF80] transition-all duration-500 w-full z-[99] ${
-          hasShadow ? "sticky top-0" : "static -top-40"
-        }`}
+        className={`bg-white shadow-[0px_4px_6.1px_0px_#E5E9FF80] transition-all duration-500 w-full z-[99] ${hasShadow ? "sticky top-0" : "static -top-40"
+          }`}
       >
         <div className="sm:py-6 py-4 px-4 relative z-[99]">
           <div className="container mx-auto flex justify-between items-center">
@@ -63,9 +63,8 @@ const Header = () => {
               />
             </Link>
             <div
-              className={`flex flex-col sm:flex-row sm:items-center sm:gap-12 gap-7 sm:static absolute top-full  bg-white w-full sm:w-auto px-4 sm:px-0 py-30px sm:py-0 z-30 transition-all duration-500 ${
-                menuOpen ? "left-0" : "-left-full"
-              }`}
+              className={`flex flex-col sm:flex-row sm:items-center sm:gap-12 gap-7 sm:static absolute top-full  bg-white w-full sm:w-auto px-4 sm:px-0 py-30px sm:py-0 z-30 transition-all duration-500 ${menuOpen ? "left-0" : "-left-full"
+                }`}
             >
               <ul className="flex flex-col sm:flex-row sm:items-center sm:gap-38px gap-2.5 text-primary font-medium sm:text-lg/5 text-base/6">
                 <li className="py-2.5 px-1.5 sm:p-0  cursor-pointer hover:text-green-600 transition-all duration-500 relative">
@@ -101,7 +100,7 @@ const Header = () => {
         setLoginOpen={setLoginOpen}
         loginOpen={loginOpen}
         newUser={newUser}
-        verified={verified}
+        status={status}
       />
     </Fragment>
   );
