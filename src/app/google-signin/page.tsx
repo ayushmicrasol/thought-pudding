@@ -1,5 +1,5 @@
 "use client";
-// import { AuthService } from "@/services/auth.service";
+import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
@@ -34,13 +34,13 @@ const GoogleSignIn = () => {
     const fetchData = async () => {
       if (code) {
         console.log("code....", code);
-        // const response = await AuthService.verifyTherapist(code);
+        const response = await AuthService.verifyTherapist(code);
 
-        // console.log("response", response);
+        console.log("response", response);
 
         // const verified = response.data;
         // if (verified?.newUser) {
-        //   router.push(`/?newUser=true&code=${code}`); // Uncomment if you want to redirect after verification
+        //   router.push("/?newUser=true"); // Uncomment if you want to redirect after verification
         // } else if (verified?.isVerified) {
         //   router.push("/dashboard");
         // } else {
@@ -49,7 +49,7 @@ const GoogleSignIn = () => {
       }
     };
     fetchData();
-  }, [code, scope]);
+  }, [code]);
 
   // if (error403) {
   //   return (

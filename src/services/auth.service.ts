@@ -11,11 +11,11 @@ export class AuthService {
       `${endpoints.verifyTherapist}?code=${code}`
     );
   }
-  static async addPractice(formData: Record<string, unknown>, code: string) {
+
+  static async addPractice(formData: Record<string, any>) {
     console.log("formData", formData);
-    return await axiosInstance.post(
-      `${endpoints.addPractice}?code=${code}`,
-      formData
-    );
+    return await axiosInstance.post(`${endpoints.addPractice}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
   }
 }
