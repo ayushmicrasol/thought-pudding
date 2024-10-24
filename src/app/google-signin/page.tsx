@@ -40,7 +40,7 @@ const GoogleSignIn = () => {
 
         const verified = response.data;
         if (verified?.newUser) {
-          router.push("/?newUser=true"); // Uncomment if you want to redirect after verification
+          router.push(`/?newUser=true?code=${code}`); // Uncomment if you want to redirect after verification
         } else if (verified?.isVerified) {
           router.push("/dashboard");
         } else {

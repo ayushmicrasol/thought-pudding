@@ -13,19 +13,23 @@ const Header = () => {
   const [loginOpen, setLoginOpen] = useState(false);
   const [newUser, setNewUser] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
+  const [code, setCode] = useState<string | null>(null);
 
   useEffect(() => {
     // Retrieve query parameters after component mounts
     const queryParams = new URLSearchParams(window.location.search);
     const newUserParam = queryParams.get("newUser");
     const statusParam = queryParams.get("status");
+    const codeParam = queryParams.get("code");
 
     // Update the states with query parameter values
     setNewUser(newUserParam);
     setStatus(statusParam);
+    setCode(codeParam);
 
     console.log("newUser", newUserParam);
     console.log("status", statusParam);
+    console.log("status", codeParam);
 
     // Open login if conditions are met
     if (statusParam === "not-verified" || newUserParam) {
@@ -107,6 +111,7 @@ const Header = () => {
         loginOpen={loginOpen}
         newUser={newUser}
         status={status}
+        code={code}
       />
     </Fragment>
   );

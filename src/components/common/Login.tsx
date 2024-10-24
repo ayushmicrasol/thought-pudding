@@ -14,6 +14,7 @@ interface LoginProps {
   setLoginOpen: (open: boolean) => void;
   newUser: string | null;
   status: string | null;
+  code: string | null;
 }
 
 const Login: React.FC<LoginProps> = ({
@@ -21,12 +22,12 @@ const Login: React.FC<LoginProps> = ({
   setLoginOpen,
   newUser,
   status,
+  code,
 }) => {
   const [step, setStep] = useState(1); // Manage steps 1 (Google), 2 (Form), 3 (Verification)
   const [isFormLoading, setIsFormLoading] = useState(false);
 
   useEffect(() => {
-
     document.body.style.overflow = loginOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
@@ -42,11 +43,11 @@ const Login: React.FC<LoginProps> = ({
 
   const handleFormSubmit = async () => {
     setIsFormLoading(true);
-    const formData = { ...formik.values };  // Copy Formik values into formData
+    const formData = { ...formik.values }; // Copy Formik values into formData
 
     console.log("formData", formData);
     try {
-      const response = await AuthService.addPractice(formData);
+      const response = await AuthService.addPractice(formData, code ?? "");
       console.log("response", response);
       if (response.status === 200) {
         setStep(3);
@@ -118,14 +119,16 @@ const Login: React.FC<LoginProps> = ({
 
   return (
     <div
-      className={`fixed inset-0 bg-black/20 z-[999] flex items-center justify-center ${loginOpen ? "visible" : "invisible"
-        }`}
+      className={`fixed inset-0 bg-black/20 z-[999] flex items-center justify-center ${
+        loginOpen ? "visible" : "invisible"
+      }`}
     >
       <div
-        className={`max-w-[887px] w-full h-[608px] bg-white rounded-base flex overflow-hidden transition-all duration-300 ${loginOpen
-          ? "visible opacity-100 scale-100"
-          : "invisible opacity-0 scale-95"
-          }`}
+        className={`max-w-[887px] w-full h-[608px] bg-white rounded-base flex overflow-hidden transition-all duration-300 ${
+          loginOpen
+            ? "visible opacity-100 scale-100"
+            : "invisible opacity-0 scale-95"
+        }`}
       >
         {/* Sidebar */}
         <div className="max-w-[311px] bg-yellow-50 pl-7.5 pr-[9px] pt-8 pb-[59px] flex flex-col justify-between">
@@ -161,8 +164,8 @@ const Login: React.FC<LoginProps> = ({
                 {step === 1
                   ? "Log in Info"
                   : step === 2
-                    ? "Set Up My Practice"
-                    : "Verify"}{" "}
+                  ? "Set Up My Practice"
+                  : "Verify"}{" "}
                 <span className="text-xs font-normal text-primary/40 ml-2">
                   {step} of 3
                 </span>
@@ -171,8 +174,8 @@ const Login: React.FC<LoginProps> = ({
                 {step === 1
                   ? "Log in to continue your journey with us"
                   : step === 2
-                    ? "Provide information about your practice"
-                    : "Verify Your Identity"}
+                  ? "Provide information about your practice"
+                  : "Verify Your Identity"}
               </p>
               {/* Progress Bar */}
               <div className="flex items-center gap-3.5 pt-5">
@@ -182,8 +185,9 @@ const Login: React.FC<LoginProps> = ({
                     className="w-[90px] h-[2px] bg-[#EEEEEE] rounded-full"
                   >
                     <div
-                      className={`h-full bg-green-600 transition-all ${step >= i ? "w-full" : "w-0"
-                        }`}
+                      className={`h-full bg-green-600 transition-all ${
+                        step >= i ? "w-full" : "w-0"
+                      }`}
                     />
                   </div>
                 ))}
@@ -249,7 +253,7 @@ const Login: React.FC<LoginProps> = ({
                     {...formik.getFieldProps(field.name)}
                   />
                   {formik.touched[field.name as keyof typeof formik.values] &&
-                    formik.errors[field.name as keyof typeof formik.values] ? (
+                  formik.errors[field.name as keyof typeof formik.values] ? (
                     <div className="text-red-600 text-xs">
                       {formik.errors[field.name as keyof typeof formik.values]}
                     </div>
