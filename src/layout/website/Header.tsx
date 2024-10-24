@@ -11,24 +11,27 @@ const Header = () => {
   const [hasShadow, setHasShadow] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
-
-  const queryParams = new URLSearchParams(
-    typeof window !== "undefined" ? window.location.search : ""
-  );
-
-  const newUser = queryParams.get("newUser");
-
-  const status = queryParams.get("status");
-
-  console.log("newUser", newUser);
-  console.log("verified", typeof status);
-  console.log("status", status);
+  const [newUser, setNewUser] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
 
   useEffect(() => {
-    if (status === "not-verified" || newUser) {
+    // Retrieve query parameters after component mounts
+    const queryParams = new URLSearchParams(window.location.search);
+    const newUserParam = queryParams.get("newUser");
+    const statusParam = queryParams.get("status");
+
+    // Update the states with query parameter values
+    setNewUser(newUserParam);
+    setStatus(statusParam);
+
+    console.log("newUser", newUserParam);
+    console.log("status", statusParam);
+
+    // Open login if conditions are met
+    if (statusParam === "not-verified" || newUserParam) {
       setLoginOpen(true);
     }
-  }, [status, newUser]);
+  }, []); // Empty dependency array to run only once after component mounts
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,11 +48,13 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
   return (
     <Fragment>
       <header
-        className={`bg-white shadow-[0px_4px_6.1px_0px_#E5E9FF80] transition-all duration-500 w-full z-[99] ${hasShadow ? "sticky top-0" : "static -top-40"
-          }`}
+        className={`bg-white shadow-[0px_4px_6.1px_0px_#E5E9FF80] transition-all duration-500 w-full z-[99] ${
+          hasShadow ? "sticky top-0" : "static -top-40"
+        }`}
       >
         <div className="sm:py-6 py-4 px-4 relative z-[99]">
           <div className="container mx-auto flex justify-between items-center">
@@ -63,8 +68,9 @@ const Header = () => {
               />
             </Link>
             <div
-              className={`flex flex-col sm:flex-row sm:items-center sm:gap-12 gap-7 sm:static absolute top-full  bg-white w-full sm:w-auto px-4 sm:px-0 py-30px sm:py-0 z-30 transition-all duration-500 ${menuOpen ? "left-0" : "-left-full"
-                }`}
+              className={`flex flex-col sm:flex-row sm:items-center sm:gap-12 gap-7 sm:static absolute top-full  bg-white w-full sm:w-auto px-4 sm:px-0 py-30px sm:py-0 z-30 transition-all duration-500 ${
+                menuOpen ? "left-0" : "-left-full"
+              }`}
             >
               <ul className="flex flex-col sm:flex-row sm:items-center sm:gap-38px gap-2.5 text-primary font-medium sm:text-lg/5 text-base/6">
                 <li className="py-2.5 px-1.5 sm:p-0  cursor-pointer hover:text-green-600 transition-all duration-500 relative">
