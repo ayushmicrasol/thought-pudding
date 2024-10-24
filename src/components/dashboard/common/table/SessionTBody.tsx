@@ -1,10 +1,12 @@
 import {
+  GoogleMeetIcon,
   RegularBinIcon,
   RegularNotificationIcon,
 } from "../../../../../public/assets/Svgs";
 import React from "react";
 import { formatDate, formatTime } from "@/utils/axios";
 import Image from "next/image";
+import Link from "next/link";
 
 interface SessionTBodyProps {
   TableData: Array<unknown>; // Define the type of TableData here
@@ -26,6 +28,7 @@ interface SessionTBodyProps {
 export interface Item {
   img?: string;
   name?: string;
+  meetLink?: string;
   email?: string;
   amount: string;
   time?: string;
@@ -133,8 +136,13 @@ const SessionTBody: React.FC<SessionTBodyProps> = ({
                     </span>
                   </div>
                   <div>
-                    <p className="text-sm/5 font-semibold text-primary">
-                      {item.name}
+                    <p className="text-sm/5 font-semibold text-primary flex items-center gap-1.5">
+                      {item.name}{" "}
+                      {item?.meetLink && (
+                        <Link href={item?.meetLink} className="w-3.5 h-auto">
+                          <GoogleMeetIcon />
+                        </Link>
+                      )}
                     </p>
                     <p className="text-xs_18 text-primary/70 font-medium">
                       {item.email}

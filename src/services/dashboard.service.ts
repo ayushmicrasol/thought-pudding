@@ -16,8 +16,8 @@ type ScheduleData = {
 };
 
 // get payment listing
-export function useGetDashboardStats() {
-  const query = ``;
+export function useGetDashboardStats(startDate: Date, endDate: Date) {
+  const query = `startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`;
   const url = `${endpoints.dashboard.getDashboardStats}?${query}`;
 
   const { data, isLoading, error, isValidating } = useSWR<ScheduleData>(

@@ -58,12 +58,12 @@ export const formatTime = (dateStr: string): string => {
     hour12: true,
   });
 };
-
 export const formatDate = (dateStr: string): string => {
   const date = new Date(dateStr);
-  return date.toLocaleDateString(undefined, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+
+  const day = date.getDate();
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = date.getFullYear();
+
+  return `${day} ${month}, ${year}`;
 };

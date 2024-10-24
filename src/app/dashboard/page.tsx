@@ -28,10 +28,7 @@ import { Navigation } from "swiper/modules";
 import "swiper/swiper-bundle.css";
 import THeader from "@/components/dashboard/common/table/THeader";
 import { useGetDashboardStats } from "../../services/dashboard.service";
-import {
-  deleteSchedules,
-  useGetSchedules,
-} from "@/services/session.service";
+import { deleteSchedules, useGetSchedules } from "@/services/session.service";
 import endpoints from "@/utils/endpoints";
 import { mutate } from "swr";
 import { useGetSettingData } from "@/services/setting.service";
@@ -126,6 +123,8 @@ const Dashboard = () => {
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText, setDebouncedSearchText] = useState("");
   const [singleSessionID, setSingleSessionID] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   // select drop down stats
 
@@ -150,6 +149,7 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("month");
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedYear, setSelectedYear] = useState(currentYear);
+
   const [dates, setDates] = useState<{ day: string; weekday: string }[]>([]);
   const [finalDate, setFinalDate] = useState<string>(new Date().toISOString());
   const [activeDate, setActiveDate] = useState(today);
@@ -180,7 +180,7 @@ const Dashboard = () => {
   console.log({ sessionData, sessionLoading, sessionCount });
 
   // get payment activity data
-  const { dashboardStatsData } = useGetDashboardStats() as unknown as {
+  const { dashboardStatsData } = useGetDashboardStats(startDate, endDate) as unknown as {
     dashboardStatsData: {
       receivedPayment: number;
       pendingPayments: number;
@@ -280,7 +280,7 @@ const Dashboard = () => {
   // Use effect to slide to the active slide on load (only once)
   useEffect(() => {
     if (!hasAutoScrolled && swiperRef.current && initialSlideIndex !== -1) {
-      (swiperRef.current).slideTo(initialSlideIndex, 0);
+      swiperRef.current.slideTo(initialSlideIndex, 0);
       setHasAutoScrolled(true); // Set flag to prevent further auto-scrolls
     }
   }, [initialSlideIndex, hasAutoScrolled]);
@@ -373,22 +373,25 @@ const Dashboard = () => {
               onChange={(value: unknown) =>
                 setIsMonthsDropSelect3(value as string)
               }
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
             />
           </div>
           <div className="grid md:grid-cols-4 grid-cols-2  gap-5 pt-5">
             {activity?.map((item, index) => (
               <div
                 key={index}
-                className={`p-5  rounded-base flex justify-between items-center ${item.title.trim() === "Received payment"
-                  ? "bg-[#FBE9D0]"
-                  : item.title.trim() === "Pending payment"
+                className={`p-5  rounded-base flex justify-between items-center ${
+                  item.title.trim() === "Received payment"
+                    ? "bg-[#FBE9D0]"
+                    : item.title.trim() === "Pending payment"
                     ? "bg-[#D8E5FF]"
                     : item.title.trim() === "Patient"
-                      ? "bg-[#FBD7D8]"
-                      : item.title.trim() === "Session"
-                        ? "bg-[#F8DBFF]"
-                        : ""
-                  }`}
+                    ? "bg-[#FBD7D8]"
+                    : item.title.trim() === "Session"
+                    ? "bg-[#F8DBFF]"
+                    : ""
+                }`}
               >
                 <div>
                   <p className="text-2xl/7 font-medium text-primary">
@@ -399,16 +402,17 @@ const Dashboard = () => {
                   </p>
                 </div>
                 <div
-                  className={`p-4 rounded-full ${item.title.trim() === "Received payment"
-                    ? "bg-[#FFD7A0]"
-                    : item.title.trim() === "Pending payment"
+                  className={`p-4 rounded-full ${
+                    item.title.trim() === "Received payment"
+                      ? "bg-[#FFD7A0]"
+                      : item.title.trim() === "Pending payment"
                       ? "bg-[#A0BEFF]"
                       : item.title.trim() === "Patient"
-                        ? "bg-[#FDC0C1]"
-                        : item.title.trim() === "Session"
-                          ? "bg-[#F1C2FE]"
-                          : ""
-                    }`}
+                      ? "bg-[#FDC0C1]"
+                      : item.title.trim() === "Session"
+                      ? "bg-[#F1C2FE]"
+                      : ""
+                  }`}
                 >
                   {item.icon}
                 </div>
@@ -430,20 +434,23 @@ const Dashboard = () => {
                   <span>{`${selectedMonth}, ${selectedYear}`}</span>
                   <CaretDown
                     size={20}
-                    className={`transition-all duration-300 ${isDateDrop ? "rotate-180" : ""
-                      }`}
+                    className={`transition-all duration-300 ${
+                      isDateDrop ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
                 <div
-                  className={`absolute top-full right-0 w-[360px] bg-white rounded-2xl shadow-[0px_4px_12px_0px_#2C58BB1A] overflow-hidden transition-all duration-300 z-20 ${isDateDrop ? "h-[428px]" : "h-0"
-                    }`}
+                  className={`absolute top-full right-0 w-[360px] bg-white rounded-2xl shadow-[0px_4px_12px_0px_#2C58BB1A] overflow-hidden transition-all duration-300 z-20 ${
+                    isDateDrop ? "h-[428px]" : "h-0"
+                  }`}
                 >
                   <div className="grid grid-cols-2 gap-2.5">
                     <button
-                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${activeTab === "month"
-                        ? "text-primary"
-                        : "text-primary/70"
-                        }`}
+                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${
+                        activeTab === "month"
+                          ? "text-primary"
+                          : "text-primary/70"
+                      }`}
                       onClick={() => setActiveTab("month")}
                     >
                       {selectedMonth}{" "}
@@ -452,10 +459,11 @@ const Dashboard = () => {
                       )}
                     </button>
                     <button
-                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${activeTab === "year"
-                        ? "text-primary"
-                        : "text-primary/70"
-                        }`}
+                      className={`p-[22px] font-medium text-sm_18 flex items-end justify-center gap-2 ${
+                        activeTab === "year"
+                          ? "text-primary"
+                          : "text-primary/70"
+                      }`}
                       onClick={() => setActiveTab("year")}
                     >
                       {selectedYear}
@@ -471,10 +479,11 @@ const Dashboard = () => {
                         {months.map((month) => (
                           <li
                             key={month}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4  hover:bg-gray-100/20 ${month === selectedMonth
-                              ? "bg-green-600/10 !text-green-600"
-                              : ""
-                              }`}
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center gap-4  hover:bg-gray-100/20 ${
+                              month === selectedMonth
+                                ? "bg-green-600/10 !text-green-600"
+                                : ""
+                            }`}
                             onClick={() => handleSelectMonth(month)}
                           >
                             <div className="w-6">
@@ -490,10 +499,11 @@ const Dashboard = () => {
                         {years.map((year) => (
                           <li
                             key={year}
-                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4  hover:bg-gray-100/20 ${String(year) === selectedYear
-                              ? "bg-green-600/10 !text-green-600"
-                              : ""
-                              }`}
+                            className={`py-3 px-4 text-sm_18 text-[#1D1B20] cursor-pointer flex items-center  gap-4  hover:bg-gray-100/20 ${
+                              String(year) === selectedYear
+                                ? "bg-green-600/10 !text-green-600"
+                                : ""
+                            }`}
                             onClick={() => handleSelectYear(year)}
                           >
                             <div className="w-6">
@@ -538,10 +548,11 @@ const Dashboard = () => {
                     <SwiperSlide key={date.day}>
                       <div className=" flex items-center justify-center text-center">
                         <button
-                          className={` group transition-all duration-500 relative z-30 ${activeDate === date.day
-                            ? "text-yellow-600 font-semibold "
-                            : "text-primary"
-                            }`}
+                          className={` group transition-all duration-500 relative z-30 ${
+                            activeDate === date.day
+                              ? "text-yellow-600 font-semibold "
+                              : "text-primary"
+                          }`}
                           onClick={() => handleDateClick(Number(date.day))}
                         >
                           <p className="text-[26px] leading-[30px] group-hover:font-semibold group-focus:font-semibold">

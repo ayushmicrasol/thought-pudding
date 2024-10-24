@@ -82,10 +82,10 @@ const Login: React.FC<LoginProps> = ({
     therapist_name: Yup.string()
       .min(2, "Therapist Name must be at least 2 characters")
       .required("Therapist Name is required"),
-    practice_name: Yup.string()
+    pratice_name: Yup.string()
       .min(2, "Practice Name must be at least 2 characters")
       .required("Practice Name is required"),
-    linkedin_URL: Yup.string()
+    linkedIn: Yup.string()
       .url("Must be a valid URL")
       .matches(
         /^(https?:\/\/)?(www\.)?linkedin\.com\/.*$/,
@@ -99,8 +99,8 @@ const Login: React.FC<LoginProps> = ({
     enableReinitialize: true,
     initialValues: {
       therapist_name: "",
-      practice_name: "",
-      linkedin_URL: "",
+      pratice_name: "",
+      linkedIn: "",
     },
     validationSchema,
     onSubmit: (values) => {
@@ -235,12 +235,12 @@ const Login: React.FC<LoginProps> = ({
                 {
                   label: "Practice Name",
                   placeholder: "Enter Practice Name",
-                  name: "practice_name",
+                  name: "pratice_name",
                 },
                 {
                   label: "Linkedin URL",
                   placeholder: "Enter Linkedin URL",
-                  name: "linkedin_URL",
+                  name: "linkedIn",
                 },
               ].map((field) => (
                 <div key={field.name}>

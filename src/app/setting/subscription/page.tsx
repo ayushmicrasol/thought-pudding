@@ -85,7 +85,7 @@ const Subscription = () => {
       <div>
         <h1 className="text-xl_30 font-semibold text-primary">Subscription</h1>
         <div className="mt-5 overflow-hidden w-full border border-primary/10 rounded-base">
-          <table className="">
+          <table className="w-full">
             <thead className="text-left ">
               <tr className="">
                 <th className="w-[300px] pt-3.5 pb-5 px-5">
@@ -152,7 +152,7 @@ const Subscription = () => {
               {subscriptionPlan?.map((item, index) => (
                 <tr
                   key={index}
-                  className={index % 2 === 1 ? "bg-green-600/15" : ""}
+                  className={index % 2 === 1 ? "" : "bg-green-600/10"}
                 >
                   <td className="pl-5 py-6.5">
                     <p className="text-base_18 text-primary font-medium">
@@ -211,14 +211,18 @@ const Subscription = () => {
         <div className="mt-3 overflow-hidden w-full border border-primary/10 rounded-base">
           <table className="w-full">
             <thead className="text-left">
-              <tr className="bg-green-600/15 text-sm/5  text-primary uppercase">
+              <tr className="bg-green-600/10 text-sm/5  text-primary uppercase">
                 <th className="px-2.5 py-5 font-medium">#</th>
                 <th className="px-2.5 py-5 font-medium">plan</th>
                 <th className="px-2.5 py-5 font-medium">Amount</th>
                 <th className="px-2.5 py-5 font-medium">Status</th>
                 <th className="px-2.5 py-5 font-medium">validity</th>
-                <th className="px-2.5 py-5 font-medium">subscription date</th>
-                <th className="px-2.5 py-5 font-medium">purchase date</th>
+                <th className="px-2.5 py-5 font-medium w-[245px]">
+                  subscription date
+                </th>
+                <th className="px-2.5 py-5 font-medium w-[212px]">
+                  purchase date
+                </th>
               </tr>
             </thead>
             <tbody>
