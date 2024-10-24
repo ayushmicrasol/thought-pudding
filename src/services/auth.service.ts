@@ -12,7 +12,7 @@ export class AuthService {
     );
   }
 
-  static async addPractice(formData: Record<string, any>) {
+  static async addPractice(formData: Record<string, unknown>) {
     console.log("formData", formData);
     return await axiosInstance.post(`${endpoints.addPractice}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
